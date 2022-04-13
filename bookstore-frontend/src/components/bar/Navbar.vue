@@ -1,16 +1,15 @@
 <template>
   <v-app-bar app color="#D9D0C7" dark>
     <h2 class="brand-name">Sophie</h2>
-    <v-btn text><p class="menu">SHOP</p></v-btn>
-    <v-btn text><p class="menu">MY BOOKS</p></v-btn>
+    <v-btn @click="generateImage()" text><p class="menu">SHOP</p></v-btn>
+    <v-btn text @click="$router.push('/myBook')"><p class="menu">MY BOOKS</p></v-btn>
     <v-btn text><p class="menu">USER MANUAL</p></v-btn>
     <v-spacer></v-spacer>
-
     <span class="button-container">
         <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
         <div class="number-prop">0</div>
     </span>
-        <span class="button-container" @click="add()">
+        <span class="button-container">
         <v-icon color="black" large>mdi-cart-outline</v-icon>
         <div class="number-prop">0</div>
     </span>
@@ -23,13 +22,30 @@
   </v-app-bar>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: "NavigationBar",
 
-  data: () => ({}),
+  data: () => ({
+    check: false,
+  }),
   methods: {
-      add(){
-          console.log("hello")
+      add(value){
+          this.$store.dispatch("incrementAction", value)
+      },
+      async generateImage(){
+        // axios.get("https://dog.ceo/api/breeds/image/random").then((value) => {
+        //   console.log(value.data.message)
+        // }).catch((err) => {
+        //   console.log(err)
+        // })
+        try {
+          const result = await axios.get("https://dog.ceo/api/breeds/image/random")
+          console.log(result.data.message)
+        }
+        catch(err){
+          console.log(err)
+        }
       }
   }
 };

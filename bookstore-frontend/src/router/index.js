@@ -7,12 +7,22 @@ const routes = [
     {
         path: '/',
         name: 'Main page',
-        component: () => import('../components/pages/MainPage.vue')
+        component: () => import('../views/MainPage.vue')
     },
     {
         path: '/detail/:bookId',
         name: 'Detail Page',
-        component: () => import("../components/pages/DetailPage.vue")
+        component: () => import("../views/DetailPage.vue")
+    },
+    {
+        path: '/test',
+        name: 'Test Page',
+        component: ()=>import("../views/TestPage.vue")
+    },
+    {
+        path: '/myBook',
+        name: 'My Book Page',
+        component: ()=>import("../views/MyBookPage.vue")
     }
 ]
 

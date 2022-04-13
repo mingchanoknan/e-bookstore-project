@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: { // ตัวแปร = data ใน vue
     // ตัวอย่าง
-    count: 0,
+    count: 2,
     user: null,
     select: 1,
   },
