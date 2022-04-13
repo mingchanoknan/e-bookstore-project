@@ -1,5 +1,5 @@
 <template>
-    <div>Detail Page</div>
+    <div>Detail Page {{$store.state.count}}</div>
 </template>
 <script>
 export default {
