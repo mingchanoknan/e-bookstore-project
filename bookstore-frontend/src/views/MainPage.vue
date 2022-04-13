@@ -2,8 +2,38 @@
   <div>
     <TypeBar />
     <v-container fluid grid-list-md>
-                    <v-layout row wrap>
-                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3 >
+                    <v-layout row wrap  v-if="$store.state.select == 1">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
+                            <BookCard :book="item"/>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap  v-if="$store.state.select == 2">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
+                            <BookCard :book="item"/>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap  v-if="$store.state.select == 3">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
+                            <BookCard :book="item"/>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap  v-if="$store.state.select == 4">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
+                            <BookCard :book="item"/>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap  v-if="$store.state.select == 5">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
+                            <BookCard :book="item"/>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap  v-if="$store.state.select == 6">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
+                            <BookCard :book="item"/>
+                        </v-flex>
+                    </v-layout>
+                    <v-layout row wrap  v-if="$store.state.select == 7">
+                        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
                             <BookCard :book="item"/>
                         </v-flex>
                     </v-layout>
