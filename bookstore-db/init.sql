@@ -47,7 +47,7 @@ CREATE TABLE book_type (
 
 DROP TABLE IF EXISTS ebook;
 CREATE TABLE ebook (
-    `ebook_id` int  NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `ebook_id` int AUTO_INCREMENT PRIMARY KEY,
     `title` varchar(255) not NULL,
     `abstract` text,
     `book_path` varchar(255) not null,
