@@ -10,6 +10,7 @@
     `lname` varchar(255),
     `image_path` varchar(255),
     `position` varchar(255) NOT NULL,
+    `resigned` bit DEFAULT 0,
     UNIQUE (`fname`, `lname`)
   );
 
@@ -41,8 +42,7 @@ CREATE TABLE set_book (
 DROP TABLE IF EXISTS book_type;
 CREATE TABLE book_type (
   `type_id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `type_name` varchar(255)  NOT NULL,
-  `type_age` int(2)
+  `type_name` varchar(255)  NOT NULL
 );
 
 DROP TABLE IF EXISTS ebook;
@@ -54,6 +54,7 @@ CREATE TABLE ebook (
    `price` FLOAT(8,2),
    `average_rating` FLOAT(8,2) DEFAULT '0',
    `image_cover`  varchar(255),
+   `deleted` bit DEFAULT 0,
    `publisher_id` int NOT NULL,
     `set_id` int ,
     `type_id` int NOT NULL,
@@ -73,9 +74,11 @@ CREATE TABLE admin_ebook (
     FOREIGN KEY (`admin_id`) REFERENCES `admin`(`admin_id`)
 );
 
-DROP TABLE IF EXISTS customer_has_ebook;
-CREATE TABLE customer_has_ebook (
+DROP TABLE IF EXISTS customer_ebook;
+CREATE TABLE customer_ebook (
   `favorite` BIT DEFAULT 0,
+  `bought` BIT DEFAULT 0,
+  `interest` BIT DEFAULT 0,
   `ebook_id`  int NOT NULL ,
   `customer_id`int NOT NULL ,
   PRIMARY KEY (`ebook_id`,`customer_id`),
@@ -83,14 +86,6 @@ CREATE TABLE customer_has_ebook (
    FOREIGN KEY (`ebook_id`) REFERENCES `ebook` ( `ebook_id`)
 );
 
-DROP TABLE IF EXISTS customer_interest_ebook;
-CREATE TABLE customer_interest_ebook (
-  `ebook_id`  int NOT NULL,
-   `customer_id`int NOT NULL ,
-   PRIMARY KEY (`ebook_id`,`customer_id`),
-   FOREIGN KEY (`ebook_id`) REFERENCES `ebook` ( `ebook_id`),
-   FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`)
-);
 
 DROP TABLE IF EXISTS author;
 CREATE TABLE author (
