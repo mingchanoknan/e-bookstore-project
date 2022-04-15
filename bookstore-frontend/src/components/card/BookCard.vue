@@ -83,7 +83,7 @@ export default {
   text-overflow: ellipsis; 
 }
 .author {
-  font-size: 1.3em;
+  font-size: 1em;
   padding-left: 1.3em;
   color: #a57b7c;
   font-weight: bold;
