@@ -5,7 +5,7 @@
         <span @click="changeTypeSelect(3)" class="bar-item" :class="$store.state.select == 3 ? 'color-change' : ''">ทั้งหมด</span>
         <span @click="changeTypeSelect(4)" class="bar-item" :class="$store.state.select == 4 ? 'color-change' : ''">นิยาย</span>
         <span @click="changeTypeSelect(5)" class="bar-item" :class="$store.state.select == 5 ? 'color-change' : ''">การ์ตูน</span>
-        <span @click="changeTypeSelect(6)" class="bar-item" :class="$store.state.select == 6 ? 'color-change' : ''">คู่มือท่องเที่ยว</span>
+        <span @click="changeTypeSelect(6)" class="bar-item" :class="$store.state.select == 6 ? 'color-change' : ''">ท่องเที่ยว</span>
         <span @click="changeTypeSelect(7)" class="bar-item" :class="$store.state.select == 7 ? 'color-change' : ''">การศึกษา</span>
         <span @click="changeTypeSelect(8)" class="bar-item" :class="$store.state.select == 8 ? 'color-change' : ''">เทคโนโลยี</span>
         <span @click="changeTypeSelect(9)" class="bar-item" :class="$store.state.select == 9 ? 'color-change' : ''">หนังสือชุด</span>
