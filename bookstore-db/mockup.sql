@@ -52,7 +52,7 @@ insert into set_book(set_name) value("SPY x FAMILY");
 
 insert into book_type(`type_name`) value('นิยาย');
 insert into book_type(`type_name`) value('การ์ตูน');
-insert into book_type(`type_name`) value('คู่มือท่องเที่ยว');
+insert into book_type(`type_name`) value('ท่องเที่ยว');
 insert into book_type(`type_name`) value('การศึกษา');
 insert into book_type(`type_name`) value('เทคโนโลยี');
 

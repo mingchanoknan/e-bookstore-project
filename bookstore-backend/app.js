@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 // app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // routers
-const indexRouter = require("./routes/index.js");
+const indexRouter = require("./routes/ebook.js");
 app.use(indexRouter.router)
 
 app.listen(3000, () => {
