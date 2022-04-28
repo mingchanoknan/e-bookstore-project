@@ -5,7 +5,7 @@
     `admin_id` int AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) not NULL UNIQUE,
     `password` varchar(255) not NULL,
-    `date_of_brith` date,
+    `date_of_birth` date,
     `fname` varchar(255),
     `lname` varchar(255),
     `image_path` varchar(255),
@@ -19,7 +19,7 @@
     `customer_id` int AUTO_INCREMENT PRIMARY KEY,
     `username` varchar(255) not NULL UNIQUE,
     `password` varchar(255) not NULL,
-    `date_of_brith` date,
+    `date_of_birth` date,
     `fname` varchar(255),
     `lname` varchar(255),
     `image_path` varchar(255),
@@ -136,6 +136,13 @@ CREATE TABLE cart_item (
    FOREIGN KEY ( `ebook_id`) REFERENCES `ebook` ( `ebook_id`),
    FOREIGN KEY ( `cart_id`) REFERENCES `cart` ( `cart_id`)
 
+);
+
+DROP TABLE IF EXISTS token;
+CREATE TABLE token (
+  `customer_id` int,
+  `admin_id` int,
+  `token` varchar(255)
 );
 
   SET FOREIGN_KEY_CHECKS = 1;

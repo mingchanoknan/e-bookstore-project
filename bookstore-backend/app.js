@@ -18,12 +18,17 @@ app.use(express.static(path.join(__dirname, 'static')))
 app.use(bodyParser.urlencoded({ extended: false}));
 
 
-// app.use(express.json()) // for parsing application/json
+app.use(express.json()) // for parsing application/json
 // app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 // routers
-const indexRouter = require("./routes/ebook.js");
+
+const indexRouter = require("./routes/store_ebook.js");
+const customerRouter = require("./routes/customer.js")
+
 app.use(indexRouter.router)
+app.use(customerRouter.router)
+
 
 app.listen(3000, () => {
   console.log(`Example app listening at http://localhost:3000`)
