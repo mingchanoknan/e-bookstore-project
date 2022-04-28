@@ -9,6 +9,7 @@ export default new Vuex.Store({
     count: 2,
     user: null,
     select: 1,
+    modalLoginActive: true
   },
   getters: { // computed ใน vue
   },
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     changeTypeSelectMutate(state, value) {
       state.select = value
+    },
+    modalLoginMutate(state) {
+      state.modalLoginActive = !state.modalLoginActive
     }
   },
   actions: { // คือ function = methods ใน vue
@@ -26,6 +30,9 @@ export default new Vuex.Store({
     },
     changeTypeSelectAction(context, value) {
       context.commit("changeTypeSelectMutate", value)
+    },
+    modalLoginAction(context) {
+      context.commit("modalLoginMutate");
     }
   },
   modules: {

@@ -75,7 +75,7 @@ export default {
   font-weight: 500;
 }
 .header {
-  font-size: 2.3em;
+  font-size: 1.4em;
   padding-left: 0.5em;
   font-weight: bold;
   white-space: nowrap;
