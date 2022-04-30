@@ -197,33 +197,33 @@ insert into author_ebook(ebook_id, author_id) value(27,18);
 
 
 
-insert into admin_ebook values (1,1,'add','2022-02-25');
-insert into admin_ebook values (2,1,'add','2022-02-25');
-insert into admin_ebook values (3,1,'add','2022-02-25');
-insert into admin_ebook value (4,1,'add','2022-03-25');
-insert into admin_ebook value (5,1,'add','2022-04-25');
-insert into admin_ebook value (6,1,'add','2022-01-25');
-insert into admin_ebook value (7,1,'add','2022-01-25');
-insert into admin_ebook value (8,1,'add','2021-01-25');
-insert into admin_ebook value (9,1,'add','2020-03-25');
-insert into admin_ebook value (10,2,'add','2020-04-25');
-insert into admin_ebook value (11,2,'add','2022-04-25');
-insert into admin_ebook value (12,2,'add','2022-04-25');
-insert into admin_ebook value (13,2,'add','2022-04-25');
-insert into admin_ebook value (14,2,'add','2022-04-25');
-insert into admin_ebook value (15,2,'add','2022-04-25');
-insert into admin_ebook value (16,2,'add','2022-04-25');
-insert into admin_ebook value (17,2,'add','2022-04-25');
-insert into admin_ebook value (18,2,'add','2000-04-25');
-insert into admin_ebook value (19,2,'add','2000-04-25');
-insert into admin_ebook value (20,2,'add','2000-04-25');
-insert into admin_ebook value (21,2,'add','2020-04-25');
-insert into admin_ebook value (22,2,'add','2020-04-25');
-insert into admin_ebook value (23,2,'add','2021-04-25');
-insert into admin_ebook value (24,2,'add','2022-04-25');
-insert into admin_ebook value (25,2,'add','2022-04-25');
-insert into admin_ebook value (26,2,'add','2020-04-25');
-insert into admin_ebook value (27,2,'add','2020-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) values (1,1,'add','2022-02-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) values (2,1,'add','2022-02-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) values (3,1,'add','2022-02-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (4,1,'add','2022-03-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (5,1,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (6,1,'add','2022-01-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (7,1,'add','2022-01-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (8,1,'add','2021-01-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (9,1,'add','2020-03-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (10,2,'add','2020-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (11,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (12,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (13,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (14,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (15,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (16,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (17,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (18,2,'add','2000-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (19,2,'add','2000-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (20,2,'add','2000-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (21,2,'add','2020-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (22,2,'add','2020-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (23,2,'add','2021-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (24,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (25,2,'add','2022-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (26,2,'add','2020-04-25');
+insert into admin_ebook (ebook_id, admin_id,modify_type,modify_date) value (27,2,'add','2020-04-25');
 
 
 

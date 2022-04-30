@@ -8,13 +8,16 @@ router.get("/getAllBook", async (req, res, next) => {
     await conn.beginTransaction();
     console.log("123")
     try {
-        const [row,col] = await conn.query(
+        let [row,col] = await conn.query(
             `select * from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)`
+            where deleted = 0`
         )
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
         conn.commit()
         res.send(row).status(200)
     } catch (err) {
@@ -33,18 +36,19 @@ router.get("/getNovelBooks", async (req, res, next) => {
             `select *from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            where type_name = "นิยาย"`
-            
+            where type_name = "นิยาย" and deleted = 0`
         )
-        conn2.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        conn.commit()
         res.send(row).status(200)
     } catch (err) {
-        conn2.rollback()
+        conn.rollback()
         res.send("Error").status(400)
     } finally {
-        conn2.release()
+        conn.release()
     }
 })
 
@@ -56,18 +60,20 @@ router.get("/getComicBooks", async (req, res, next) => {
             `select *from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            where type_name = "การ์ตูน"`
+            where type_name = "การ์ตูน" and deleted = 0`
             
         )
-        conn3.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
         res.send(row).status(200)
     } catch (err) {
-        conn3.rollback()
+        await conn.rollback()
         res.send("Error").status(400)
     } finally {
-        conn3.release()
+        conn.release()
     }
 })
 
@@ -79,18 +85,21 @@ router.get("/getTravelBooks", async (req, res, next) => {
             `select *from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            where type_name = "ท่องเที่ยว"`
+
+            where type_name = "ท่องเที่ยว" and deleted = 0`
             
         )
-        conn4.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
         res.send(row).status(200)
     } catch (err) {
-        conn4.rollback()
+        await conn.rollback()
         res.send("Error").status(400)
     } finally {
-        conn4.release()
+        conn.release()
     }
 })
 
@@ -102,18 +111,20 @@ router.get("/getTextBooks", async (req, res, next) => {
             `select *from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            where type_name = "การศึกษา"`
+            where type_name = "การศึกษา" and deleted = 0`
             
         )
-        conn5.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
         res.send(row).status(200)
     } catch (err) {
-        conn5.rollback()
+        await conn.rollback()
         res.send("Error").status(400)
     } finally {
-        conn5.release()
+        conn.release()
     }
 })
 
@@ -125,18 +136,20 @@ router.get("/getTechnologyBooks", async (req, res, next) => {
             `select *from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            where type_name = "เทคโนโลยี"`
+            where type_name = "เทคโนโลยี" and deleted = 0`
             
         )
-        conn6.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
         res.send(row).status(200)
     } catch (err) {
-        conn6.rollback()
+        await conn.rollback()
         res.send("Error").status(400)
     } finally {
-        conn6.release()
+        conn.release()
     }
 })
 
@@ -171,15 +184,17 @@ router.get("/getBySetId/:setId", async (req, res, next) => {
             `select * from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-             where set_id = ?`, [req.params.setId]
+             where set_id = ? and deleted = 0`, [req.params.setId]
         )
-        conn.commit()
-        res.send(row).status(404)
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
+        res.send(row).status(200)
     }
     catch (err) {
-        conn.rollback()
+        await conn.rollback()
         res.send(err.message).status(404)
     }
     finally {
@@ -194,11 +209,11 @@ router.get("/getSetBooks", async (req, res, next) => {
         const [row, col] = await conn.query(
             `select * from set_book`
         )
-        conn.commit()
+        await conn.commit()
         res.send(row).status(200)
     } 
     catch (err) {
-        conn.rollback()
+        await conn.rollback()
         res.send(ërr.message).status(404)
     }
     finally {
@@ -217,15 +232,17 @@ router.get("/getNewBooks", async (req, res, next) => {
             join admin_ebook using (ebook_id)
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            WHERE modify_type = "add" and modify_date > DATE_SUB(NOW(), INTERVAL 1 MONTH) `
+            WHERE modify_type = "add" and modify_date > DATE_SUB(NOW(), INTERVAL 1 MONTH) and deleted = 0`
         )
-        conn.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
         res.send(row).status(200)
     } 
     catch (err) {
-        conn.rollback()
+        await conn.rollback()
         res.send(ërr.message).status(404)
     }
     finally {
@@ -243,15 +260,17 @@ router.get("/getPopularBooks", async (req, res, next) => {
             from ebook
             join publisher using (publisher_id)
             join book_type using (type_id)
-            join author_ebook using (ebook_id)
-            join author using (author_id)
-            WHERE average_rating between 3.5 and 5`
+            WHERE average_rating between 3.5 and 5 and deleted = 0`
         )
-        conn.commit()
+        for (let book of row) {
+            let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+            book["author"] = author
+        }
+        await conn.commit()
         res.send(row).status(200)
     } 
     catch (err) {
-        conn.rollback()
+        await conn.rollback()
         res.send(ërr.message).status(404)
     }
     finally {

@@ -1,6 +1,7 @@
 <template>
   <div>
     <span v-for="set of setBook" :key="set.set_id">
+       <h1>{{set.name}}</h1>
       <v-layout row wrap>
         <v-flex v-for="item in set.list" :key="item.ebook_id" xs12 md6 lg3>
           <BookCard :book="item" />
