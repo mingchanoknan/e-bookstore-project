@@ -5,7 +5,6 @@
     <v-btn text @click="$router.push('/myBook')"><p class="menu">MY BOOKS</p></v-btn>
     <v-btn text @click="$router.push('/myBook')"><p class="menu">USER MANUAL</p></v-btn>
     <v-btn text @click="$router.push('/customerRegister')"><p class="menu">Register</p></v-btn>
-    <v-btn text @click="$router.push('/customerLogin')"><p class="menu">Login</p></v-btn>
     <v-spacer></v-spacer>
     <span class="button-container">
         <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
