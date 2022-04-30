@@ -8,9 +8,10 @@
       <v-dialog
         v-model="dialog"
         persistent
-        max-width="600px"
+        max-width="30rem"
         v-if="$store.state.modalLoginActive"
-        ><v-card><LoginCard /></v-card></v-dialog>
+        ><v-card><LoginCard/></v-card>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>

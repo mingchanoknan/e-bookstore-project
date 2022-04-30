@@ -6,7 +6,7 @@
         <v-card color="#FFFEEB">
         <v-row no-gutters>
           <v-col lg="5" sm="12" md="12">         
-          <v-img src="../image/login-2.png" height="100%" width="100%"></v-img> 
+          <v-img src="../components/image/login-2.png" height="100%" width="100%"></v-img> 
           </v-col>
           <v-col lg="7" sm="12" md="12" >
             <v-stepper v-model="e1" height="100%">
