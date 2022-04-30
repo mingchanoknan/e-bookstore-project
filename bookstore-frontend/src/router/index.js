@@ -28,6 +28,16 @@ const routes = [
         path: '/customerRegister',
         name: 'Customer Register Page',
         component: ()=>import("../views/CustomerRegisterPage.vue")
+    },
+    {
+        path: '/manual',
+        name: 'Manual Page',
+        component: ()=>import("../views/ManualPage.vue")
+    },
+    {
+        path: '/bookdetail',
+        name: 'Book Detail Page',
+        component: ()=>import("../views/DetailPage.vue")
     }
 ]
 

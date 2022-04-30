@@ -1,9 +1,9 @@
 <template>
   <v-app-bar app color="#D9D0C7" dark>
-    <h2 class="brand-name">Sophie</h2>
+    <h2 class="brand-name" @click="$router.push('/')">Sophie</h2>
     <v-btn @click="generateImage()" text><p class="menu">SHOP</p></v-btn>
     <v-btn text @click="$router.push('/myBook')"><p class="menu">MY BOOKS</p></v-btn>
-    <v-btn text @click="$router.push('/myBook')"><p class="menu">USER MANUAL</p></v-btn>
+    <v-btn text @click="$router.push('/manual')"><p class="menu">USER MANUAL</p></v-btn>
     <v-btn text @click="$router.push('/customerRegister')"><p class="menu">Register</p></v-btn>
     <v-spacer></v-spacer>
     <span class="button-container">
@@ -18,7 +18,7 @@
         <v-icon color="black" large>mdi-account-circle-outline</v-icon>
     </span>
     <span @click="activeModal()" class="button-container" v-if="$store.state.user == null">
-        <v-icon color="black" large>mdi-login</v-icon>
+        <v-icon @click="$router.push('/customerRegister')" color="black" large>mdi-login</v-icon>
     </span>
   </v-app-bar>
 </template>

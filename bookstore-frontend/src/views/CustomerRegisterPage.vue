@@ -128,10 +128,4 @@ export default {
 };
 </script>
 <style scoped>
-.content {
-  max-width: 800px;
-  margin: auto;
-  background: rgb(250, 206, 255);
-  padding: 10px;
-}
 </style>
