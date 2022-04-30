@@ -25,9 +25,16 @@ app.use(express.json()) // for parsing application/json
 
 const indexRouter = require("./routes/store_ebook.js");
 const customerRouter = require("./routes/customer.js")
-
+const adminRouter = require("./routes/admin.js")
+const manageBookRouter = require("./routes/mangeBook.js")
+const reportRouter = require("./routes/report.js")
+  
 app.use(indexRouter.router)
 app.use(customerRouter.router)
+app.use(adminRouter.router)
+app.use(manageBookRouter.router)
+app.use(reportRouter.router)
+
 
 
 app.listen(3000, () => {

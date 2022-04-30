@@ -9,7 +9,7 @@
     `fname` varchar(255),
     `lname` varchar(255),
     `image_path` varchar(255),
-    `position` varchar(255) NOT NULL,
+    `position` varchar(255) NOT NULL ,
     `resigned` bit DEFAULT 0,
     UNIQUE (`fname`, `lname`)
   );
@@ -65,11 +65,12 @@ CREATE TABLE ebook (
 
 DROP TABLE IF EXISTS admin_ebook;
 CREATE TABLE admin_ebook (
+   `admin_ebook` int AUTO_INCREMENT PRIMARY KEY,
    `ebook_id`  int NOT NULL ,
    `admin_id`int NOT NULL,
    modify_type varchar(255),
    modify_date  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`ebook_id`,`admin_id`),
+    -- PRIMARY KEY (`ebook_id`,`admin_id`),
     FOREIGN KEY (`ebook_id`) REFERENCES `ebook` ( `ebook_id`),
     FOREIGN KEY (`admin_id`) REFERENCES `admin`(`admin_id`)
 );

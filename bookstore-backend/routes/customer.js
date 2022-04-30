@@ -13,7 +13,7 @@ const registerSchemas = Joi.object({
 });
 
 router = express.Router();
-
+// regiter Customer
 router.post("/customer/register", async (req, res, next) => {
   const username = req.body.username;
   const password = await bcrypt.hash(req.body.password, 5);

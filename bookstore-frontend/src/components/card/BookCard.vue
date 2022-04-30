@@ -19,7 +19,7 @@
         </template>
         <span>{{$props.book.title}}</span>
         </v-tooltip>
-        <div class="author">{{$props.book.author_name}}</div>
+        <div class="author"><span v-for="(author, index) in $props.book.author" :key="index"><span style="text-decoration: underline">{{author.author_name}}</span>&nbsp;&nbsp;</span></div>
         <div class="price">{{$props.book.price}} ฿</div>
       </v-container>
       <v-container class="px-6 pb-6">
@@ -49,9 +49,9 @@ export default {
     data: "",
   }),
   props: ["book"],
-//   created(){
-//       console.log(this.$props.book)
-//   },
+  created(){
+      console.log(this.$props.book)
+  },
   methods: {},
 };
 </script>
