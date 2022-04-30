@@ -25,11 +25,6 @@ const routes = [
         component: ()=>import("../views/MyBookPage.vue")
     },
     {
-        path: '/customerLogin',
-        name: 'Customer Login Page',
-        component: ()=>import("../views/CustomerLoginPage.vue")
-    },
-    {
         path: '/customerRegister',
         name: 'Customer Register Page',
         component: ()=>import("../views/CustomerRegisterPage.vue")
