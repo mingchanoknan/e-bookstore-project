@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app color="#D9D0C7" dark>
-    <h2 class="brand-name" @click="$router.push('/')">Sophie</h2>
-    <v-btn @click="generateImage()" text><p class="menu">SHOP</p></v-btn>
+    <h2 class="brand-name" @click="$router.push('/main')">Sophie</h2>
+    <v-btn @click="$router.push('/main')" text><p class="menu">SHOP</p></v-btn>
     <v-btn text @click="$router.push('/myBook')"><p class="menu">MY BOOKS</p></v-btn>
     <v-btn text @click="$router.push('/manual')"><p class="menu">USER MANUAL</p></v-btn>
     <v-btn text @click="$router.push('/customerRegister')"><p class="menu">Register</p></v-btn>
@@ -10,7 +10,7 @@
         <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
         <div class="number-prop">0</div>
     </span>
-        <span class="button-container">
+        <span class="button-container" @click="$router.push('/cart/:cartId')">
         <v-icon color="black" large>mdi-cart-outline</v-icon>
         <div class="number-prop">0</div>
     </span>
