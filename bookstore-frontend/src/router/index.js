@@ -40,6 +40,21 @@ const routes = [
         component: ()=>import("../views/ManualPage.vue")
     },
     {
+        path: '/bookdetail',
+        name: 'Book Detail Page',
+        component: ()=>import("../views/DetailPage.vue")
+    },
+    {
+        path: '/addBookForm',
+        name: 'Add Book Form',
+        component: ()=>import("../views/AddBook.vue")
+    },
+    {
+        path: '/report',
+        name: 'Report',
+        component: ()=>import("../views/Report.vue")
+    },
+    {
         path: '/cart/:cartId',
         name: 'Cart Page',
         component: ()=>import("../views/CartPage.vue")
@@ -65,6 +80,7 @@ const routes = [
         component: ()=>import("../views/ReviewHistoryPage.vue")
     }
 ]
+
 
 const router = new VueRouter({
     mode: 'history',

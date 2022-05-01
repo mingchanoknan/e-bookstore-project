@@ -3,6 +3,7 @@ const pool = require("../config/mysql_connector");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/token");
+const {isLoggedIn} = require("../middlewares/index")
 
 const registerSchemas = Joi.object({
   username: Joi.string().required(),
@@ -38,18 +39,19 @@ router.post("/customer/register", async (req, res, next) => {
     res.send("Register!").status(200);
   } catch (err) {
     conn.rollback();
-    res.send(err.message).status(400);
+    res.status(404).json(err.message.data)
   } finally {
     conn.release();
   }
 });
 
-router.get("/customer/login", async (req, res, next) => {
+router.post("/customer/login", async (req, res, next) => {
+  console.log(req.body.password)
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
     const [row, col] = await conn.query(
-      `SELECT * FROM customer WHERE username = ?`,
+      `SELECT customer_id,username, password, date_of_birth,fname, lname,image_path FROM customer WHERE username = ?`,
       [req.body.username]
     );
 
@@ -57,58 +59,69 @@ router.get("/customer/login", async (req, res, next) => {
     if (!user) {
       throw new Error("Your password or your username is incorrect");
     }
+    console.log(user)
     if (!(await bcrypt.compare(req.body.password, user.password))) {
       throw new Error("Your password or your username is incorrect");
     }
+    user["role"] = "customer"
+    const token = await conn.query(`SELECT token FROM token WHERE customer_id = ?`,
+    [user.customer_id])
     let obj = {
       status: "Login!",
       user: user,
+      token: token[0][0]
     };
+    await conn.commit()
     res.send(obj).status(200);
   } catch (err) {
-    res.send(err.message).status(400);
+    await conn.rollback()
+    // res.send(err.message).status(400);
+    console.log(err)
+    res.status(404).json(err.message.data)
+  } finally {
+    conn.release()
   }
 });
 
-router.get("/customer/loginByToken", async (req, res, next) => {
-    const conn = await pool.getConnection()
-    await conn.beginTransaction()
-    try {
-        const [row1, field] = await conn.query(`SELECT * FROM token WHERE token = ?`, [req.body.token])
+// router.post("/customer/loginByToken", async (req, res, next) => {
+//     const conn = await pool.getConnection()
+//     await conn.beginTransaction()
+//     try {
+//         const [row1, field] = await conn.query(`SELECT * FROM token WHERE token = ?`, [req.body.token])
 
-        const token = row1[0]
-        if (token == undefined) {
-            throw new Error("Token is Incorrect")
-        }
+//         const token = row1[0]
+//         if (token == undefined) {
+//             throw new Error("Token is Incorrect")
+//         }
 
-        const [row2, field2] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [token.customer_id])
+//         const [row2, field2] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [token.customer_id])
         
-        const user = row2[0]
-        res.send(user).status(200)
-    }
-    catch (err) {
-        res.send(err.message).status(400)
-    }
-})
+//         const user = row2[0]
+//       res.send({user: user }).status(200)
+//     }
+//     catch (err) {
+//       res.status(404).json(err.message.data)
+//     }
+// })
 
-router.get("/customer/profile/:cusId", async (req, res, next) => {
+router.get("/customer/profile/:cusId", isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
     const [row, col] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [req.params.cusId])
     res.send(row).status(200);
   }catch (err) {
-    res.send(err.message).status(400)
+    res.status(404).json(err.message.data)
 }
 })
 //not yet
-router.put("/customer/editProfile/:cusId", async (req, res, next) => {
+router.put("/customer/editProfile/:cusId", isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
     const [row,col] = await conn.query(` UPDATE customer SET username = ?, date_of_birth = ?,fname =?, lname = ?,`)
   }catch (err) {
-    res.send(err.message).status(400)
+    res.status(404).json(err.message.data)
 }
 })
 

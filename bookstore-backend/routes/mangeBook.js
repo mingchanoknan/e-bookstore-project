@@ -3,6 +3,8 @@ const pool = require("../config/mysql_connector");
 router = express.Router();
 const upload = require("../utils/Uploader");
 const fs = require("fs");
+const {isLoggedIn} = require("../middlewares/index");
+
 // const imageUploader = require("../utils/ImageBookUpload");
 // const fileUploader = require("../utils/FileBookUpload");
 // const { router } = require("./admin");
@@ -73,10 +75,26 @@ const fs = require("fs");
 //   }
 // );
 
+router.get("/bookType", async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    const [getType, field] = await conn.query(
+      `Select type_name FROM book_type`
+    )
+    await conn.commit();
+    res.send(getType).status(200);
+  }catch (err) {
+    await conn.rollback();
+    res.send(err.message).status(400);
+  } finally {
+    conn.release();
+  }
+})
 //delete book
 // 1 ลบ
 // 0 ยังไม่ลบ
-router.put("/deleteBook/:bookId/:adminId", async (req, res, next) => {
+router.put("/deleteBook/:bookId/:adminId",isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
@@ -99,7 +117,7 @@ router.put("/deleteBook/:bookId/:adminId", async (req, res, next) => {
 });
 
 router.post(
-  "/addBook/:adminId",
+  "/addBook/:adminId",isLoggedIn,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "file", maxCount: 1 },
@@ -153,7 +171,7 @@ router.post(
         const image_cover = req.files.image[0].path;
         const addBook = await conn.query(
           `INSERT INTO ebook(title, abstract, book_path,image_cover, price, publisher_id, type_id) values (?,?,?,?,?,?,?)`,
-          [title, abstract, book_path, image_cover, price, publisherId, typeId]);
+          [title, abstract, book_path, image_cover.substr(6), price, publisherId, typeId]);
         ebookId = addBook[0].insertId
       } else {
         const addBook = await conn.query(
@@ -206,7 +224,7 @@ router.post(
   }
 );
 
-router.put("/editBook/:bookId/:adminId",
+router.put("/editBook/:bookId/:adminId",isLoggedIn,
 upload.fields([
   { name: "image", maxCount: 1 },
   { name: "file", maxCount: 1 },

@@ -108,6 +108,7 @@
   </div>
 </template>
 <script>
+//import axios from '@/plugins/axios'
 import TypeBar from "../components/bar/Typebar.vue";
 export default {
   name: "DetailPage",

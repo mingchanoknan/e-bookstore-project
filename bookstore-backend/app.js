@@ -28,12 +28,14 @@ const customerRouter = require("./routes/customer.js")
 const adminRouter = require("./routes/admin.js")
 const manageBookRouter = require("./routes/mangeBook.js")
 const reportRouter = require("./routes/report.js")
+const userRouter = require("./routes/user.js")
   
 app.use(indexRouter.router)
 app.use(customerRouter.router)
 app.use(adminRouter.router)
 app.use(manageBookRouter.router)
 app.use(reportRouter.router)
+app.use(userRouter.router)
 
 
 

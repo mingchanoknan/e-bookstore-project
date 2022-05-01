@@ -2,10 +2,10 @@ const express = require("express");
 const pool = require("../config/mysql_connector")
 router = express.Router();
 
-router.get("/getbook", (req, res, next) => {
-    let obj = {name: "Harry Potter", author: "Ming"}
-    res.send(obj).status(200);
-})
+// router.get("/getbook", (req, res, next) => {
+//     let obj = {name: "Harry Potter", author: "Ming"}
+//     res.send(obj).status(200);
+// })
 
 router.get("/getAllBook", async (req, res, next) => {
     const conn = await pool.getConnection();

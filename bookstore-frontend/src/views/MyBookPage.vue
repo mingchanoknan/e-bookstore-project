@@ -49,7 +49,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import axios from '@/plugins/axios';
 import TypeBar from "../components/bar/Typebar.vue";
 import BookCard from "@/components/card/BookCard.vue";
 import SetBook from "../components/layout/SetBook.vue";
