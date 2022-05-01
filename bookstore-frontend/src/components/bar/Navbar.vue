@@ -26,6 +26,7 @@
 import axios from "axios";
 export default {
   name: "NavigationBar",
+  
 
   data: () => ({
     check: false,

@@ -13,9 +13,9 @@
             </v-stepper-step>
 
             <v-stepper-content step="1">
-              <v-card color="#FFF3F3" class="mb-12" height="100%">
+              <v-card color="#FFF3F3" class="mb-12">
                 <div class="how_to">
-                  <v-ul>
+                  <ul>
                     <div class="answer_how_to">
                       <p
                         class="how-to-buy"
@@ -139,7 +139,7 @@
                         />
                       </div>
                     </div>
-                  </v-ul>
+                  </ul>
                 </div>
                 
               </v-card>
