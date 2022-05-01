@@ -21,7 +21,7 @@
         <p class="type">{{ $props.book.type_name }}</p>
         <v-tooltip bottom color="#da9c9d">
           <template v-slot:activator="{ on, attrs }">
-            <div v-bind="attrs" v-on="on" class="header">
+            <div v-bind="attrs" v-on="on" @click="getBook()" class="header">
               {{ $props.book.title }}
             </div>
           </template>
@@ -79,9 +79,12 @@ export default {
   }),
   props: ["book"],
   created() {
-    console.log(this.$props.book);
   },
-  methods: {},
+  methods: {
+    getBook(){
+      this.$router.push("/bookdetail/"+this.$props.book.ebook_id)
+    }
+  },
 };
 </script>
 <style scoped>
