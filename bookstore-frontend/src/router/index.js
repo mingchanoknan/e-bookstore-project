@@ -35,9 +35,9 @@ const routes = [
         component: ()=>import("../views/ManualPage.vue")
     },
     {
-        path: '/bookdetail',
-        name: 'Book Detail Page',
-        component: ()=>import("../views/DetailPage.vue")
+        path: '/cart/:cartId',
+        name: 'Cart Page',
+        component: ()=>import("../views/CartPage.vue")
     }
 ]
 
