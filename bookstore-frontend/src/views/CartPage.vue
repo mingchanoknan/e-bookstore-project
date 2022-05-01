@@ -165,7 +165,7 @@
             <v-divider></v-divider><br/>
             <p>ราคาสินค้า 709.00 THB</p>
             <center>
-              <v-btn
+              <v-btn @click="$router.push('/payment/:cartId')"
                 title
                 color="black"
                 style="color: white"
@@ -176,8 +176,9 @@
               </v-btn>
             </center>
           </v-card>
+          <br>
           <center>
-            <v-btn title color="#D7ECFF" large> WRITE REVIWE </v-btn>
+            <v-btn title color="#D7ECFF" large> เลือกซื้อหนังสือต่อ </v-btn>
           </center>
         </v-col>
       </v-row>
