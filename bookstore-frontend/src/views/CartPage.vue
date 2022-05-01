@@ -4,31 +4,63 @@
     <br />
     <v-container style="font-family: 'Kanit', sans-serif">
       <center><h1>Cart Item</h1></center>
-      <v-divider></v-divider><br />
-
+      <v-divider></v-divider><br/>
       <v-row>
         <v-col lg="6" sm="12" md="12">
-          <v-card
-            max-width="500"
-            color="#686868"
-            style="color: white;"
-          >
-            <center>
-              <h1>4.3</h1>
-              <v-rating
-                v-model="rating"
-                background-color="purple lighten-3"
-                color="purple lighten-3"
-                large
-              ></v-rating>
-              <p>Average from 4 Reviews</p>
-              <v-btn rounded color="#EFFFE3" large> WRITE REVIWE </v-btn>
-            </center>
-            <p></p>
-          </v-card>
-            <v-divider></v-divider><br/>
 
+          <v-card class="mx-auto my-12 font" style="position: relative" height="270px" width="600px">
+            <v-row>
+            <v-col lg="4" sm="12" md="12">
+                  <div class="background-card"></div>
+                  <center>
+                    <v-img
+                      height="auto"
+                      width="150"
+                      src="https://cdn-local.mebmarket.com/meb/server1/193092/Thumbnail/book_detail_large.gif?2"
+                    >
+                    </v-img>
+                  </center>
+            </v-col>
+            <v-col lg="8" sm="12" md="12" >
+                  <div class="front">
+                    <v-container fluid class="px-6 py-6">
+                      <v-card ></v-card>
+                      <p class="type">SPY x FAMILY เล่ม 02</p>
+                      <v-tooltip bottom color="#da9c9d">
+                        <template v-slot:activator="{ on, attrs }">
+                          <div v-bind="attrs" v-on="on" class="header">
+                            Tatsuya Endo
+                          </div>
+                        </template>
+                        <span>beautiful</span>
+                      </v-tooltip>
+                      <div class="author">
+                        <span style="text-decoration: underline"
+                          >Siam Inter Comics&nbsp;&nbsp;</span
+                        >
+                      </div>
+                    </v-container>
+                    <v-container class="px-6 pb-6">
+                      <span>
+                        <v-row>
+                          <v-spacer></v-spacer>
+                            <div class="price">100 ฿</div>
+                        </v-row>
+                      </span>
+                    </v-container>
+                    
+                  </div>
+                  
+            </v-col>
+            </v-row><div align="right"><v-icon>mdi-close</v-icon></div>
+
+        </v-card>
+
+            <v-divider></v-divider><br/>
         </v-col>
+
+
+
         <v-col lg="6" sm="12" md="12">
           <v-card color="#686868" style="color: white; padding: 1rem">
             <center><h1>YOU MAY BE INTERESTED IN…</h1></center>
