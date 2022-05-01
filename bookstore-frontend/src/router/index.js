@@ -40,7 +40,7 @@ const routes = [
         component: ()=>import("../views/ManualPage.vue")
     },
     {
-        path: '/bookdetail',
+        path: '/bookdetail/:bookId',
         name: 'Book Detail Page',
         component: ()=>import("../views/DetailPage.vue")
     },
@@ -55,27 +55,27 @@ const routes = [
         component: ()=>import("../views/Report.vue")
     },
     {
-        path: '/cart/:cartId',
+        path: '/cart',
         name: 'Cart Page',
         component: ()=>import("../views/CartPage.vue")
     },
     {
-        path: '/payment/:cartId',
+        path: '/payment',
         name: 'Payment Page',
         component: ()=>import("../views/PaymentPage.vue")
     },
     {
-        path: '/profile/:id',
+        path: '/profile/',
         name: 'Manage Profile Page',
         component: ()=>import("../views/ManageProfilePage.vue")
     },
     {
-        path: '/paymenthistory/:id',
+        path: '/paymenthistory',
         name: 'Payment History Page',
         component: ()=>import("../views/PaymentHistoryPage.vue")
     },
     {
-        path: '/reviewhistory/:id',
+        path: '/reviewhistory',
         name: 'Review History Page',
         component: ()=>import("../views/ReviewHistoryPage.vue")
     }

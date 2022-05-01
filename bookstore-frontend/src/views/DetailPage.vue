@@ -1,26 +1,26 @@
 <template>
   <div>
-    <TypeBar />
 
     <v-container style="font-family: 'Kanit', sans-serif">
       <v-row>
         <v-col lg="6" sm="12" md="12" align="right">
           <v-img
-            src="https://cdn-local.mebmarket.com/meb/server1/193092/Thumbnail/book_detail_large.gif?2"
+            :src="'http://localhost:3000/' + book.image_cover"
             align="center"
             style="max-height: 550px; max-width: 350px"
           ></v-img>
         </v-col>
         <v-col lg="6" sm="12" md="12">
-          <h1>เจ้านี่เหรอซอมบี้? 4</h1>
-          <v-rating
+          <h1>{{book.title}}</h1>
+          <!-- <v-rating
             v-model="rating"
             background-color="black"
             color="black"
-          ></v-rating>
-          <p>โดย SACCHI/ SHINICHI KIMURA/ KOBUICHI/ MURIRIN</p>
-          <p>สำนักพิมพ์ Bongkoch Publishing</p>
-          <p>หมวดหมู่ การ์ตูนทั่วไป</p>
+          ></v-rating> -->
+          <p>โดย <span v-for="aut in book.author" :key="aut.author_id"><span style="text-decoration:underline;">{{aut.author_name}}</span>/
+            </span></p>
+          <p>สำนักพิมพ์ {{book.publisher_name}}</p>
+          <p>หมวดหมู่ {{book.type_name}}</p>
           <v-btn rounded color="#EFFFE3" large> มีแล้ว </v-btn>
           <v-btn rounded color="#EDC4D6" large> ซื้อ 69 บาท </v-btn>
           <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
@@ -31,11 +31,7 @@
             style="color: white; padding: 1rem"
           >
             <p style="font-size: 15px">
-              มืดมนแมนเซอร์งั้นเหรอ...
-              ก็เป็นเทศบาลคอยกำจัดข้าวเหลือที่มีความสำคัญไงล่ะ!
-              หลังจากที่ยูหายตัวไป เซร่าก็ซึมหงอย ส่วนฮารุนะก็เปลี่ยนร่างเป็น
-              "อุนเนี้ย~ว?!" โธ่โว้ย อยากเจอกับยูจัง!
-              การ์ตูนญี่ปุ่นตลกโรแมนติกพารานอร์มอลมืดมนแมนเซอร์งั้นเหรอ...
+              {{book.abstract}}
             </p>
           </v-card>
         </v-col>
@@ -53,26 +49,27 @@
             style="color: white; padding: 1rem"
           >
             <center>
-              <h1>4.3</h1>
+              <h1>{{book.average_rating}}</h1>
               <v-rating
                 v-model="rating"
                 background-color="purple lighten-3"
                 color="purple lighten-3"
                 large
+                 readonly
               ></v-rating>
               <p>Average from 4 Reviews</p>
               <v-btn rounded color="#EFFFE3" large v-on:click="isShow = true"> WRITE REVIWE </v-btn>
             </center>
-            <p></p>
+            <p></p> WRITE REVIWE
           </v-card>
         </v-col>
         <v-col lg="12" sm="12" md="12">
           <v-card color="white" style="color: white; padding: 1rem" v-if="isShow">
             <v-rating
-              v-model="rating"
               background-color="purple lighten-3"
               color="purple lighten-3"
               large
+             
             ></v-rating>
             <p>Average from 4 Reviews</p>
             <v-textarea
@@ -117,19 +114,31 @@
   </div>
 </template>
 <script>
-//import axios from '@/plugins/axios'
-import TypeBar from "../components/bar/Typebar.vue";
+import axios from '@/plugins/axios'
+// import TypeBar from "../components/bar/Typebar.vue";
 export default {
   name: "DetailPage",
   components: {
-    TypeBar,
+    // TypeBar,
   },
   data: () => ({
-    isShow:false
+    book:"",
+    rating:"",
   }),
+  created(){
+    this.getBook()
+  },
+
   methods: {
+    async getBook(){
+      const result = await axios.get("http://localhost:3000/getDetailBook/"+ this.$route.params.bookId)
+      this.book = result.data
+      this.rating = this.book.average_rating
+    // console.log(this.$route.params.bookId)
+    },
     saveReview() {
       this.isShow = false
+
     }
   }
 };
