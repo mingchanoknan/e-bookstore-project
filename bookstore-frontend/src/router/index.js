@@ -38,6 +38,11 @@ const routes = [
         path: '/cart/:cartId',
         name: 'Cart Page',
         component: ()=>import("../views/CartPage.vue")
+    },
+    {
+        path: '/payment/:cartId',
+        name: 'Payment Page',
+        component: ()=>import("../views/PaymentPage.vue")
     }
 ]
 
