@@ -177,7 +177,7 @@
             </center>
           </v-card>
           <center>
-            <v-btn title color="#D7ECFF" large> WRITE REVIWE </v-btn>
+            <v-btn title color="#D7ECFF" large> เลือกซื้อหนังสือต่อ </v-btn>
           </center>
         </v-col>
       </v-row>
