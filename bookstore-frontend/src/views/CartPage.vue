@@ -62,7 +62,7 @@
 
 
         <v-col lg="6" sm="12" md="12">
-          <v-card color="#686868" style="color: white; padding: 1rem">
+          <v-card color="#FFF3F3" style="color: black; padding: 1rem">
             <center><h1>YOU MAY BE INTERESTED IN…</h1></center>
 
             <v-row>
