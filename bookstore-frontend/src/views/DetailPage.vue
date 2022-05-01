@@ -58,13 +58,13 @@
                  readonly
               ></v-rating>
               <p>Average from 4 Reviews</p>
-              <v-btn rounded color="#EFFFE3" large> WRITE REVIWE </v-btn>
+              <v-btn rounded color="#EFFFE3" large v-on:click="isShow = true"> WRITE REVIWE </v-btn>
             </center>
             <p></p> WRITE REVIWE
           </v-card>
         </v-col>
         <v-col lg="12" sm="12" md="12">
-          <v-card color="white" style="color: white; padding: 1rem">
+          <v-card color="white" style="color: white; padding: 1rem" v-if="isShow">
             <v-rating
               background-color="purple lighten-3"
               color="purple lighten-3"
@@ -79,7 +79,7 @@
               value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
             ></v-textarea>
             <p></p>
-            <v-btn rounded color="#EFFFE3" large> SAVE </v-btn>
+            <v-btn rounded color="#EFFFE3" large @click="saveReview"> SAVE </v-btn>
           </v-card>
         </v-col>
       </v-row>
@@ -93,11 +93,20 @@
             style="color: black; padding: 1rem"
           >
             <v-card-text>
+              
               สนุกมากกกกกก สมกับที่รอคอยเลยค่ะ เพราะว่าหลังอ่านทัณฑ์สนธยาจบ
               ก็รอเล่มนี้มาตลอดเลย แล้วก็ดีตามที่คาดไว้เลย
               เราชอบสายแฟนตาซีโรแมนติกอยู่แล้วด้วย ฟินมาก น่ารักมาก ดราม่าน้อย
               มีปมเข้ามาให้เรื่องราวน่าติดตาม
             </v-card-text>
+            <div align="right">
+            <p>Kulanitframe</p>
+            <p>57 ธ.ค. 2564 0:53 น<v-rating
+              v-model="rating"
+              background-color="purple lighten-3"
+              color="purple lighten-3" small
+            ></v-rating></p>
+            </div>
           </v-card>
         </v-col>
       </v-row>
@@ -119,12 +128,17 @@ export default {
   created(){
     this.getBook()
   },
+
   methods: {
     async getBook(){
       const result = await axios.get("http://localhost:3000/getDetailBook/"+ this.$route.params.bookId)
       this.book = result.data
       this.rating = this.book.average_rating
     // console.log(this.$route.params.bookId)
+    },
+    saveReview() {
+      this.isShow = false
+
     }
   }
 };
