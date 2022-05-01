@@ -10,7 +10,7 @@
         <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
         <div class="number-prop">0</div>
     </span>
-        <span class="button-container">
+        <span class="button-container" @click="$router.push('/cart/:cartId')">
         <v-icon color="black" large>mdi-cart-outline</v-icon>
         <div class="number-prop">0</div>
     </span>
