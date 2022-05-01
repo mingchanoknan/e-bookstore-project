@@ -32,7 +32,7 @@
                             Tatsuya Endo
                           </div>
                         </template>
-                        <span>beautiful</span>
+                        <span>Tatsuya Endo</span>
                       </v-tooltip>
                       <div class="author">
                         <span style="text-decoration: underline"
