@@ -176,6 +176,7 @@
               </v-btn>
             </center>
           </v-card>
+          <br>
           <center>
             <v-btn title color="#D7ECFF" large> เลือกซื้อหนังสือต่อ </v-btn>
           </center>
