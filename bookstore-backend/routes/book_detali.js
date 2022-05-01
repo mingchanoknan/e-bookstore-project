@@ -48,7 +48,7 @@ router.get("/getComments/:ebookId", async (req, res, next) => {
     }
 })
 
-router.post("/comments/:ebookId", async (req, res, next) => {
+router.post("/comments/:ebookId",isLoggedIn, async (req, res, next) => {
     const ebookId = req.params.ebookId
     const conn = await pool.getConnection();
     await conn.beginTransaction();
@@ -68,7 +68,7 @@ router.post("/comments/:ebookId", async (req, res, next) => {
     }
 })
 
-router.put("/comments/:commentId", async (req, res, next) => {
+router.put("/comments/:commentId", isLoggedIn,async (req, res, next) => {
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     

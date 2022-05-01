@@ -4,23 +4,38 @@
     <div class="background-card"></div>
     <center class="front pt-6">
       <v-img
+        v-if="$props.book.image_cover == null"
         height="250"
         width="70%"
         src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
       ></v-img>
+      <v-img
+        v-else
+        height="250"
+        width="70%"
+        :src="'http://localhost:3000/' + $props.book.image_cover"
+      ></v-img>
     </center>
     <div class="front">
       <v-container fluid class="px-6 py-6">
-        <p class="type">{{$props.book.type_name}}</p>
+        <p class="type">{{ $props.book.type_name }}</p>
         <v-tooltip bottom color="#da9c9d">
-            <template v-slot:activator="{ on, attrs }">
-        <div v-bind="attrs"
-          v-on="on" class="header">{{$props.book.title}}</div>
-        </template>
-        <span>{{$props.book.title}}</span>
+          <template v-slot:activator="{ on, attrs }">
+            <div v-bind="attrs" v-on="on" class="header">
+              {{ $props.book.title }}
+            </div>
+          </template>
+          <span>{{ $props.book.title }}</span>
         </v-tooltip>
-        <div class="author"><span v-for="(author, index) in $props.book.author" :key="index"><span style="text-decoration: underline">{{author.author_name}}</span>&nbsp;&nbsp;</span></div>
-        <div class="price">{{$props.book.price}} ฿</div>
+        <div class="author">
+          <span v-for="(author, index) in $props.book.author" :key="index"
+            ><span style="text-decoration: underline">{{
+              author.author_name
+            }}</span
+            >&nbsp;&nbsp;</span
+          >
+        </div>
+        <div class="price">{{ $props.book.price }} ฿</div>
       </v-container>
       <v-container class="px-6 pb-6">
         <span>
@@ -34,8 +49,22 @@
               size="25"
             ></v-rating>
             <v-spacer></v-spacer>
-            <v-icon large class="pr-3">mdi-cart-outline</v-icon>
-            <v-icon large>mdi-notebook-heart-outline</v-icon>
+            <span
+              v-if="
+                $store.state.user == null || $store.state.user.role != 'admin'
+              "
+            >
+              <v-icon large class="pr-3">mdi-cart-outline</v-icon>
+              <v-icon large>mdi-notebook-heart-outline</v-icon>
+            </span>
+            <span v-else>
+            
+            <v-icon  large  class="pr-3"
+              >mdi-pencil-outline</v-icon
+            >
+            <v-icon large class="pr-3"
+              >mdi-trash-can-outline</v-icon
+            ></span>
           </v-row>
         </span>
       </v-container>
@@ -49,8 +78,8 @@ export default {
     data: "",
   }),
   props: ["book"],
-  created(){
-      console.log(this.$props.book)
+  created() {
+    console.log(this.$props.book);
   },
   methods: {},
 };
@@ -80,7 +109,7 @@ export default {
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
 }
 .author {
   font-size: 1em;
@@ -95,7 +124,7 @@ export default {
   color: #3b85c9;
 }
 .v-tooltip__content {
-    color: black !important;
-    font-size: 1.2em;
+  color: black !important;
+  font-size: 1.2em;
 }
 </style>

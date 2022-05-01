@@ -3,6 +3,7 @@ const pool = require("../config/mysql_connector");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/token");
+const {isLoggedIn} = require("../middlewares/index")
 router = express.Router();
 // const multer = require("multer");
 // var storage = multer.diskStorage({
@@ -60,13 +61,14 @@ router.post("/admin/register", async (req, res, next) => {
     conn.release();
   }
 });
-
-router.get("/admin/login", async (req, res, next) => {
+//1 ลาออกแล้ว
+//0 ยังไม่ลาออก
+router.post("/admin/login", async (req, res, next) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
     const [row, col] = await conn.query(
-      `SELECT * FROM admin WHERE username = ?`,
+      `SELECT admin_id,username, password, date_of_birth,fname, lname,image_path, position FROM admin WHERE username = ? AND resigned = 0`,
       [req.body.username]
     );
 
@@ -77,9 +79,13 @@ router.get("/admin/login", async (req, res, next) => {
     if (!(await bcrypt.compare(req.body.password, user.password))) {
       throw new Error("Your password or your username is incorrect");
     }
+    user["role"] = "admin"
+    const token = await conn.query(`SELECT token FROM token WHERE admin_id = ?`,
+    [user.admin_id])
     let obj = {
       status: "Login!",
       user: user,
+      token: token[0][0]
     };
     res.send(obj).status(200);
   } catch (err) {
@@ -88,35 +94,35 @@ router.get("/admin/login", async (req, res, next) => {
     conn.release();
   }
 });
-router.get("/admin/loginByToken", async (req, res, next) => {
-  const conn = await pool.getConnection();
-  await conn.beginTransaction();
-  try {
-    const [row1, field] = await conn.query(
-      `SELECT * FROM token WHERE token = ?`,
-      [req.body.token]
-    );
+// router.get("/admin/loginByToken", async (req, res, next) => {
+//   const conn = await pool.getConnection();
+//   await conn.beginTransaction();
+//   try {
+//     const [row1, field] = await conn.query(
+//       `SELECT * FROM token WHERE token = ?`,
+//       [req.body.token]
+//     );
 
-    const token = row1[0];
-    if (token == undefined) {
-      throw new Error("Token is Incorrect");
-    }
+//     const token = row1[0];
+//     if (token == undefined) {
+//       throw new Error("Token is Incorrect");
+//     }
 
-    const [row2, field2] = await conn.query(
-      `SELECT * FROM customer WHERE admin_id = ?`,
-      [token.admin_id]
-    );
+//     const [row2, field2] = await conn.query(
+//       `SELECT * FROM customer WHERE admin_id = ?`,
+//       [token.admin_id]
+//     );
 
-    const user = row2[0];
-    res.send(user).status(200);
-  } catch (err) {
-    res.send(err.message).status(400);
-  } finally {
-    conn.release();
-  }
-});
+//     const user = row2[0];
+//     res.send(user).status(200);
+//   } catch (err) {
+//     res.send(err.message).status(400);
+//   } finally {
+//     conn.release();
+//   }
+// });
 //show profile
-router.get("/admin/profile/:adminId", async (req, res, next) => {
+router.get("/admin/profile/:adminId", isLoggedIn , async (req, res, next) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
@@ -133,7 +139,7 @@ router.get("/admin/profile/:adminId", async (req, res, next) => {
 });
 //edit Profile admin
 // router.put(
-//   "/admin/editProfile/:adminId",
+//   "/admin/editProfile/:adminId",isLoggedIn,
 //   upload.single("imageAdmin"),
 //   async (req, res, next) => {
 //     const conn = await pool.getConnection();

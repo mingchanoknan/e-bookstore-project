@@ -17,9 +17,9 @@
 </template>
 
 <script>
+import axios from './plugins/axios';
 import Navbar from "./components/bar/Navbar.vue";
-import LoginCard from './components/card/loginCard.vue';
-
+import LoginCard from "./components/card/LoginModalCard.vue"
 // import MainPage from './components/pages/MainPage.vue';
 
 export default {
@@ -32,13 +32,46 @@ export default {
   },
 
   data: () => ({
-    dialog: false,
+    dialog: true,
   }),
+  created(){
+    this.onAuthChange()
+  },
   methods: {
     toggleModal(){
       this.$store.dispatch("modalLoginAction")
-    }
+    },
+    // async loginByToken(){
+    //   const token = localStorage.getItem("token")
+    //   try {
+    //     const result = await axios.post("http://localhost:3000/customer/loginByToken" ,{token: token})
+    //     this.$store.dispatch("keepUser", result.data.user)
+    //   }
+    //   catch(err){
+    //     console.log(err.message)
+    //   }
+    // }
+    onAuthChange () {
+       const token = localStorage.getItem('token')
+       if (token) {
+         this.getUser()
+       }
+     },
+     async getUser () {
+      try {
+        const result = await axios.get("http://localhost:3000/user/me")
+        this.$store.dispatch("keepUser", result.data)
+      }
+      catch(err){
+        console.log(err)
+      }
+     }
   },
 
 };
 </script>
+<style scoped>
+.v-dialog {
+ overflow-y: none !important; 
+}
+</style>

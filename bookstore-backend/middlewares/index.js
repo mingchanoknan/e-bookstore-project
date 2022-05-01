@@ -1,4 +1,4 @@
- const pool = require("../config");
+ const pool = require("../config/mysql_connector");
 
  async function isLoggedIn (req, res, next) {
      let authorization = req.headers.authorization
@@ -13,18 +13,29 @@
      }
      
      // Check token
-     const [tokens] = await pool.query('SELECT * FROM tokens WHERE token = ?', [part2])
+     const [tokens] = await pool.query('SELECT * FROM token WHERE token = ?', [part2])
      const token = tokens[0]
      if (!token) {
          return res.status(401).send('You are not logged in')
      }
- 
-     // Set user
-     const [users] = await pool.query(
-         'SELECT id, username, first_name, last_name, email, picture, mobile, join_date ' + 
-         'FROM users WHERE id = ?', [token.user_id]
-     )
-     req.user = users[0]
+
+    // Set user
+     let user;
+     if (token.customer_id == null && token.admin_id != null) {
+         const isAdmin = await pool.query(`SELECT * FROM admin WHERE admin_id = ?`, [token.admin_id])
+         user = isAdmin[0][0]
+         user["role"] = "admin"
+         
+     } else if (token.customer_id != null && token.admin_id == null) {
+         const isCustomer = await pool.query(`SELECT * FROM customer WHERE customer_id = ?`, [token.customer_id])
+         user = isCustomer[0][0]
+        user["role"] = "customer"
+
+     } else {
+        return res.status(401).send('Token invalid!')
+     }
+     console.log(user)
+     req.user = user
  
      next()
  }

@@ -1,7 +1,20 @@
 <template>
   <div>
     <TypeBar />
-    <v-container grid-list-lg>
+    
+    <v-btn v-if="$store.state.user!= null && $store.state.user.role == 'admin'"
+      class="mx-2 position-bottomRight" 
+      fab
+      large
+      dark
+      color="#638AEF"
+      @click="$router.push('/addBookForm')"
+    >
+      <v-icon dark>
+        mdi-plus
+      </v-icon>
+    </v-btn>
+    <v-container  grid-list-lg>
       <!-- <v-layout row wrap  v-if="$store.state.select == 1">
                         <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
                             <BookCard :book="item"/>
@@ -49,7 +62,7 @@
   </div>
 </template>
 <script>
-import axios from "axios";
+import axios from '@/plugins/axios'
 import TypeBar from "../components/bar/Typebar.vue";
 import BookCard from "@/components/card/BookCard.vue";
 import SetBook from "../components/layout/SetBook.vue";
@@ -97,4 +110,11 @@ export default {
   watch: {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+  .position-bottomRight{
+    position: fixed;
+    z-index: 1000;
+    bottom: 20px;
+    right: 20px
+  }
+</style>

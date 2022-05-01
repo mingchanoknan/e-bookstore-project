@@ -38,8 +38,19 @@ const routes = [
         path: '/bookdetail',
         name: 'Book Detail Page',
         component: ()=>import("../views/DetailPage.vue")
-    }
+    },
+    {
+        path: '/addBookForm',
+        name: 'Add Book Form',
+        component: ()=>import("../views/AddBook.vue")
+    },
+    {
+        path: '/report',
+        name: 'Report',
+        component: ()=>import("../views/Report.vue")
+    },
 ]
+
 
 const router = new VueRouter({
     mode: 'history',
