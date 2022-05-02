@@ -12,7 +12,7 @@
             <v-divider></v-divider><br/>
             <p>ราคาสินค้า 709.00 THB</p>
             <center>
-              <v-btn @click="$router.push('/cart/:cartId')"
+              <v-btn @click="$router.push('/cart')"
                 title
                 color="black"
                 style="color: white"

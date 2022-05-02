@@ -78,6 +78,21 @@ const routes = [
         path: '/reviewhistory',
         name: 'Review History Page',
         component: ()=>import("../views/ReviewHistoryPage.vue")
+    },
+    {
+        path: '/wishlist',
+        name: 'Wish list Page',
+        component: ()=>import("../views/WishlistPage.vue")
+    },
+    {
+        path: '/addbook',
+        name: 'Add Book Page',
+        component: ()=>import("../views/AddBook.vue")
+    },
+    {
+        path: '/report',
+        name: 'Report Page',
+        component: ()=>import("../views/Report.vue")
     }
 ]
 
