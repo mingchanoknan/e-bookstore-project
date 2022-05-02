@@ -138,6 +138,7 @@
                     ></v-checkbox>
                     <v-text-field
                       v-if="isAdmin"
+                      v-model="position"
                       prepend-inner-icon="mdi-shield-crown"
                       label="Position"
                       outlined
@@ -188,7 +189,7 @@
 </template>
 
 <script>
-import axios from "@/plugins/axios";
+import axios from "axios";
 export default {
   components: {},
   data: () => ({
@@ -210,22 +211,36 @@ export default {
   }),
   methods: {
     async register() {
-      var formdata = new FormData();
-      formdata.append("username", this.username);
-      formdata.append("password", this.password);
-      formdata.append("fname", this.firstname);
-      formdata.append("lname", this.lastname);
-      formdata.append("date_of_birth", this.birthdate);
-
-      console.log(formdata)
-      if (this.isAdmin) {
-        formdata.append("position", this.position);
-        await axios.post("http://localhost:3000/admin/register", formdata);
-      } else {
-        await axios.post(
-          "http://localhost:3000/customer/register",
-          formdata
-        );
+      try {
+        if (this.isAdmin) {
+          const result = await axios.post(
+            "http://localhost:3000/admin/register",
+            {
+              username: this.username,
+              password: this.password,
+              fname: this.firstname,
+              lname: this.lastname,
+              date_of_birth: this.birthdate,
+              position: this.position,
+              secretCode: this.secretCode
+            }
+          );
+          console.log(result.data);
+        } else {
+          const result = await axios.post(
+            "http://localhost:3000/customer/register",
+            {
+              username: this.username,
+              password: this.password,
+              fname: this.firstname,
+              lname: this.lastname,
+              date_of_birth: this.birthdate,
+            }
+          );
+          console.log(result.data);
+        }
+      } catch (err) {
+        console.log(err);
       }
     },
   },

@@ -35,10 +35,17 @@ router.post("/admin/register", async (req, res, next) => {
   const fname = req.body.fname;
   const lname = req.body.lname;
   const position = req.body.position;
-
-  const conn = await pool.getConnection();
+  const secretCode = req.body.secretCode
+const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
+  
+  
+    if (secretCode != "webPro2022") {
+    throw new Error("Secret code incorrect!")
+  }
+  
+  
     await registerSchemas.validateAsync(req.body, { abortEarly: false });
 
     const [row, col] = await conn.query(
@@ -55,8 +62,10 @@ router.post("/admin/register", async (req, res, next) => {
     await conn.commit();
     res.send("Register!").status(200);
   } catch (err) {
+    console.log(err.message)
     await conn.rollback();
-    res.send(err.message).status(400);
+    // res.send(err.message).status(400);
+    res.status(400).send({message: err.message})
   } finally {
     conn.release();
   }

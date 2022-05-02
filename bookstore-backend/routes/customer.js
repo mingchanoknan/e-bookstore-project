@@ -3,7 +3,7 @@ const pool = require("../config/mysql_connector");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/token");
-const {isLoggedIn} = require("../middlewares/index")
+const { isLoggedIn } = require("../middlewares/index")
 
 const registerSchemas = Joi.object({
   username: Joi.string().required(),
@@ -16,15 +16,18 @@ const registerSchemas = Joi.object({
 router = express.Router();
 // regiter Customer
 router.post("/customer/register", async (req, res, next) => {
-  const username = req.body.username;
-  const password = await bcrypt.hash(req.body.password, 5);
-  const date_of_birth = req.body.date_of_birth;
-  const fname = req.body.fname;
-  const lname = req.body.lname;
-
   const conn = await pool.getConnection();
   await conn.beginTransaction();
+  console.log(req.body)
   try {
+    const username = req.body.username;
+    const password = await bcrypt.hash(req.body.password, 5);
+    const date_of_birth = req.body.date_of_birth;
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+
+
+
     await registerSchemas.validateAsync(req.body, { abortEarly: false });
 
     const [row, col] = await conn.query(
@@ -33,13 +36,14 @@ router.post("/customer/register", async (req, res, next) => {
     );
 
     let token = generateToken();
-    await conn.query(`insert into token(customer_id, token) value(?,?)`,[row.insertId, token])
-      
-      await conn.commit();
+    await conn.query(`insert into token(customer_id, token) value(?,?)`, [row.insertId, token])
+
+    await conn.commit();
     res.send("Register!").status(200);
   } catch (err) {
-    conn.rollback();
-    res.status(404).json(err.message.data)
+    console.log(err)
+    await conn.rollback();
+    res.status(404).json(err.message)
   } finally {
     conn.release();
   }
@@ -65,7 +69,7 @@ router.post("/customer/login", async (req, res, next) => {
     }
     user["role"] = "customer"
     const token = await conn.query(`SELECT token FROM token WHERE customer_id = ?`,
-    [user.customer_id])
+      [user.customer_id])
     let obj = {
       status: "Login!",
       user: user,
@@ -77,7 +81,7 @@ router.post("/customer/login", async (req, res, next) => {
     await conn.rollback()
     // res.send(err.message).status(400);
     console.log(err)
-    res.status(404).json(err.message.data)
+    res.status(404).json(err.message)
   } finally {
     conn.release()
   }
@@ -95,7 +99,7 @@ router.post("/customer/login", async (req, res, next) => {
 //         }
 
 //         const [row2, field2] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [token.customer_id])
-        
+
 //         const user = row2[0]
 //       res.send({user: user }).status(200)
 //     }
@@ -110,19 +114,41 @@ router.get("/customer/profile/:cusId", isLoggedIn, async (req, res, next) => {
   try {
     const [row, col] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [req.params.cusId])
     res.send(row).status(200);
-  }catch (err) {
+  } catch (err) {
     res.status(404).json(err.message.data)
-}
+  }
 })
 //not yet
 router.put("/customer/editProfile/:cusId", isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
-    const [row,col] = await conn.query(` UPDATE customer SET username = ?, date_of_birth = ?,fname =?, lname = ?,`)
-  }catch (err) {
+    const [row, col] = await conn.query(` UPDATE customer SET username = ?, date_of_birth = ?,fname =?, lname = ?,`)
+  } catch (err) {
     res.status(404).json(err.message.data)
-}
+  }
 })
 
+router.get("/isOwnerBook/:bookId/:cusId", async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    const [row, col] = await conn.query(
+      `SELECT * FROM customer_ebook WHERE ebook_id = ? AND customer_id =? AND bought = 1`,
+      [req.params.bookId, req.params.cusId]
+    );
+    res.send(row).status(200)
+    // if (row[0].length) {
+    //   res.send(true).status(200)
+    // } else {
+    //    res.send(false).status(200)
+    // }
+
+  } catch (err) {
+    conn.rollback();
+    res.status(404).json(err.message.data)
+  } finally {
+    conn.release();
+  }
+})
 exports.router = router;
