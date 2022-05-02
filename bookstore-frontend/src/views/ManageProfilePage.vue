@@ -12,50 +12,86 @@
               <label for="imageUpload"></label>
             </div>
             <div class="avatar-preview">
-              <div id="imagePreview" style="background-image: url('http://i.pravatar.cc/500?img=7')"
+              <div
+                id="imagePreview"
+                style="background-image: url('http://i.pravatar.cc/500?img=7')"
               ></div>
             </div>
           </div>
         </v-col>
 
         <v-col lg="9" sm="12" md="12">
-            <v-card color="#EFFFE3" style="color: black; padding: 1rem" height="250px">
+          <v-card
+            color="#EFFFE3"
+            style="color: black; padding: 1rem"
+            height="250px"
+          >
+          </v-card>
 
-            </v-card>
-            
-        <br>
+          <br />
           <div align="right">
-          <v-btn
-            title
-            color="black"
-            style="color: white; margin-right:10px"
-            large
-            width="250px" 
-          >
-            แก้ไขข้อมูลส่วนตัว
-          </v-btn>
-          <v-btn
-            title
-            color="black"
-            style="color: white"
-            large
-            width="250px"
-          >
-            ออกจากระบบ
-          </v-btn>
+            <v-btn @click="activeModal()"
+              title
+              color="black"
+              style="color: white; margin-right: 10px"
+              large
+              width="250px"
+            >
+              แก้ไขข้อมูลส่วนตัว
+            </v-btn>
+            <v-btn title color="black" style="color: white" large width="250px">
+              ออกจากระบบ
+            </v-btn>
           </div>
         </v-col>
-    </v-row>
-  </v-container>
+      </v-row>
+      <v-row>
+        <v-col lg="6" sm="12" md="12" >
+              <v-sheet border-variant="primary" @click="$router.push('/mybook')"
+      class="mx-auto transition-swing" color="#FEEEF5"
+      elevation="12"
+      height="128"
+      width="65%" rounded="xl"
+    ><v-container><h3>ชั้นหนังสือของฉัน</h3><small>รายการหนังสือทั้งหมดของคุณ</small></v-container></v-sheet><br>
+        <v-sheet @click="$router.push('/reviewhistory/:id')"
+      class="mx-auto transition-swing" color="#FEEEF5"
+      elevation="12"
+      height="128"
+      width="65%" rounded="xl"
+    ><v-container><h3>รีวิวของฉัน</h3><small>รายการรีวิวและเรตติ้งหนังสือ</small></v-container></v-sheet>
+        </v-col>
+
+        <v-col lg="6" sm="12" md="12">
+                <v-sheet
+       @click="$router.push('/paymenthistory/:id')"
+      class="mx-auto transition-swing" color="#FEEEF5"
+      elevation="12"
+      height="128"
+      width="65%" rounded="xl"
+    ><v-container><h3>ประวัติการสั่งซื้อของฉัน</h3><small>รวมรายการสั่งซื้อของคุณ
+และรายละเอียดการชำระเงินทั้งหมด</small></v-container></v-sheet>
+            <br>  <v-sheet
+       @click="$router.push('/')"
+      class="mx-auto transition-swing" color="#FEEEF5"
+      elevation="12"
+      height="128"
+      width="65%" rounded="xl"
+    ><v-container><h3>รายการที่อยากได้</h3><small>รายการหนังสือที่อยากได้</small></v-container></v-sheet>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 <script>
 export default {
   name: "DetailPage",
-  components: {
-
-  },
+  components: {},
   data: () => ({}),
+  methods:{
+    activeModal() {
+      this.$store.dispatch("modalLoginAction");
+    }
+  }
 };
 </script>
 <style scoped>

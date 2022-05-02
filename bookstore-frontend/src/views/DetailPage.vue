@@ -99,7 +99,7 @@
               เราชอบสายแฟนตาซีโรแมนติกอยู่แล้วด้วย ฟินมาก น่ารักมาก ดราม่าน้อย
               มีปมเข้ามาให้เรื่องราวน่าติดตาม
             </v-card-text>
-            <div align="right">
+            <div>align="right">
             <p>Kulanitframe</p>
             <p>57 ธ.ค. 2564 0:53 น<v-rating
               v-model="rating"
