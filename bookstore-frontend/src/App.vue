@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navbar />
+    <Navbar/>
 
     <v-main>
       <!-- <MainPage/> -->

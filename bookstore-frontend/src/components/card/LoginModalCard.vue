@@ -87,26 +87,28 @@ export default {
       this.$store.dispatch("modalLoginAction");
       this.$router.push("/customerRegister");
     },
-     async loginCustomer(){
-       try{
-         const result = await axios.post("http://localhost:3000/customer/login" ,{username: this.username, password: this.password})
-         localStorage.setItem('token', result.data.token.token)
-         this.$store.dispatch("keepUser", result.data.user)
-         this.activeModal()
-       }catch(err){
-         console.log(err.message)
-       }
-    },async loginAdmin(){
-       try{
-         const result = await axios.post("http://localhost:3000/admin/login" ,{username: this.username, password: this.password})
-         console.log(result.data)
-         localStorage.setItem('token', result.data.token.token)
-         this.$store.dispatch("keepUser", result.data.user)
-         
-         this.activeModal()
-       }catch(err){
-         console.log(err.message)
-       }
+    async loginCustomer(){
+      try{
+        const result = await axios.post("http://localhost:3000/customer/login" ,{username: this.username, password: this.password})
+        localStorage.setItem('token', result.data.token.token)
+        this.$store.dispatch("keepUser", result.data.user)
+        this.activeModal()
+      }
+      catch(err){
+        console.log(err.message)
+      }
+    },
+    async loginAdmin(){
+      try{
+        const result = await axios.post("http://localhost:3000/admin/login" ,{username: this.username, password: this.password})
+        console.log(result.data)
+        localStorage.setItem('token', result.data.token.token)
+        this.$store.dispatch("keepUser", result.data.user)   
+        this.activeModal()
+      }
+      catch(err){
+        console.log(err.message)
+      }
     },
   },
 };
@@ -141,6 +143,5 @@ export default {
   justify-content: flex-end;
   cursor: pointer;
 }
-
 </style>
 l
