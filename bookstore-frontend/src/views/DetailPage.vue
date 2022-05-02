@@ -17,12 +17,12 @@
             background-color="black"
             color="black"
           ></v-rating> -->
-          <p>โดย <span v-for="aut in book.author" :key="aut.author_id"><span style="text-decoration:underline;">{{aut.author_name}}</span>/
+          <p><b>โดย</b> <span v-for="aut in book.author" :key="aut.author_id"><span style="text-decoration:underline;">{{aut.author_name}}</span>/
             </span></p>
-          <p>สำนักพิมพ์ {{book.publisher_name}}</p>
-          <p>หมวดหมู่ {{book.type_name}}</p>
+          <p><b>สำนักพิมพ์</b> {{book.publisher_name}}</p>
+          <p><b>หมวดหมู่</b> {{book.type_name}}</p>
           <v-btn rounded color="#EFFFE3" large> มีแล้ว </v-btn>
-          <v-btn rounded color="#EDC4D6" large> ซื้อ 69 บาท </v-btn>
+          <v-btn rounded color="#EDC4D6" large> ซื้อ {{book.price}} บาท </v-btn>
           <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
           <p></p>
           <v-card
@@ -58,7 +58,7 @@
                  readonly
               ></v-rating>
               <p>Average from 4 Reviews</p>
-              <v-btn rounded color="#EFFFE3" large v-on:click="isShow = true"> WRITE REVIWE </v-btn>
+              <v-btn rounded color="#EFFFE3" large @click="isShow = true"> WRITE REVIWE </v-btn>
             </center>
             <p></p> WRITE REVIWE
           </v-card>
@@ -124,6 +124,7 @@ export default {
   data: () => ({
     book:"",
     rating:"",
+    isShow:false,
   }),
   created(){
     this.getBook()

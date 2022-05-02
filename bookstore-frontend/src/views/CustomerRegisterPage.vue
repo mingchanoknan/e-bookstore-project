@@ -1,162 +1,194 @@
 <template>
-  <div >
-      <v-container class="wrapper">
-        <v-card color="#FFFEEB">
-          <v-row no-gutters>
-            <v-col lg="5" sm="12" md="5">
-              <v-img
-                src="../components/image/login-2.png"
-                height="100%"
-                width="100%"
-              ></v-img>
-            </v-col>
-            <v-col lg="7" sm="12" md="7">
-              <v-stepper v-model="e1" height="100%">
-                <v-stepper-header background-color="black">
-                  <v-stepper-step :complete="e1 > 1" step="1" color="#8BBAE5">
-                    Account Information
-                  </v-stepper-step>
+  <div>
+    <v-container class="wrapper">
+      <v-card color="#FFFEEB">
+        <v-row no-gutters>
+          <v-col lg="5" sm="12" md="5">
+            <v-img
+              src="../components/image/login-2.png"
+              height="100%"
+              width="100%"
+            ></v-img>
+          </v-col>
+          <v-col lg="7" sm="12" md="7">
+            <v-stepper v-model="e1" height="100%">
+              <v-stepper-header background-color="black">
+                <v-stepper-step :complete="e1 > 1" step="1" color="#8BBAE5">
+                  Account Information
+                </v-stepper-step>
 
-                  <v-divider></v-divider>
+                <v-divider></v-divider>
 
-                  <v-stepper-step :complete="e1 > 2" step="2" color="#8BBAE5">
-                    User Information
-                  </v-stepper-step>
+                <v-stepper-step :complete="e1 > 2" step="2" color="#8BBAE5">
+                  User Information
+                </v-stepper-step>
 
-                  <v-divider></v-divider>
+                <v-divider></v-divider>
 
-                  <v-stepper-step step="3" color="#8BBAE5">
-                    Role validation
-                  </v-stepper-step>
-                </v-stepper-header>
+                <v-stepper-step step="3" color="#8BBAE5">
+                  Role validation
+                </v-stepper-step>
+              </v-stepper-header>
 
-                <v-stepper-items>
-                  <v-stepper-content step="1">
-                    <div class="px-3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-account"
-                        label="Username"
-                        outlined
-                        dense
-                        color="black"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                      <v-text-field
-                        prepend-inner-icon="mdi-lock"
-                        label="Password"
-                        outlined
-                        dense
-                        color="black"
-                        :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                        @click:append="passwordShow = !passwordShow"
-                        :type="passwordShow ? 'text' : 'password'"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                      <v-text-field
-                        prepend-inner-icon="mdi-lock-alert"
-                        label="Repeat Password"
-                        outlined
-                        dense
-                        color="black"
-                        :append-icon="repeatShow ? 'mdi-eye' : 'mdi-eye-off'"
-                        @click:append="repeatShow = !repeatShow"
-                        :type="repeatShow ? 'text' : 'password'"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                    </div>
-                    <div class="ma-2 btn-container-single">
-                      <v-btn class="white--text" color="#8BBAE5" elevation="5" @click="e1 = 2">
-                        Next
-                      </v-btn>
-                    </div>
-                  </v-stepper-content>
+              <v-stepper-items>
+                <v-stepper-content step="1">
+                  <div class="px-3">
+                    <v-text-field
+                      prepend-inner-icon="mdi-account"
+                      label="Username"
+                      outlined
+                      dense
+                      color="black"
+                      background-color="#EDC4D6"
+                      v-model="username"
+                    ></v-text-field>
+                    <v-text-field
+                      prepend-inner-icon="mdi-lock"
+                      label="Password"
+                      outlined
+                      dense
+                      color="black"
+                      v-model="password"
+                      :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="passwordShow = !passwordShow"
+                      :type="passwordShow ? 'text' : 'password'"
+                      background-color="#EDC4D6"
+                    ></v-text-field>
+                    <v-text-field
+                      prepend-inner-icon="mdi-lock-alert"
+                      label="Repeat Password"
+                      outlined
+                      dense
+                      color="black"
+                      v-model="confirmpassword"
+                      :append-icon="repeatShow ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="repeatShow = !repeatShow"
+                      :type="repeatShow ? 'text' : 'password'"
+                      background-color="#EDC4D6"
+                    ></v-text-field>
+                  </div>
+                  <div class="ma-2 btn-container-single">
+                    <v-btn
+                      class="white--text"
+                      color="#8BBAE5"
+                      elevation="5"
+                      @click="e1 = 2"
+                    >
+                      Next
+                    </v-btn>
+                  </div>
+                </v-stepper-content>
 
-                  <v-stepper-content step="2">
-                    <div class="px-3">
-                      <v-text-field
-                        prepend-inner-icon="mdi-account-check"
-                        label="First Name"
-                        outlined
-                        dense
-                        color="black"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                      <v-text-field
-                        prepend-inner-icon="mdi-account-check"
-                        label="Last Name"
-                        outlined
-                        dense
-                        color="black"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                      <v-text-field
-                        prepend-inner-icon="mdi-cake-variant"
-                        label="Date of birth"
-                        outlined
-                        dense
-                        color="black"
-                        type="date"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                    </div>
-                    <div class="pa-2 btn-container">
-                      <v-btn class="white--text" color="#8BBAE5" elevation="5" @click="e1 = --e1">
-                        Back
-                      </v-btn>
-                      <v-btn class="white--text" color="#8BBAE5" elevation="5" @click="e1 = 3">
-                        Next
-                      </v-btn>
-                    </div>
-                  </v-stepper-content>
+                <v-stepper-content step="2">
+                  <div class="px-3">
+                    <v-text-field
+                      prepend-inner-icon="mdi-account-check"
+                      label="First Name"
+                      outlined
+                      dense
+                      color="black"
+                      v-model="firstname"
+                      background-color="#EDC4D6"
+                    ></v-text-field>
+                    <v-text-field
+                      prepend-inner-icon="mdi-account-check"
+                      label="Last Name"
+                      outlined
+                      dense
+                      color="black"
+                      background-color="#EDC4D6"
+                      v-model="lastname"
+                    ></v-text-field>
+                    <v-text-field
+                      prepend-inner-icon="mdi-cake-variant"
+                      label="Date of birth"
+                      outlined
+                      dense
+                      color="black"
+                      type="date"
+                      background-color="#EDC4D6"
+                      v-model="birthdate"
+                    ></v-text-field>
+                  </div>
+                  <div class="pa-2 btn-container">
+                    <v-btn
+                      class="white--text"
+                      color="#8BBAE5"
+                      elevation="5"
+                      @click="e1 = --e1"
+                    >
+                      Back
+                    </v-btn>
+                    <v-btn
+                      class="white--text"
+                      color="#8BBAE5"
+                      elevation="5"
+                      @click="e1 = 3"
+                    >
+                      Next
+                    </v-btn>
+                  </div>
+                </v-stepper-content>
 
-                  <v-stepper-content step="3">
-                    <div class="px-3">
-                      <v-checkbox
-                        v-model="isAdmin"
-                        label="Are you sign up as Admin?"
-                      ></v-checkbox>
-                      <v-text-field
-                        v-if="isAdmin"
-                        prepend-inner-icon="mdi-shield-crown"
-                        label="Position"
-                        outlined
-                        dense
-                        color="black"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                      <v-text-field
-                        v-if="isAdmin"
-                        prepend-inner-icon="mdi-key-variant"
-                        label="Secret Code"
-                        outlined
-                        dense
-                        color="black"
-                        :append-icon="secretShow ? 'mdi-eye' : 'mdi-eye-off'"
-                        @click:append="secretShow = !secretShow"
-                        :type="secretShow ? 'text' : 'password'"
-                        background-color="#EDC4D6"
-                      ></v-text-field>
-                    </div>
-                    <div class="pa-2 btn-container">
-                      <v-btn class="white--text" color="#8BBAE5" elevation="5" @click="e1 = --e1">
-                        Back
-                      </v-btn>
-                      <v-btn  class="white--text" color="#6fcead" elevation="5">
-                        Submit
-                      </v-btn>
-                    </div>
-                  </v-stepper-content>
-                </v-stepper-items>
-              </v-stepper>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-container>
+                <v-stepper-content step="3">
+                  <div class="px-3">
+                    <v-checkbox
+                      v-model="isAdmin"
+                      label="Are you sign up as Admin?"
+                    ></v-checkbox>
+                    <v-text-field
+                      v-if="isAdmin"
+                      prepend-inner-icon="mdi-shield-crown"
+                      label="Position"
+                      outlined
+                      dense
+                      color="black"
+                      background-color="#EDC4D6"
+                    ></v-text-field>
+                    <v-text-field
+                      v-if="isAdmin"
+                      prepend-inner-icon="mdi-key-variant"
+                      label="Secret Code"
+                      outlined
+                      dense
+                      color="black"
+                      v-model="secretCode"
+                      :append-icon="secretShow ? 'mdi-eye' : 'mdi-eye-off'"
+                      @click:append="secretShow = !secretShow"
+                      :type="secretShow ? 'text' : 'password'"
+                      background-color="#EDC4D6"
+                    ></v-text-field>
+                  </div>
+                  <div class="pa-2 btn-container">
+                    <v-btn
+                      class="white--text"
+                      color="#8BBAE5"
+                      elevation="5"
+                      @click="e1 = --e1"
+                    >
+                      Back
+                    </v-btn>
+                    <v-btn
+                      class="white--text"
+                      color="#6fcead"
+                      @click="register()"
+                      elevation="5"
+                    >
+                      Submit
+                    </v-btn>
+                  </div>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
+          </v-col>
+        </v-row>
+      </v-card>
+    </v-container>
   </div>
 </template>
 
 <script>
-//import axios from '@/plugins/axios'
+import axios from "@/plugins/axios";
 export default {
   components: {},
   data: () => ({
@@ -167,8 +199,8 @@ export default {
     firstname: "",
     lastname: "",
     birthdate: "",
-    email: "",
-    telephone: "",
+    secretCode: "",
+    position: "",
     isAdmin: false,
     passwordShow: false,
     repeatShow: false,
@@ -176,7 +208,27 @@ export default {
     inputRules: [(v) => !!v || "Required."],
     valid: false,
   }),
-  methods: {},
+  methods: {
+    async register() {
+      var formdata = new FormData();
+      formdata.append("username", this.username);
+      formdata.append("password", this.password);
+      formdata.append("fname", this.firstname);
+      formdata.append("lname", this.lastname);
+      formdata.append("date_of_birth", this.birthdate);
+
+      console.log(formdata)
+      if (this.isAdmin) {
+        formdata.append("position", this.position);
+        await axios.post("http://localhost:3000/admin/register", formdata);
+      } else {
+        await axios.post(
+          "http://localhost:3000/customer/register",
+          formdata
+        );
+      }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -192,9 +244,9 @@ export default {
   justify-content: flex-end;
 }
 .wrapper {
-    position: absolute;
-    top:  50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

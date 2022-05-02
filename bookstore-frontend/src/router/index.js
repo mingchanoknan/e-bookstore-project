@@ -65,7 +65,7 @@ const routes = [
         component: ()=>import("../views/PaymentPage.vue")
     },
     {
-        path: '/profile/',
+        path: '/profile',
         name: 'Manage Profile Page',
         component: ()=>import("../views/ManageProfilePage.vue")
     },
