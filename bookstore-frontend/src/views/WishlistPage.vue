@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container grid-list-lg>
-            <center><h1>MY BOOKS</h1></center>
+            <center><h1>WISH LIST</h1></center>
       <v-divider></v-divider><br/>
 
       <!-- <v-layout row wrap  v-if="$store.state.select == 1">
@@ -16,7 +16,7 @@
                     </v-layout> -->
       <v-layout row wrap>
         <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
-          <MybookCard :book="item" />
+          <WishbookCard :book="item" />
         </v-flex>
       </v-layout>
     </v-container>
@@ -24,11 +24,11 @@
 </template>
 <script>
 import axios from '@/plugins/axios';
-import MybookCard from "@/components/card/MybookCard.vue";
+import WishbookCard from "@/components/card/WishbookCard.vue";
 export default {
   name: "MainPage",
   components: {
-    MybookCard,
+    WishbookCard,
   },
   data: () => ({
     rowQuantity: "",
