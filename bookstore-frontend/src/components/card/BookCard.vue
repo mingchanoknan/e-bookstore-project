@@ -100,7 +100,7 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap");
 .font {
-  font-family: "Amiri", serif;
+  font-family: 'Kanit', sans-serif;
 }
 .background-card {
   background-color: #da9c9d;

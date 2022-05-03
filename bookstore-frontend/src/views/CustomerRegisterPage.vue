@@ -209,6 +209,7 @@ export default {
     inputRules: [(v) => !!v || "Required."],
     valid: false,
   }),
+
   methods: {
     async register() {
       try {

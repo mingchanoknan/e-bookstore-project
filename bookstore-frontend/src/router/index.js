@@ -93,6 +93,11 @@ const routes = [
         path: '/report',
         name: 'Report Page',
         component: ()=>import("../views/Report.vue")
+    },
+    {
+        path: '/editprofile',
+        name: 'Edit profile Page',
+        component: ()=>import("../views/Editprofile.vue")
     }
 ]
 
