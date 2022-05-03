@@ -3,12 +3,12 @@
     <h2 class="brand-name" @click="$router.push('/')">Sophie</h2>
     <v-btn @click="$router.push('/')" text><p class="menu">SHOP</p></v-btn>
    
-    <span v-if="$store.state.user == null || $store.state.user.role != 'admin'">
+    <span v-if="$store.state.user != null && $store.state.user.role != 'admin'">
     <v-btn text @click="$router.push('/myBook')"
       ><p class="menu">MY BOOKS</p></v-btn
     >
     </span>
-     <span v-else>
+     <span v-else-if="$store.state.user != null && $store.state.user.role == 'admin'">
       <v-btn text @click="$router.push('/report')"
       ><p class="menu">REPORT</p></v-btn
     >
@@ -38,7 +38,7 @@
       </template>
       <v-list>
         <v-list-item link>
-          <v-list-item-title v-text="'Profile'"></v-list-item-title>
+          <v-list-item-title  @click="$router.push('/profile')" v-text="'Profile'"></v-list-item-title>
          
         </v-list-item>
         <v-list-item link>

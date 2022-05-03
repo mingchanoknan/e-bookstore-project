@@ -12,10 +12,16 @@
               <label for="imageUpload"></label>
             </div>
             <div class="avatar-preview">
-              <div
+              <v-img v-if="$store.state.user.image_path == null"
+               src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png">
+              </v-img>
+              <v-img v-else
+               :src="`http://localhost:3000/${$store.state.user.image_path}`">
+              </v-img>
+              <!-- <div
                 id="imagePreview"
                 style="background-image: url('http://i.pravatar.cc/500?img=7')"
-              ></div>
+              ></div> -->
             </div>
           </div>
         </v-col>
@@ -28,15 +34,14 @@
           >
           <v-row>
             <v-col lg="6" sm="12" md="12">
-              <p>Username :</p>
-              <p>Email :</p>
-              <p>Password : ********</p>
+              <h4>Username : {{$store.state.user.username}}</h4>
             </v-col>
             <v-col lg="6" sm="12" md="12">
-              <p>Firstname : </p>
-              <p>Lastname : </p>
-              <p>Date of brith : </p>
-              <p>Member level :</p>
+              <p>Firstname : {{$store.state.user.fname}}</p>
+              <p>Lastname : {{$store.state.user.lname}}</p>
+              <p>Date of brith : {{$store.state.user.date_of_birth.toString().substr(0,10)}}</p>
+              <p v-if="$store.state.user.role != 'customer'" >position: {{$store.state.user.position}}</p>
+              <p v-else>Member level : {{$store.state.user.member_level}}</p>
             </v-col>
           </v-row>
           </v-card>
@@ -64,7 +69,7 @@
           </div>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="$store.state.user.role == 'customer'">
         <v-col lg="6" sm="12" md="12" >
               <v-sheet border-variant="primary" @click="$router.push('/mybook')"
       class="mx-auto transition-swing" color="#FEEEF5"
