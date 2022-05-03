@@ -38,6 +38,7 @@ router.post("/customer/register", async (req, res, next) => {
     let token = generateToken();
     await conn.query(`insert into token(customer_id, token) value(?,?)`, [row.insertId, token])
 
+    const [createCart,col2] = await conn.query(`INSERT INTO cart (customerId) values(?)`,[row.insertId])
     await conn.commit();
     res.send("Register!").status(200);
   } catch (err) {
@@ -68,6 +69,8 @@ router.post("/customer/login", async (req, res, next) => {
       throw new Error("Your password or your username is incorrect");
     }
     user["role"] = "customer"
+    const [cartId,col2] = await conn.query(`SELECT cart_id FROM cart WHERE customerId= ? AND status_payment = 0`,[user.customer_id])
+    user["caet_id"] = cartId[0]
     const token = await conn.query(`SELECT token FROM token WHERE customer_id = ?`,
       [user.customer_id])
     let obj = {
@@ -134,15 +137,10 @@ router.get("/isOwnerBook/:bookId/:cusId", async (req, res, next) => {
   await conn.beginTransaction();
   try {
     const [row, col] = await conn.query(
-      `SELECT * FROM customer_ebook WHERE ebook_id = ? AND customer_id =? AND bought = 1`,
+      `SELECT * FROM customer_ebook WHERE ebook_id = ? AND customer_id =?`,
       [req.params.bookId, req.params.cusId]
     );
-    res.send(row).status(200)
-    // if (row[0].length) {
-    //   res.send(true).status(200)
-    // } else {
-    //    res.send(false).status(200)
-    // }
+      res.send(row[0]).status(200)
 
   } catch (err) {
     conn.rollback();

@@ -19,21 +19,30 @@
           <p>
             <b>โดย</b>
             <span v-for="aut in book.author" :key="aut.author_id"
-              ><span style="text-decoration: underline">{{
-                aut.author_name
-              }}</span
+              ><span style="text-decoration: underline">
+                {{ aut.author_name }}</span
               >/
             </span>
           </p>
           <p><b>สำนักพิมพ์</b> {{ book.publisher_name }}</p>
           <p><b>หมวดหมู่</b> {{ book.type_name }}</p>
-          <v-btn rounded color="#EFFFE3" large v-if="showFullBook">
-            มีแล้ว
-          </v-btn>
+          <v-btn rounded color="#EFFFE3" large v-if="isOwner"> เปิดอ่าน </v-btn>
           <v-btn rounded color="#EDC4D6" large v-else>
             ซื้อ {{ book.price }} บาท
           </v-btn>
-          <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
+          <v-icon v-if="isInterest && !isOwner" color="pink" large
+            >mdi-notebook-heart</v-icon
+          >
+          <v-icon v-else-if="!isInterest && !isOwner" color="black" large
+            >mdi-notebook-heart-outline</v-icon
+          >
+
+          <v-icon v-if="!isFavorite && isOwner" color="black" large
+            >mdi-cards-heart-outline</v-icon
+          >
+          <v-icon v-else-if="isFavorite && isOwner" color="pink" large
+            >mdi-cards-heart</v-icon
+          >
           <p></p>
           <v-card
             max-width="400"
@@ -51,37 +60,82 @@
       <v-row>
         <v-col lg="6" sm="12" md="12" align="left" height="300px">
           <p>READER REVIWES</p>
-          <!-- <v-rating length="5" value ="5" readonly size="18"></v-rating> 
-          <v-progress-linear value="15" buffer-value="30"></v-progress-linear>
-          <v-rating length="5" value = "4" readonly size="18"></v-rating>
-          <v-rating length="5" value = "3" readonly size="18"></v-rating>
-          <v-rating length="5" value = "2" readonly size="18"></v-rating>
-          <v-rating length="5" value = "1"  readonly size="18"></v-rating> -->
-          <v-rating
-      v-model="rate[0]"
-      background-color="purple lighten-3"
-      size="18"
-    ></v-rating>
-    <v-rating
-      v-model="rate[1]"
-      background-color="purple lighten-3"
-      size="18"
-    ></v-rating>
-    <v-rating
-      v-model="rate[2]"
-      background-color="purple lighten-3"
-      size="18"
-    ></v-rating>
-    <v-rating
-      v-model="rate[3]"
-      background-color="purple lighten-3"
-      size="18"
-    ></v-rating>
-    <v-rating
-      v-model="rate[4]"
-      background-color="purple lighten-3"
-      size="18"
-    ></v-rating>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+            "
+          >
+            <v-rating
+              :value="5"
+              background-color="purple lighten-3"
+              size="18"
+              readonly
+            ></v-rating>
+            <v-progress-linear value="10" buffer-value="45"></v-progress-linear>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+            "
+          >
+            <v-rating
+              :value="4"
+              background-color="purple lighten-3"
+              size="18"
+              readonly
+            ></v-rating>
+            <v-progress-linear value="10" buffer-value="45"></v-progress-linear>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+            "
+          >
+            <v-rating
+              :value="3"
+              background-color="purple lighten-3"
+              size="18"
+              readonly
+            ></v-rating>
+            <v-progress-linear value="10" buffer-value="45"></v-progress-linear>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+            "
+          >
+            <v-rating
+              :value="2"
+              background-color="purple lighten-3"
+              size="18"
+              readonly
+            ></v-rating>
+            <v-progress-linear value="10" buffer-value="45"></v-progress-linear>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+            "
+          >
+            <v-rating
+              :value="1"
+              background-color="purple lighten-3"
+              size="18"
+              readonly
+            ></v-rating>
+            <v-progress-linear value="10" buffer-value="45"></v-progress-linear>
+          </div>
         </v-col>
         <v-col lg="6" sm="12" md="12">
           <v-card
@@ -98,8 +152,14 @@
                 large
                 readonly
               ></v-rating>
-              <p>Average from 4 Reviews</p>
-              <v-btn rounded color="#EFFFE3" large @click="isShow = true">
+              <p>Average from {{ allComment.length }} Reviews</p>
+              <v-btn
+                v-if="isOwner"
+                rounded
+                color="#EFFFE3"
+                large
+                @click="isShow = true"
+              >
                 WRITE REVIWE
               </v-btn>
             </center>
@@ -117,16 +177,17 @@
               background-color="purple lighten-3"
               color="purple lighten-3"
               large
+              v-model="ratingCustomer"
             ></v-rating>
             <p>Average from 4 Reviews</p>
             <v-textarea
               filled
               name="input-7-4"
               label="แสดงความคิดเห็น"
-              value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+              v-model="commentCustomer"
             ></v-textarea>
             <p></p>
-            <v-btn rounded color="#EFFFE3" large @click="saveReview">
+            <v-btn rounded color="#EFFFE3" large @click="saveComment">
               SAVE
             </v-btn>
           </v-card>
@@ -137,27 +198,76 @@
       <v-row>
         <v-col lg="12" sm="12" md="12" height="300px" mx-auto>
           <v-card
+            v-for="(comment, index) in allComment"
+            :key="comment.comment_id"
             class="pa-md-4 mx-lg-auto"
             color="#FFFEEB"
             style="color: black; padding: 1rem"
           >
+            <v-card-title>
+              <v-row>
+                <v-col>
+                  <v-avatar size="56">
+                    <img
+                      alt="user"
+                      src="https://cdn.pixabay.com/photo/2020/06/24/19/12/cabbage-5337431_1280.jpg"
+                    />
+                  </v-avatar>
+                </v-col>
+                <v-col>
+                  <v-row>
+                    <p class="ml-3">{{ comment.username }}</p>
+                  </v-row>
+                  <v-row>
+                    <v-rating
+                      :value="comment.rate"
+                      background-color="purple lighten-3"
+                      size="18"
+                      readonly
+                    ></v-rating>
+                    <p>
+                      {{
+                        new Date(comment.comment_date).toString().substr(0, 24)
+                      }}
+                    </p>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-card-title>
             <v-card-text>
-              สนุกมากกกกกก สมกับที่รอคอยเลยค่ะ เพราะว่าหลังอ่านทัณฑ์สนธยาจบ
-              ก็รอเล่มนี้มาตลอดเลย แล้วก็ดีตามที่คาดไว้เลย
-              เราชอบสายแฟนตาซีโรแมนติกอยู่แล้วด้วย ฟินมาก น่ารักมาก ดราม่าน้อย
-              มีปมเข้ามาให้เรื่องราวน่าติดตาม
+              <!-- <v-textarea
+                name="input-7-1"
+                filled
+                label="Label"
+                auto-grow
+                value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+              ></v-textarea> -->
+              <p>{{ comment.comment }}</p>
             </v-card-text>
-            <div align="right">
-              <p>Kulanitframe</p>
-              <p>
-                57 ธ.ค. 2564 0:53 น<v-rating
-                  v-model="rating"
-                  background-color="purple lighten-3"
-                  color="purple lighten-3"
-                  small
-                ></v-rating>
-              </p>
-            </div>
+            <v-card-actions>
+              <v-btn
+                v-if="
+                  $store.state.user != null &&
+                  $store.state.user.role == 'customer' &&
+                  $store.state.user.customer_id == comment.customer_id
+                "
+                color="orange"
+                text
+              >
+                Edit</v-btn
+              >
+              <v-btn
+                v-if="
+                  $store.state.user != null &&
+                  $store.state.user.role == 'customer' &&
+                  $store.state.user.customer_id == comment.customer_id
+                "
+                @click="deleteComment(index)"
+                color="orange"
+                text
+                >delete</v-btn
+              >
+            </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
@@ -175,18 +285,22 @@ export default {
   data: () => ({
     book: "",
     rating: 0,
+    allComment: [],
     isShow: false,
-    showFullBook: false,
-    rate:[5,4,3,2,1],
+    isOwner: false,
+    isFavorite: false,
+    isInterest: false,
+    commentCustomer: "",
+    ratingCustomer: 0,
   }),
   created() {
     this.getBook();
-    console.log(this.$store.state);
+    this.getComment();
     if (
       this.$store.state.user != null &&
       this.$store.state.user.role == "customer"
     ) {
-      this.owner();
+      this.checkBookAboutCustomer();
     }
   },
 
@@ -199,15 +313,78 @@ export default {
       this.rating = this.book.average_rating;
       // console.log(this.$route.params.bookId)
     },
-    saveReview() {
-      this.isShow = false;
+
+    async checkBookAboutCustomer() {
+      try {
+        const result = await axios.get(
+          `http://localhost:3000/isOwnerBook/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`
+        );
+        if (result.data.bought.data[0]) {
+          this.isOwner = true;
+        }
+        if (result.data.favorite.data[0]) {
+          this.isFavorite = true;
+        }
+        if (result.data.interest.data[0]) {
+          this.isInterest = true;
+        }
+      } catch (err) {
+        console.log(err);
+      }
     },
-    async owner() {
-      const result = await axios.get(
-        `http://localhost:3000/isOwnerBook/"${this.$route.params.bookId} /${this.$store.state.user.customer_id}`
-      );
-      this.showFullBook = result.data;
+    async getComment() {
+      try {
+        const result = await axios.get(
+          `http://localhost:3000/getComments/${this.$route.params.bookId}`
+        );
+        this.allComment = result.data;
+      } catch (err) {
+        console.log(err);
+      }
     },
+    async saveComment() {
+      try {
+        const result = await axios.post(
+          `http://localhost:3000/comments/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,
+          {
+            comment: this.commentCustomer,
+            rate: this.ratingCustomer,
+          }
+        );
+        console.log(result.data)
+        this.allComment.push({
+          comment: this.commentCustomer,
+          comment_date: new Date(),
+          customer_id: this.$store.state.user.customer_id,
+          image_path: this.$store.state.user.image_path,
+          rate: this.ratingCustomer,
+          username: this.$store.state.user.username,
+        });
+
+        this.isShow = false;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+     async deleteComment(index){
+       try{
+         const result = await axios.delete(`http://localhost:3000/deleteComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`)
+       console.log(result.data)
+       this.allComment.splice(index,1)
+       } catch (err) {
+        console.log(err);
+      }
+    },
+    // async editComment(comment){
+    //   try{
+    //     // const result = await axios.put(`http://localhost:3000/editComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,{
+    //     //   comment: this.
+    //     // })
+    //  console.log(result.data)
+    //  }catch (err) {
+    //     console.log(err);
+    //   }
+    // }
   },
 };
 </script>

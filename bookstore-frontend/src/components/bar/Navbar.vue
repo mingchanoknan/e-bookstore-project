@@ -18,11 +18,11 @@
     >
     <v-spacer></v-spacer>
     <span class="button-container" v-if="$store.state.user != null && $store.state.user.role == 'customer'">
-      <v-icon color="black" large>mdi-notebook-heart-outline</v-icon>
+      <v-icon color="black" @click="$router.push('/wishlist')" large>mdi-notebook-heart-outline</v-icon>
       <div class="number-prop">0</div>
     </span>
     <span class="button-container" v-if="$store.state.user != null && $store.state.user.role == 'customer'">
-      <v-icon color="black" large>mdi-cart-outline</v-icon>
+      <v-icon @click="$router.push('/cart')" color="black" large>mdi-cart-outline</v-icon>
       <div class="number-prop">0</div>
     </span>
     <v-menu v-if="$store.state.user != null"

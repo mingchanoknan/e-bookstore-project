@@ -239,6 +239,8 @@ export default {
           );
           console.log(result.data);
         }
+        this.$store.dispatch("modalLoginAction")
+        this.$router.push('/')
       } catch (err) {
         console.log(err);
       }
