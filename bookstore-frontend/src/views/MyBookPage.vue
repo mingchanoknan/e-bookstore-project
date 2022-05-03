@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-container grid-list-lg>
-            <center><h1>MY BOOKS</h1></center>
+        <div class="head-name" style="padding-top: 2rem">
+          <center><h1>My Books</h1></center>
+        </div>
       <v-divider></v-divider><br/>
 
       <!-- <v-layout row wrap  v-if="$store.state.select == 1">

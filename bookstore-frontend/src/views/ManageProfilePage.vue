@@ -3,7 +3,7 @@
     <br />
     <v-container style="font-family: 'Kanit', sans-serif">
       <center><h1>My Account</h1></center>
-      <v-divider></v-divider><br />
+      <v-divider></v-divider><br/>
       <v-row>
         <v-col lg="3" sm="12" md="12">
           <div class="avatar-upload">
@@ -23,14 +23,27 @@
         <v-col lg="9" sm="12" md="12">
           <v-card
             color="#EFFFE3"
-            style="color: black; padding: 1rem"
+            style="color: black; padding: 1rem; font-size:large"
             height="250px"
           >
+          <v-row>
+            <v-col lg="6" sm="12" md="12">
+              <p>Username :</p>
+              <p>Email :</p>
+              <p>Password : ********</p>
+            </v-col>
+            <v-col lg="6" sm="12" md="12">
+              <p>Firstname : </p>
+              <p>Lastname : </p>
+              <p>Date of brith : </p>
+              <p>Member level :</p>
+            </v-col>
+          </v-row>
           </v-card>
 
-          <br />
+          <br/>
           <div align="right">
-            <v-btn @click="activeModal()"
+            <v-btn @click="$router.push('/editprofile')"
               title
               color="black"
               style="color: white; margin-right: 10px"
@@ -38,9 +51,6 @@
               width="250px"
             >
               แก้ไขข้อมูลส่วนตัว
-            </v-btn>
-            <v-btn title color="black" style="color: white" large width="250px">
-              ออกจากระบบ
             </v-btn>
           </div>
         </v-col>
@@ -53,30 +63,19 @@
       height="128"
       width="65%" rounded="xl"
     ><v-container><h3>ชั้นหนังสือของฉัน</h3><small>รายการหนังสือทั้งหมดของคุณ</small></v-container></v-sheet><br>
-        <v-sheet @click="$router.push('/reviewhistory/:id')"
-      class="mx-auto transition-swing" color="#FEEEF5"
-      elevation="12"
-      height="128"
-      width="65%" rounded="xl"
-    ><v-container><h3>รีวิวของฉัน</h3><small>รายการรีวิวและเรตติ้งหนังสือ</small></v-container></v-sheet>
+       
         </v-col>
 
         <v-col lg="6" sm="12" md="12">
                 <v-sheet
-       @click="$router.push('/paymenthistory/:id')"
-      class="mx-auto transition-swing" color="#FEEEF5"
-      elevation="12"
-      height="128"
-      width="65%" rounded="xl"
-    ><v-container><h3>ประวัติการสั่งซื้อของฉัน</h3><small>รวมรายการสั่งซื้อของคุณ
-และรายละเอียดการชำระเงินทั้งหมด</small></v-container></v-sheet>
-            <br>  <v-sheet
-       @click="$router.push('/')"
+       @click="$router.push('/wishlist')"
       class="mx-auto transition-swing" color="#FEEEF5"
       elevation="12"
       height="128"
       width="65%" rounded="xl"
     ><v-container><h3>รายการที่อยากได้</h3><small>รายการหนังสือที่อยากได้</small></v-container></v-sheet>
+
+            <br>
         </v-col>
       </v-row>
     </v-container>
