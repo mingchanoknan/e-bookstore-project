@@ -1,11 +1,10 @@
 <template>
   <!-- <div>This is card</div> -->
   <v-card class="mx-auto my-12 font" max-width="374" style="position: relative">
-
     <div class="background-card"></div>
-        <div class="close-container" align="right">
-            <v-icon>mdi-close</v-icon>
-        </div>
+    <div class="close-container" align="right">
+      <v-icon @click="unInterested($props.book.ebook_id)">mdi-close</v-icon>
+    </div>
 
     <center class="front pt-6">
       <v-img
@@ -59,17 +58,14 @@
                 $store.state.user == null || $store.state.user.role != 'admin'
               "
             >
-              <v-icon large class="pr-3">mdi-cart-outline</v-icon>
+              <v-icon
+                @click="addToCart($props.book.ebook_id)"
+                large
+                class="pr-3"
+                >mdi-cart-outline</v-icon
+              >
               <v-icon large>mdi-notebook-heart-outline</v-icon>
             </span>
-            <span v-else>
-            
-            <v-icon  large  class="pr-3"
-              >mdi-pencil-outline</v-icon
-            >
-            <v-icon large class="pr-3"
-              >mdi-trash-can-outline</v-icon
-            ></span>
           </v-row>
         </span>
       </v-container>
@@ -77,18 +73,39 @@
   </v-card>
 </template>
 <script>
+import axios from "@/plugins/axios";
 export default {
   name: "WishbookCard",
   data: () => ({
     data: "",
   }),
   props: ["book"],
-  created() {
-  },
+  created() {},
   methods: {
-    getBook(){
-      this.$router.push("/bookdetail/"+this.$props.book.ebook_id)
-    }
+    getBook() {
+      this.$router.push("/bookdetail/" + this.$props.book.ebook_id);
+    },
+    async addToCart(ebookId) {
+      try {
+        const result = await axios.post(
+          `/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`
+        );
+        console.log(result.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    async unInterested(ebookId) {
+      try {
+        const result = await axios.put(
+          `/deleteToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+        );
+        console.log(result.data);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
   },
 };
 </script>

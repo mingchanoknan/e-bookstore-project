@@ -6,6 +6,7 @@ const { isLoggedIn } = require("../middlewares/index");
 
 
 
+
 router.post("/addItem/:cartId/:ebookId", isLoggedIn, async (req, res, next) => {
     const conn = await pool.getConnection();
     await conn.beginTransaction();
@@ -62,4 +63,6 @@ router.delete("/deleteItem/:itemNo/:cartId", isLoggedIn,async (req, res, next) =
         conn.release();
     }
 })
+
+
 exports.router = router;

@@ -3,7 +3,8 @@ const pool = require("../config/mysql_connector");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/token");
-const { isLoggedIn } = require("../middlewares/index")
+const { isLoggedIn } = require("../middlewares/index");
+
 
 const registerSchemas = Joi.object({
   username: Joi.string().required(),
@@ -38,7 +39,7 @@ router.post("/customer/register", async (req, res, next) => {
     let token = generateToken();
     await conn.query(`insert into token(customer_id, token) value(?,?)`, [row.insertId, token])
 
-    const [createCart,col2] = await conn.query(`INSERT INTO cart (customerId) values(?)`,[row.insertId])
+    const [createCart,col2] = await conn.query(`INSERT INTO cart (customer_id) values(?)`,[row.insertId])
     await conn.commit();
     res.send("Register!").status(200);
   } catch (err) {
@@ -69,7 +70,7 @@ router.post("/customer/login", async (req, res, next) => {
       throw new Error("Your password or your username is incorrect");
     }
     user["role"] = "customer"
-    const [cartId,col2] = await conn.query(`SELECT cart_id FROM cart WHERE customerId= ? AND status_payment = 0`,[user.customer_id])
+    const [cartId,col2] = await conn.query(`SELECT cart_id FROM cart WHERE customer_id= ? AND status_payment = 0`,[user.customer_id])
     user["caet_id"] = cartId[0]
     const token = await conn.query(`SELECT token FROM token WHERE customer_id = ?`,
       [user.customer_id])
@@ -89,27 +90,6 @@ router.post("/customer/login", async (req, res, next) => {
     conn.release()
   }
 });
-
-// router.post("/customer/loginByToken", async (req, res, next) => {
-//     const conn = await pool.getConnection()
-//     await conn.beginTransaction()
-//     try {
-//         const [row1, field] = await conn.query(`SELECT * FROM token WHERE token = ?`, [req.body.token])
-
-//         const token = row1[0]
-//         if (token == undefined) {
-//             throw new Error("Token is Incorrect")
-//         }
-
-//         const [row2, field2] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [token.customer_id])
-
-//         const user = row2[0]
-//       res.send({user: user }).status(200)
-//     }
-//     catch (err) {
-//       res.status(404).json(err.message.data)
-//     }
-// })
 
 router.get("/customer/profile/:cusId", isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection()
@@ -141,7 +121,7 @@ router.get("/isOwnerBook/:bookId/:cusId", async (req, res, next) => {
       [req.params.bookId, req.params.cusId]
     );
       res.send(row[0]).status(200)
-
+      await conn.commit()
   } catch (err) {
     conn.rollback();
     res.status(404).json(err.message.data)
@@ -149,4 +129,69 @@ router.get("/isOwnerBook/:bookId/:cusId", async (req, res, next) => {
     conn.release();
   }
 })
+//interested
+router.put("/addToInterest/:bookId/:cusId", isLoggedIn, async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+
+
+    const [row, col] = await conn.query(
+      `INSERT INTO customer_ebook(interest,ebook_id,customer_id) values(1,?,?)`,
+      [req.params.bookId, req.params.cusId]
+    )
+    res.send("add interested successfully")
+    await conn.commit()
+  }catch (err) {
+    conn.rollback();
+    res.status(404).json(err.message.data)
+  } finally {
+    conn.release();
+  }
+})
+
+router.get("/interestBook/:cusId", isLoggedIn, async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    const [row, col] = await conn.query(
+      `SELECT * FROM customer_ebook JOIN ebook USING (ebook_id)  join publisher using (publisher_id)
+      join book_type using (type_id)
+      where deleted = 0 And customer_id = ? AND interest = 1`,
+      [req.params.cusId]
+    )
+    for (let book of row) {
+      let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
+      book["author"] = author
+  }
+    res.send(row).status(200)
+    await conn.commit()
+  }catch (err) {
+    conn.rollback();
+    res.status(404).json(err.message)
+  } finally {
+    conn.release();
+  }
+  
+})
+
+router.put("/deleteToInterest/:bookId/:cusId", isLoggedIn, async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    const [row, col] = await conn.query(
+      `UPDATE customer_ebook SET interest = 0 WHERE ebook_id=? AND customer_id=?`,
+      [req.params.bookId, req.params.cusId]
+    )
+    res.send("deleted interested successfully").status(200)
+    await conn.commit()
+  }catch (err) {
+    await conn.rollback();
+    console.log(err)
+    res.status(404).json(err.message)
+  } finally {
+    conn.release();
+  }
+})
+
 exports.router = router;

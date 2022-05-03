@@ -26,14 +26,12 @@
           </p>
           <p><b>สำนักพิมพ์</b> {{ book.publisher_name }}</p>
           <p><b>หมวดหมู่</b> {{ book.type_name }}</p>
-          <v-btn rounded color="#EFFFE3" large v-if="isOwner"> เปิดอ่าน </v-btn>
-          <v-btn rounded color="#EDC4D6" large v-else>
-            ซื้อ {{ book.price }} บาท
-          </v-btn>
-          <v-icon v-if="isInterest && !isOwner" color="pink" large
+          <v-btn rounded color="#EFFFE3" large v-if="isOwner || $store.state.user.role != 'customer'"> เปิดอ่าน </v-btn>
+          <v-btn rounded color="#EDC4D6" large v-else>ซื้อ {{ book.price }} บาท</v-btn>
+          <v-icon v-if="isInterest && !isOwner " color="pink" large
             >mdi-notebook-heart</v-icon
           >
-          <v-icon v-else-if="!isInterest && !isOwner" color="black" large
+          <v-icon v-else-if="!isInterest && !isOwner && $store.state.user.role == 'customer'" color="black" large
             >mdi-notebook-heart-outline</v-icon
           >
 
@@ -43,6 +41,11 @@
           <v-icon v-else-if="isFavorite && isOwner" color="pink" large
             >mdi-cards-heart</v-icon
           >
+          <span class="ml-3" v-if="$store.state.user != null && $store.state.user.role != 'customer'">
+            <v-icon large  class="pr-3">mdi-pencil-outline</v-icon>
+          <v-icon large class="pr-3">mdi-trash-can-outline</v-icon>
+          </span>
+          
           <p></p>
           <v-card
             max-width="400"
