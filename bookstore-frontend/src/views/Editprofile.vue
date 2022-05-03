@@ -15,17 +15,6 @@
         
 
         <v-col cols="12" md="4" lg="6">
-          <h4>Password</h4>
-
-                              <v-text-field solo background-color="#EDC4D6" color="black" rounded dense
-                      prepend-inner-icon="mdi-lock"
-                      label="Password"
-                      outlined
-                      v-model="password"
-                      :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                      @click:append="passwordShow = !passwordShow"
-                      :type="passwordShow ? 'text' : 'password'"
-                    ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
