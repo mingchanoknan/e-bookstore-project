@@ -2,7 +2,7 @@
   <v-form v-model="valid">
     <v-container>
       <div class="close-container">
-        <v-icon large>mdi-close</v-icon>
+      <v-icon large>mdi-close</v-icon>
       </div>
       <div class="head-name">
         <center><h1>แก้ไขรหัสผ่าน</h1></center>
