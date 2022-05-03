@@ -29,7 +29,8 @@
      } else if (token.customer_id != null && token.admin_id == null) {
          const isCustomer = await pool.query(`SELECT * FROM customer WHERE customer_id = ?`, [token.customer_id])
          user = isCustomer[0][0]
-        user["role"] = "customer"
+         user["role"] = "customer"
+         
 
      } else {
         return res.status(401).send('Token invalid!')

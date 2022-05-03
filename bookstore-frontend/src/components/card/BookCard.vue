@@ -54,7 +54,7 @@
                 $store.state.user == null || $store.state.user.role != 'admin'
               "
             >
-              <v-icon large class="pr-3">mdi-cart-outline</v-icon>
+              <v-icon @click="addToCart($props.book.ebook_id)" large class="pr-3">mdi-cart-outline</v-icon>
               <v-icon large>mdi-notebook-heart-outline</v-icon>
             </span>
             <span v-else>
@@ -72,6 +72,7 @@
   </v-card>
 </template>
 <script>
+import axios from "@/plugins/axios";
 export default {
   name: "BookCard",
   data: () => ({
@@ -83,6 +84,15 @@ export default {
   methods: {
     getBook(){
       this.$router.push("/bookdetail/"+this.$props.book.ebook_id)
+    },
+    async addToCart(ebookId){
+      try{
+        const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
+      
+      console.log(result.data)
+      }catch(err){
+        console.log(err)
+      }
     }
   },
 };

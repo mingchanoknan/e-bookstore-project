@@ -29,7 +29,7 @@ router.get("/getDetailBook/:ebookId", async (req, res, next) => {
         res.send(row[0]).status(200)
     } catch (err) {
         conn.rollback()
-        res.status(404).json(err.message.data)
+        res.status(404).json(err.message)
     } finally {
         conn.release()
     }
@@ -42,56 +42,83 @@ router.get("/getComments/:ebookId", async (req, res, next) => {
 
     try {
         const [row, col] = await conn.query(
-            `select * from comment
+            `select ebook_id, customer_id, username,comment,rate,comment_date, image_path from comment
             join customer using (customer_id)
             where ebook_id = ?`, [ebookId]
 
         )
-        conn.commit()
+
+        await conn.commit()
         res.send(row).status(200)
     } catch (err) {
-        conn.rollback()
-        res.send("Error").status(400)
+        await conn.rollback()
+        res.status(404).json(err.message)
     } finally {
         conn.release()
     }
 })
 
-router.post("/comments/:ebookId", isLoggedIn, async (req, res, next) => {
+router.post("/comments/:ebookId/:cusId", isLoggedIn, async (req, res, next) => {
     const ebookId = req.params.ebookId
+    const customerId = req.params.cusId
     const conn = await pool.getConnection();
     await conn.beginTransaction();
 
     try {
         const [row, col] = await conn.query(
-            `insert into comment(comment,rate,ebook_id,customer_id) values (?,?,?,?)`, [req.body.comment, req.body.rate, ebookId,] ///ยังตืดไอดี ลค
-
-        )
-        conn.commit()
-        res.send(row).status(200)
+            `insert into comment(comment,rate,ebook_id,customer_id) values (?,?,?,?)`, [req.body.comment, req.body.rate, ebookId, customerId]
+        );
+        const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
+        const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
+        await  conn.commit()
+        res.send(avg[0]).status(200)
     } catch (err) {
-        conn.rollback()
-        res.send("Error").status(400)
+        console.log(err)
+        await conn.rollback()
+        res.status(404).json(err.message)
     } finally {
         conn.release()
     }
 })
 
-router.put("/comments/:commentId", isLoggedIn, async (req, res, next) => {
+router.put("/editComments/:commentId/:cusId", isLoggedIn, async (req, res, next) => {
+    const ebookId = req.params.ebookId
+    const customerId = req.params.cusId
     const conn = await pool.getConnection();
     await conn.beginTransaction();
 
     try {
         const [row, col] = await conn.query(
-            `update comment set comment =?,rate = ?
-            values (?,?)`, [req.body.comment, req.body.rate, ebookId,] ///ยังตืดไอดี ลค
+            `update comment set comment =?,rate = ?, WHERE ebook_id=? AND customer_id= ?`, [req.body.comment, req.body.rate, ebookId,customerId]
 
         )
+        const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
+        const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
         conn.commit()
         res.send(row).status(200)
     } catch (err) {
         conn.rollback();
-        res.status(404).json(err.message.data)
+        res.status(404).json(err.message)
+    } finally {
+        conn.release();
+    }
+})
+
+router.delete("/deleteComment/:ebookId/:cusId", isLoggedIn, async (req, res, next) => {
+    const ebookId = req.params.ebookId
+    const conn = await pool.getConnection();
+    await conn.beginTransaction();
+    try {
+        const [row, col] = await conn.query(`DELETE FROM comment WHERE ebook_id=? AND customer_id =?`, [ebookId,req.params.cusId])
+        const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
+        const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
+        
+        await conn.commit()
+        res.send("delete Successfully").status(200)
+    } catch (err) {
+        console.log(err)
+        await conn.rollback();
+        res.status(404).json(err.message)
     } finally {
         conn.release();
     }

@@ -31,6 +31,7 @@ const manageBookRouter = require("./routes/mangeBook.js")
 const reportRouter = require("./routes/report.js")
 const userRouter = require("./routes/user.js")
 const bookdetailRouter = require("./routes/book_detali.js")
+const cartRouter = require("./routes/cart.js")
   
 app.use(indexRouter.router)
 app.use(customerRouter.router)
@@ -39,6 +40,7 @@ app.use(manageBookRouter.router)
 app.use(reportRouter.router)
 app.use(userRouter.router)
 app.use(bookdetailRouter.router)
+app.use(cartRouter.router)
 
 
 

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TypeBar/>
     <br/>
     <v-container style="font-family: 'Kanit', sans-serif">
       <center><h1>Cart Item</h1></center>
@@ -8,7 +7,7 @@
       <v-row>
 
         <v-col lg="6" sm="12" md="12">
-          <v-card class="mx-auto my-12 font" style="position: relative" height="270px" width="600px">
+          <v-card v-for="(item,index) in allItemInCart" :key="index" class="mx-auto my-12 font" style="position: relative" height="270px" width="600px">
             <v-row>
               <v-col lg="4" sm="12" md="12">
                 <div class="background-card"></div>
@@ -20,9 +19,9 @@
               <v-col lg="8" sm="12" md="12">
                 <div class="front">
                   <v-container fluid class="px-6 py-6">
-                    <v-card></v-card>
-                    <p class="type">SPY x FAMILY เล่ม 02</p>
-                    <v-tooltip bottom color="#da9c9d">
+                    
+                    <p class="type">{{item.title}}</p>
+                    <!-- <v-tooltip bottom color="#da9c9d">
                       <template v-slot:activator="{ on, attrs }">
                         <div v-bind="attrs" v-on="on" class="header">
                           Tatsuya Endo
@@ -34,22 +33,22 @@
                       <span style="text-decoration: underline">
                         Siam Inter Comics&nbsp;&nbsp;
                       </span>
-                    </div>
+                    </div> -->
                   </v-container>
 
                   <v-container class="px-6 pb-6">
                     <span>
                       <v-row>
                         <v-spacer></v-spacer>
-                        <div class="price">100 ฿</div>
+                        <div class="price">{{item.price}} ฿</div>
                       </v-row>
                     </span>
                   </v-container>
                 </div>
               </v-col>
             </v-row>
-            <div class="close-container" align="right">
-              <v-icon>mdi-close</v-icon>
+            <div class="pr-3 pb-3" align="right">
+              <v-icon @click="deleteItem(index,item )" large>mdi-trash-can-outline</v-icon>
             </div>
           </v-card>
           <v-divider></v-divider><br />
@@ -60,7 +59,7 @@
 
             <h1>CART TOTALS</h1>
             <v-divider></v-divider><br />
-            <p>ราคาสินค้า 709.00 THB</p>
+            <p>ราคาสินค้า {{totalPrice}} THB</p>
             <center>
               <v-btn
                 @click="$router.push('/payment')"
@@ -84,15 +83,35 @@
   </div>
 </template>
 <script>
-import TypeBar from "../components/bar/Typebar.vue";
+import axios from "@/plugins/axios";
 export default {
   name: "DetailPage",
   components: {
-    TypeBar,
   },
-  data: () => ({}),
+  data: () => ({
+    allItemInCart:[],
+    totalPrice:0
+  }),
+  created() {
+    this.getItemInCart();
+  },
   methods: {
-    deleteItem() {},
+    async deleteItem(index, item) {
+        try{
+          const result = await axios.delete(`http://localhost:3000/deleteItem/${item.item_no}/${this.$store.state.user.cart.cart_id}`)
+          console.log(result.data)
+          this.totalPrice -= item.price
+          this.allItemInCart.splice(index,1)
+        }catch(err){
+          console.log(err)
+        }
+
+    },
+    async getItemInCart(){
+      const result = await axios.get(`http://localhost:3000/itemsInCart/${this.$store.state.user.cart.cart_id}`);
+      this.allItemInCart = result.data
+      this.totalPrice = this.allItemInCart[0].total_price
+    }
   },
 };
 </script>
