@@ -20,6 +20,7 @@
 import axios from './plugins/axios';
 import Navbar from "./components/bar/Navbar.vue";
 import LoginCard from "./components/card/LoginModalCard.vue"
+
 // import MainPage from './components/pages/MainPage.vue';
 
 export default {

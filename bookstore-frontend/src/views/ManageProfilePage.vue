@@ -52,6 +52,15 @@
             >
               แก้ไขข้อมูลส่วนตัว
             </v-btn>
+            <v-btn
+              title
+              color="black"
+              style="color: white; margin-right: 10px"
+              large
+              width="250px"
+            >
+              แก้ไขรหัสผ่าน
+            </v-btn>
           </div>
         </v-col>
       </v-row>
@@ -87,9 +96,6 @@ export default {
   components: {},
   data: () => ({}),
   methods:{
-    activeModal() {
-      this.$store.dispatch("modalLoginAction");
-    }
   }
 };
 </script>
