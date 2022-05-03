@@ -55,7 +55,7 @@
               "
             >
               <v-icon @click="addToCart($props.book.ebook_id)" large class="pr-3">mdi-cart-outline</v-icon>
-              <v-icon large>mdi-notebook-heart-outline</v-icon>
+              <v-icon @click="addToInterest($props.book.ebook_id)" large>mdi-notebook-heart-outline</v-icon>
             </span>
             <span v-else>
             
@@ -89,6 +89,13 @@ export default {
       try{
         const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
       
+      console.log(result.data)
+      }catch(err){
+        console.log(err)
+      }
+    },async addToInterest(ebookId){
+      try{
+        const result = await axios.put(`/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`)
       console.log(result.data)
       }catch(err){
         console.log(err)

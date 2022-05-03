@@ -15,8 +15,8 @@
                         </v-flex>
                     </v-layout> -->
       <v-layout row wrap>
-        <v-flex v-for="item in allBook" :key="item.id" xs12 md6 lg3>
-          <WishbookCard :book="item" />
+        <v-flex v-for="item in interestedBook" :key="item.id" xs12 md6 lg3>
+          <WishbookCard ref="close" :book="item" />
         </v-flex>
       </v-layout>
     </v-container>
@@ -31,37 +31,32 @@ export default {
     WishbookCard,
   },
   data: () => ({
-    rowQuantity: "",
-    allBook: "",
-    novelBooks: "",
-    comicBooks: "",
-    travelBooks: "",
-    textBooks: "",
-    technologyBooks: "",
+   interestedBook:"",
   }),
   created() {
     this.getBook();
   },
   methods: {
+    close(){
+      console.log("123")
+    },
     async getBook() {
       try {
-        let result = await axios("http://localhost:3000/getAllBook");
-        this.allBook = result.data;
-        result = await axios("http://localhost:3000/getNovelBooks");
-        this.novelBooks = result.data;
-        result = await axios("http://localhost:3000/getComicBooks");
-        this.comicBooks = result.data;
-        result = await axios("http://localhost:3000/getTravelBooks");
-        this.travelBooks = result.data;
-        result = await axios("http://localhost:3000/getTextBooks");
-        this.textBooks = result.data;
-        result = await axios("http://localhost:3000/getTechnologyBooks");
-        this.technologyBooks = result.data;
-        // console.log(this.comicBooks)
+        let result = await axios(`http://localhost:3000/interestBook/${this.$store.state.user.customer_id}`);
+        this.interestedBook = result.data;
+        console.log(result.data)
       } catch (err) {
         console.log(err.message);
       }
-    },
+    },async addToCart(ebookId){
+      try{
+        const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
+      
+      console.log(result.data)
+      }catch(err){
+        console.log(err)
+      }
+    }
   },
   computed: {},
   watch: {},
