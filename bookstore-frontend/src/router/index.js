@@ -98,6 +98,11 @@ const routes = [
         path: '/editprofile',
         name: 'Edit profile Page',
         component: ()=>import("../views/Editprofile.vue")
+    },
+    {
+        path: '/editbook',
+        name: 'Edit book Page',
+        component: ()=>import("../views/EditBook.vue")
     }
 ]
 

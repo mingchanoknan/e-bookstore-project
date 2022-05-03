@@ -2,7 +2,7 @@
   <div>
     <v-container grid-list-lg>
         <div class="head-name" style="padding-top: 2rem">
-          <center><h1>User Manual</h1></center>
+          <center><h1>Wish List</h1></center>
         </div>
       <v-divider></v-divider><br/>
 
