@@ -65,6 +65,7 @@
   </v-dialog>
 </template>
 <script>
+import { required, sameAs } from "vuelidate/lib/validators";
 import axios from "@/plugins/axios";
 export default {
   name: "LoginCard",
@@ -80,9 +81,16 @@ export default {
     valid: true,
     isActive:false,
   }),
+  validations: {
+    oldPassword: { required },
+    newPassword: { required },
+    confirmpassword: { sameAs: sameAs('newPassword')},
+  },
   methods: {
    async changePassword(){
      var result;
+     this.$v.$touch()
+      if (!this.$v.newPassword.$error && !this.$v.confirmpassword.$error && !this.$v.oldPassword.$error) {
       try{
         if(this.$store.state.user.role == 'customer'){
           result = await axios.put(`http://localhost:3000/customer/changePassword/${this.$store.state.user.customer_id}`,{
@@ -104,9 +112,12 @@ export default {
         this.isActive = false
         console.log(result.data)
       }catch(err){
-        console.log(err.message)
+        alert("ผิด")
       }
     }
+    else{
+      alert("แก้ไขรหัสผ่านไม่ถูกต้อง")
+    }}
   },
   watch: {
     active: function(){
