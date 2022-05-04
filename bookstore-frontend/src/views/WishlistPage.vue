@@ -96,6 +96,8 @@ export default {
       }
     },
     async unInterested(ebookId) {
+      let text = "ต้องการลบออกจากรายการที่สนใจ!";
+      if (confirm(text) == true) {
       try {
         const result = await axios.put(
           `/deleteToInterest/${ebookId}/${this.$store.state.user.customer_id}`
@@ -103,7 +105,7 @@ export default {
         console.log(result.data);
       } catch (err) {
         console.log(err);
-      }
+      }}
     },
 
   },
