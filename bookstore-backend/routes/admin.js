@@ -109,6 +109,13 @@ router.get("/admin/profile/:adminId", isLoggedIn, async (req, res, next) => {
     conn.release();
   }
 });
+
+const editProfileSchemas = Joi.object({
+  username: Joi.string().required(),
+  date_of_birth: Joi.date().optional(),
+  fname: Joi.string().required(),
+  lname: Joi.string().required(),
+});
 //edit Profile admin
 router.put(
   "/admin/editProfile/:adminId", isLoggedIn,
@@ -117,6 +124,7 @@ router.put(
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
+      await editProfileSchemas.validateAsync(req.body,  { abortEarly: false })
       const [row, col] = await conn.query(` UPDATE admin SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE admin_id = ?`,
         [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth, req.params.adminId])
       if (!!req.file) {

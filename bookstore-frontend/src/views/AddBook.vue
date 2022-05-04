@@ -129,7 +129,10 @@ export default {
       formData.append("price", this.price);
       formData.append("publisher", this.publisher);
       formData.append("type", this.type);
-      formData.append("set", this.set);
+      if(this.set != ""){
+        formData.append("set", this.set);
+      }
+      
 
       formData.append("file", this.file);
       if (this.image != null) {
@@ -137,6 +140,7 @@ export default {
       }
       for (let aut of this.allAuthor) {
         formData.append("author[]", aut);
+        console.log(aut)
       }
       try {
         const result = await axios.post(

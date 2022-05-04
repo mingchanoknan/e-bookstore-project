@@ -3,7 +3,8 @@ const pool = require("../config/mysql_connector");
 router = express.Router();
 const upload = require("../utils/Uploader");
 const fs = require("fs");
-const {isLoggedIn} = require("../middlewares/index");
+const { isLoggedIn } = require("../middlewares/index");
+const Joi = require("joi");
 
 
 router.get("/bookType", async (req, res, next) => {
@@ -47,6 +48,15 @@ router.put("/deleteBook/:bookId/:adminId",isLoggedIn, async (req, res, next) => 
   }
 });
 
+const addBookSchema = Joi.object({
+  title: Joi.string().required(),
+  abstract: Joi.string().required(),
+  price: Joi.number().required(),
+  publisher: Joi.string().required(),
+  author: Joi.array().items(Joi.string()),
+  type: Joi.string().required(),
+  set:Joi.string().optional(),
+ })
 router.post(
   "/addBook/:adminId",isLoggedIn,
   upload.fields([
@@ -54,6 +64,7 @@ router.post(
     { name: "file", maxCount: 1 },
   ]),
   async (req, res, next) => {
+    console.log(req.body)
     const title = req.body.title;
     const abstract = req.body.abstract;
     const price = req.body.price;
@@ -76,6 +87,7 @@ router.post(
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
+      await addBookSchema.validateAsync(req.body,  { abortEarly: false })
       const checkPublisher = await conn.query(
         `SELECT publisher_id FROM publisher WHERE publisher_name = ?`,
         [publisher]
@@ -110,7 +122,7 @@ router.post(
           [title, abstract, book_path, price, publisherId, typeId]);
           ebookId = addBook[0].insertId
       }
-      if (set != "") {
+      if (set != null) {
         const checkSet = await conn.query(
           `SELECT set_id FROM set_book WHERE set_name = ?`,
           [set]
@@ -147,13 +159,21 @@ router.post(
       await conn.commit();
       res.send("Add successfully").status(200)
     } catch (err) {
+      console.log(err)
       await conn.rollback();
-      res.send(err.message).status(400);
+      res.status(400).send(err.message);
     } finally {
       conn.release();
     }
   }
 );
+
+const editBookSchema = Joi.object({
+  title: Joi.string().required(),
+  abstract: Joi.string().optional(),
+  price: Joi.number().required(),
+  set:Joi.string().optional(),
+ })
 
 router.put("/editBook/:bookId/:adminId",isLoggedIn,
 upload.fields([
@@ -166,11 +186,11 @@ upload.fields([
     const price = req.body.price;
     const set = req.body.set;
     const bookId = req.params.bookId
-
-    // const book_path = req.files.file[0].path;
+    //const book_path = req.files.file[0].path;
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
+      await editBookSchema.validateAsync(req.body,  { abortEarly: false })
       if (!!req.files.image) {
         const [row, field] = await conn.query(`SELECT image_cover FROM ebook WHERE ebook_id=?`, [bookId])
         const image_existed_path = row[0].image_cover
@@ -191,7 +211,7 @@ upload.fields([
       }
       const updateBook = conn.query(`UPDATE ebook SET title=?, abstract=?,price=? WHERE ebook_id=?`, [title, abstract, price,bookId])
       let setId;
-      if (set != "") {
+      if (set != undefined && set != null) {
         const checkSet = await conn.query(
           `SELECT set_id FROM set_book WHERE set_name = ?`,
           [set]

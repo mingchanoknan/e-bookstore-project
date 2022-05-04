@@ -267,12 +267,12 @@ export default {
               }
             );
             console.log(result.data);
-            alert("เข้าสู่ระบบสำเร็จ")
+            alert("สมัครสมาชิกสำเร็จ")
           }
           this.$store.dispatch("modalLoginAction");
           this.$router.push("/");
         } catch (err) {
-          alert("ไม่ถูกต้อง");
+          alert("ข้อมูลไม่ถูกต้อง");
         }
       }
     },
