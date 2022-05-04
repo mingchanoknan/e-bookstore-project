@@ -53,7 +53,7 @@
 
       <div align="right">
         <div class="mb-2">
-          <v-btn rounded color="#9FCDDE" large @click="loginCustomer()">
+          <v-btn rounded color="#9FCDDE" large @click="changePassword()">
             Change Password </v-btn
           >
         </div>
@@ -65,13 +65,12 @@
   </v-dialog>
 </template>
 <script>
-// import axios from "@/plugins/axios";
+import axios from "@/plugins/axios";
 export default {
   name: "LoginCard",
   components: {},
   props: ['active'],
   data: () => ({
-    username: "",
     oldPassword: "",
     newPassword:"",
     passwordShow:false,
@@ -80,9 +79,35 @@ export default {
     nameRules: [(v) => !!v || "Required."],
     valid: true,
     isActive:false,
-    isOldPass:""
   }),
-  methods: {},
+  methods: {
+   async changePassword(){
+     var result;
+      try{
+        if(this.$store.state.user.role == 'customer'){
+          result = await axios.put(`http://localhost:3000/customer/changePassword/${this.$store.state.user.customer_id}`,{
+          old_password:this.oldPassword,
+          password:this.newPassword,
+          confirm_password:this.confirmpassword
+        })
+        console.log("cus")
+        }else{
+          result = await axios.put(`http://localhost:3000/admin/changePassword/${this.$store.state.user.admin_id}`,{
+          old_password:this.oldPassword,
+          password:this.newPassword,
+          confirm_password:this.confirmpassword
+        })
+        }
+        this.oldPassword = ""
+        this.newPassword = ""
+        this.confirmpassword = ""
+        this.isActive = false
+        console.log(result.data)
+      }catch(err){
+        console.log(err.message)
+      }
+    }
+  },
   watch: {
     active: function(){
       this.isActive = !this.isActive

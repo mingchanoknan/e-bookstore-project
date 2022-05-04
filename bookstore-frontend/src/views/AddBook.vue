@@ -125,7 +125,7 @@ export default {
     async addBook() {
       var formData = new FormData();
       formData.append("title", this.title);
-      formData.append("abstrac", this.abstract);
+      formData.append("abstract", this.abstract);
       formData.append("price", this.price);
       formData.append("publisher", this.publisher);
       formData.append("type", this.type);

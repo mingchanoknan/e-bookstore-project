@@ -61,9 +61,6 @@
             
             <v-icon  large @click="editbook($props.book.ebook_id)" class="pr-3"
               >mdi-pencil-outline</v-icon
-            >
-            <v-icon large class="pr-3"
-              >mdi-trash-can-outline</v-icon
             ></span>
           </v-row>
         </span>
