@@ -68,7 +68,7 @@
   </v-form>
 </template>
 <script>
-import { required} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import axios from '@/plugins/axios'
 export default {
   name: "LoginCard",

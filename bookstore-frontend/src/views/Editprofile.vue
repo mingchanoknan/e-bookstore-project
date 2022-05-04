@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form v-model="valid">
     <v-container class="body">
       <div class="head-name" style="padding-top: 2rem">
         <center><h1>Edit Profile</h1></center>
@@ -34,14 +34,14 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4" lg="6">
-          <h4 style="color = 'black'">Username</h4>
+          <h4 style="color = 'black'">Username *</h4>
           <v-text-field
             label="Solo"
             solo
             background-color="#EDC4D6"
             color="black"
             rounded
-            dense
+            dense :rules="nameRules"
             v-model="username"
           >
           </v-text-field>
@@ -51,7 +51,7 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4" lg="6">
-          <h4>Firstname</h4>
+          <h4>Firstname  *</h4>
           <v-text-field
             label="Solo"
             solo
@@ -59,15 +59,15 @@
             color="black"
             rounded
             dense
-            v-model="fname"
+            v-model="fname" :rules="nameRules"
           >
           </v-text-field>
         </v-col>
 
         <v-col cols="12" lg="6" md="4">
-          <h4>Lastname</h4>
+          <h4>Lastname *</h4>
           <v-text-field
-            label="Solo"
+            label="Solo" :rules="nameRules"
             solo
             background-color="#EDC4D6"
             color="black"
@@ -78,9 +78,9 @@
           </v-text-field>
         </v-col>
         <v-col cols="12" lg="4" md="6" sm="12">
-          <h4 style="color = 'black'">Birthdate</h4>
+          <h4 style="color = 'black'">Birthdate  *</h4>
           <v-text-field
-            solo
+            solo :rules="nameRules"
             rounded
             prepend-inner-icon="mdi-cake-variant"
             label="Date of birth"
@@ -119,6 +119,7 @@
   </v-form>
 </template>
 <script>
+import { required } from "vuelidate/lib/validators";
 import axios from "@/plugins/axios";
 export default {
   name: "AddBookForm",
@@ -134,7 +135,15 @@ export default {
       required: (value) => !!value || "Required.",
       min: (v) => v.length >= 8 || "Min 8 characters",
     },
+    nameRules: [(v) => !!v || "Required."],
+    valid: true,
   }),
+  validations: {
+    username: { required },
+    fname: { required },
+    lname: { required },
+    birthdate: { required },
+  },
   created() {
     this.username = this.$store.state.user.username;
     this.fname = this.$store.state.user.fname;
@@ -152,12 +161,14 @@ export default {
       this.imgProfile = event.target.files;
     },
     async saveEditprofile() {
-
+      
       let formData = new FormData();
       formData.append('username', this.username);
       formData.append('fname', this.fname);
       formData.append('lname', this.lname);
       formData.append('date_of_birth', this.birthdate);
+      this.$v.$touch()
+      if (!this.$v.username.$error && !this.$v.fname.$error && !this.$v.lname.$error && !this.$v.birthdate.$error) {        
       try {
         var result;
         if (this.$store.state.user.role == "customer") {
@@ -182,6 +193,9 @@ export default {
         
       } catch (err) {
         console.log(err)
+      }}
+      else{
+        alert("ไม่ถูกต้องกรุณาตรวจสอบอีกครั้ง!");
       }
     },
     showSelectImage() {

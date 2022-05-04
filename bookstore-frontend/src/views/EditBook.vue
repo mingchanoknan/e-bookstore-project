@@ -111,12 +111,14 @@ export default {
       formData.append("abstract", this.abstract);
       formData.append("price", this.price);
       formData.append("set", this.set);
+      confirm("บันทึกการเปลี่ยนแปลง!");
       if(this.file != null){
         formData.append("file", this.file);
       }
       if (this.image != null) {
         formData.append("image", this.image);
       }
+      
       try {
         const result = await axios.put(
           `http://localhost:3000/editBook/${this.$route.params.bookId}/${this.$store.state.user.admin_id}`,
@@ -129,7 +131,12 @@ export default {
       }
     },
     cancle() {
-      this.$router.push("/");
+      let text = "ยกเลิกการเปลี่ยนแปลง!";
+      if (confirm(text) == true) {
+        this.$router.push("/");
+      } else {
+        text = "You canceled!";
+      }
     },
   },
 };
