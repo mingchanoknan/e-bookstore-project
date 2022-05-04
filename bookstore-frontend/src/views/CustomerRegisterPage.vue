@@ -72,7 +72,7 @@
                       class="white--text"
                       color="#8BBAE5"
                       elevation="5"
-                      @click="e1 = 2"
+                      @click="setStateRegister(2)"
                     >
                       Next
                     </v-btn>
@@ -115,7 +115,7 @@
                       class="white--text"
                       color="#8BBAE5"
                       elevation="5"
-                      @click="e1 = --e1"
+                      @click="setStateRegister(--e1)"
                     >
                       Back
                     </v-btn>
@@ -123,7 +123,7 @@
                       class="white--text"
                       color="#8BBAE5"
                       elevation="5"
-                      @click="e1 = 3"
+                      @click="setStateRegister(3)"
                     >
                       Next
                     </v-btn>
@@ -165,7 +165,7 @@
                       class="white--text"
                       color="#8BBAE5"
                       elevation="5"
-                      @click="e1 = --e1"
+                      @click="setStateRegister(--e1)"
                     >
                       Back
                     </v-btn>
@@ -189,6 +189,7 @@
 </template>
 
 <script>
+import { required, sameAs } from "vuelidate/lib/validators";
 import axios from "axios";
 export default {
   components: {},
@@ -210,40 +211,69 @@ export default {
     valid: false,
   }),
 
+  validations: {
+    username: { required },
+    password: { required },
+    confirmpassword: { sameAs: sameAs('password') },
+    firstname: { required},
+    lastname: { required},
+    birthdate: {required}
+  },
+
   methods: {
-    async register() {
-      try {
-        if (this.isAdmin) {
-          const result = await axios.post(
-            "http://localhost:3000/admin/register",
-            {
-              username: this.username,
-              password: this.password,
-              fname: this.firstname,
-              lname: this.lastname,
-              date_of_birth: this.birthdate,
-              position: this.position,
-              secretCode: this.secretCode
-            }
-          );
-          console.log(result.data);
+    setStateRegister(numberOfState) {
+      this.$v.$touch()
+      if (numberOfState == 2) {
+        if (!this.$v.username.$error && !this.$v.password.$error && !this.$v.confirmpassword.$error) {
+          this.e1 = numberOfState;
         } else {
-          const result = await axios.post(
-            "http://localhost:3000/customer/register",
-            {
-              username: this.username,
-              password: this.password,
-              fname: this.firstname,
-              lname: this.lastname,
-              date_of_birth: this.birthdate,
-            }
-          );
-          console.log(result.data);
+          alert("กรุณาตรวจสอบความถูกต้อง");
         }
-        this.$store.dispatch("modalLoginAction")
-        this.$router.push('/')
-      } catch (err) {
-        console.log(err);
+      }
+      if (numberOfState == 3) {
+        if (!this.$v.firstname.$error && !this.$v.lastname.$error && !this.$v.birthdate.$error) {
+          this.e1 = numberOfState;
+        } else {
+          alert("เฟรม");
+        }
+      }
+    },
+    async register() {
+      if (!this.$v.$invalid) {
+        try {
+          if (this.isAdmin) {
+            const result = await axios.post(
+              "http://localhost:3000/admin/register",
+              {
+                username: this.username,
+                password: this.password,
+                fname: this.firstname,
+                lname: this.lastname,
+                date_of_birth: this.birthdate,
+                position: this.position,
+                secretCode: this.secretCode,
+              }
+            );
+            console.log(result.data);
+          } else {
+            const result = await axios.post(
+              "http://localhost:3000/customer/register",
+              {
+                username: this.username,
+                password: this.password,
+                fname: this.firstname,
+                lname: this.lastname,
+                date_of_birth: this.birthdate,
+              }
+            );
+            console.log(result.data);
+            alert("เข้าสู่ระบบสำเร็จ")
+          }
+          this.$store.dispatch("modalLoginAction");
+          this.$router.push("/");
+        } catch (err) {
+          alert("ไม่ถูกต้อง");
+        }
       }
     },
   },
