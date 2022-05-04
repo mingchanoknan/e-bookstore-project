@@ -86,12 +86,18 @@ export default {
       this.totalPrice = this.allItemInCart[0].total_price
     },
     async pay(){
+      let text = "ยืนยันการชำระเงิน";
+      if (confirm(text) == true) {
       try{
         const result = await axios.put(`http://localhost:3000/payment/${this.$store.state.user.cart.cart_id}/${this.$store.state.user.customer_id}`)
         console.log(result.data)
         this.$router.push("/myBook")
       }catch(err){
         console.log(err)
+        alert("")
+      }}
+      else{
+        this.$router.push.push('/payment')
       }
     }
   },
