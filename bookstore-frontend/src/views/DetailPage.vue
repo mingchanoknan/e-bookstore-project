@@ -346,6 +346,7 @@ export default {
       }
     },
     async saveComment() {
+      confirm("ยืนยันเพิ่มความคิดเห็น");
       try {
         const result = await axios.post(
           `http://localhost:3000/comments/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,

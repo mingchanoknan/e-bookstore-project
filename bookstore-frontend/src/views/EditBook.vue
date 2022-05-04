@@ -9,27 +9,19 @@
       <v-row>
         <v-col lg="6" sm="12" md="12">
           <h4>รูปภาพปกหนังสือ</h4>
-                <v-img
-        height="250"
-        width="70%"
-        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-      ></v-img>
+            <v-img height="250" width="70%" src="https://cdn.vuetifyjs.com/images/cards/cooking.png"></v-img>
           <v-file-input accept="image/png, image/jpeg"
             prepend-icon="mdi-image-plus"
             label="Add file image" solo dense v-model="image"
           ></v-file-input>
                               <h4 style="color = 'black'">ชื่อประเภท *</h4>
-          <v-select :items="allType" label="ประเภทของหนังสือ" dense solo
-           v-model="type">
-          </v-select>
+<p>ชื่อประเภท</p>
                               <h4 style="color = 'black'">ชื่อผู้แต่ง *</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-           v-model="author">
-          </v-text-field>
+<p>ชื่อผู้แต่ง</p>
+
                               <h4 style="color = 'black'">ชื่อสำนักพิมพ์ *</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-           v-model="publisher">
-          </v-text-field>
+<p>ชื่อสำนักพิมพ์</p>
+
           <br />
 
           <v-divider></v-divider>
@@ -107,6 +99,8 @@ export default {
       this.author = "";
     },
     async addBook() {
+      let text = "ยืนยันการแก้ไขหนังสือ";
+      if (confirm(text) == true) {
       var formData = new FormData();
       formData.append("title", this.title);
       formData.append("abstrac", this.abstract);
@@ -116,6 +110,7 @@ export default {
       formData.append("set", this.set);
 
       formData.append("file", this.file);
+      
       if (this.image != null) {
         formData.append("image", this.image);
       }
@@ -130,7 +125,10 @@ export default {
         console.log(result.data);
       } catch (err) {
         console.log(err);
-      }
+      }}
+      else {
+    this.$router.push("/editbook");
+  }
     },
     cancle() {
       this.title = "";

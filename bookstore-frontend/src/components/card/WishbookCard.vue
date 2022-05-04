@@ -96,24 +96,28 @@ export default {
       }
     },
     async unInterested(ebookId) {
-      try {
-        const result = await axios.put(
-          `/deleteToInterest/${ebookId}/${this.$store.state.user.customer_id}`
-        );
-        console.log(result.data);
-      } catch (err) {
-        console.log(err);
+      let text = "ต้องการลบออกจากรายการที่สนใจใช่หรือไม่?";
+      if (confirm(text) == true) {
+        try {
+          const result = await axios.put(
+            `/deleteToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+          );
+          console.log(result.data);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        text = "You canceled!";
       }
     },
-
   },
 };
 </script>
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 
 .font {
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
 }
 .background-card {
   background-color: #da9c9d;

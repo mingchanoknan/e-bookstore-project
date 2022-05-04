@@ -73,11 +73,16 @@ export default {
       this.$store.dispatch("modalLoginAction");
     },
     logout(){
+      let text = "ออกจากระบบ?";
+  if (confirm(text) == true) {
       localStorage.removeItem('token');
       this.$store.dispatch("keepUser", null)
       this.$router.push("/")
     }
-  },
+    else{
+      text = "You canceled!";
+    }
+    }}
 };
 </script>
 <style scoped>

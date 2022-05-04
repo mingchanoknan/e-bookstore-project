@@ -5,47 +5,82 @@
       <v-row>
         <v-col cols="12" md="4" lg="4">
           <h4 style="color = 'black'">ชื่อหนังสือ *</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-           v-model="title">
+          <v-text-field
+            label="Solo"
+            solo
+            background-color="white"
+            color="black"
+            rounded
+            dense
+            v-model="title"
+          >
           </v-text-field>
         </v-col>
 
         <v-col cols="12" sm="4" lg="4">
-          <v-select :items="allType" label="ประเภทของหนังสือ" dense solo
-           v-model="type">
+          <v-select
+            :items="allType"
+            label="ประเภทของหนังสือ"
+            dense
+            solo
+            v-model="type"
+          >
           </v-select>
         </v-col>
 
         <v-col cols="12" md="4" lg="4">
           <h4>รูปภาพปกหนังสือ</h4>
-          <v-file-input accept="image/png, image/jpeg"
+          <v-file-input
+            accept="image/png, image/jpeg"
             prepend-icon="mdi-image-plus"
-            label="Add file image" solo dense v-model="image"
+            label="Add file image"
+            solo
+            dense
+            v-model="image"
           ></v-file-input>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" lg="4" md="6" sm="12">
           <h4>เรื่องย่อของหนังสือ</h4>
-          <v-textarea solo name="input-7-4" label="Solo textarea"
-          v-model="abstract"
+          <v-textarea
+            solo
+            name="input-7-4"
+            label="Solo textarea"
+            v-model="abstract"
           ></v-textarea>
         </v-col>
 
         <v-col cols="12" lg="4" md="6" sm="12">
           <v-row>
             <h4>ชื่อผู้แต่ง</h4>
-            <v-btn class="mx-2" fab dark x-small color="indigo"
-             @click="addAuthor()">
-            <v-icon dark> mdi-plus </v-icon>
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              x-small
+              color="indigo"
+              @click="addAuthor()"
+            >
+              <v-icon dark> mdi-plus </v-icon>
             </v-btn>
           </v-row>
           <div>
-            <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-              v-model="author" class="mt-6">
+            <v-text-field
+              label="Solo"
+              solo
+              background-color="white"
+              color="black"
+              rounded
+              dense
+              v-model="author"
+              class="mt-6"
+            >
             </v-text-field>
             <span v-for="(author, index) in allAuthor" :key="index">
-              <v-chip class="ma-2" close
+              <v-chip
+                class="ma-2"
+                close
                 @click:close="allAuthor.splice(index, 1)"
               >
                 {{ author }}
@@ -55,28 +90,54 @@
         </v-col>
         <v-col cols="12" lg="4" md="6" sm="12">
           <h4 style="color = 'black'">ชื่อสำนักพิมพ์ *</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-           v-model="publisher">
+          <v-text-field
+            label="Solo"
+            solo
+            background-color="white"
+            color="black"
+            rounded
+            dense
+            v-model="publisher"
+          >
           </v-text-field>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" lg="4" md="6" sm="12">
           <h4>หนังสือฉบับเต็ม *</h4>
-          <v-file-input accept="application/pdf" label="Avatar" solo dense
-           v-model="file">
+          <v-file-input
+            accept="application/pdf"
+            label="Avatar"
+            solo
+            dense
+            v-model="file"
+          >
           </v-file-input>
         </v-col>
         <v-col cols="12" lg="3" md="6" sm="12">
           <h4 style="color = 'black'">ราคาของหนังสือ</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-           v-model="price">
+          <v-text-field
+            label="Solo"
+            solo
+            background-color="white"
+            color="black"
+            rounded
+            dense
+            v-model="price"
+          >
           </v-text-field>
         </v-col>
         <v-col cols="12" lg="5" md="6" sm="12">
           <h4 style="color = 'black'">ชื่อของหนังสือชุด</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
-           v-model="set">
+          <v-text-field
+            label="Solo"
+            solo
+            background-color="white"
+            color="black"
+            rounded
+            dense
+            v-model="set"
+          >
           </v-text-field>
         </v-col>
       </v-row>
@@ -124,6 +185,7 @@ export default {
     },
     async addBook() {
       var formData = new FormData();
+      confirm("ยืนยันการเพิ่มหนังสือ!");
       formData.append("title", this.title);
       formData.append("abstrac", this.abstract);
       formData.append("price", this.price);
@@ -148,18 +210,26 @@ export default {
         console.log(err);
       }
     },
-    cancle(){
-        this.title = ""
-        this.abstract = ""
-        this.price = ""
-        this.publisher = ""
-        this.type = ""
-        this.set = ""
-        this.file = null
-        this.image = null
-        this.allAuthor = []
-        this.$router.push('/')
-    }
+    cancle() {
+      this.title = "";
+      this.abstract = "";
+      this.price = "";
+      this.publisher = "";
+      this.type = "";
+      this.set = "";
+      this.file = null;
+      this.image = null;
+      this.allAuthor = [];
+      this.$router.push("/");
+      let text = "ยกเลิกการเปลี่ยนแปลง";
+      if (confirm(text) == true) {
+        this.$router.push("/");
+      } else {
+        this.$router.push("/addbook");
+        text = "You canceled!";
+      }
+      document.getElementById("demo").innerHTML = text;
+    },
   },
 };
 </script>

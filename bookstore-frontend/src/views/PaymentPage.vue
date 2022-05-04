@@ -46,8 +46,8 @@
               </v-col> </v-row
             ><v-divider></v-divider><br>
             <center>
-              <v-btn
-                @click="$router.push('/payment')"
+              <v-btn 
+                @click="$router.push('/payment') "
                 title
                 color="black"
                 style="color: white"
