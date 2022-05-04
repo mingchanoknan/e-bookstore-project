@@ -29,8 +29,6 @@ router.post("/customer/register", async (req, res, next) => {
     const fname = req.body.fname;
     const lname = req.body.lname;
 
-
-
     await registerSchemas.validateAsync(req.body, { abortEarly: false });
 
     const [row, col] = await conn.query(
@@ -263,6 +261,37 @@ router.get("/getMyBook/:custId", isLoggedIn, async (req, res, next) => {
   } finally {
     conn.release()
   }
+})
+
+const changeSchema = Joi.object({
+  old_password: Joi.string().required().min(8),
+  password: Joi.string().required().min(8),
+  confirm_password: Joi.string().required().valid(Joi.ref('password'))
+})
+router.put("/customer/changePassword/:cusId", isLoggedIn, async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    await changeSchema.validateAsync(req.body,  { abortEarly: false })
+    const [user, col] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [req.params.cusId])
+    if (!(await bcrypt.compare(req.body.old_password, user[0].password))) {
+      throw new Error("Your old password is incorrect");
+    }
+    const password = await bcrypt.hash(req.body.password, 5)
+    const [row, col2] = await conn.query(`UPDATE customer SET password = ? WHERE customer_id=?`,
+      [password, req.params.cusId]);
+    res.send('Password change successfully').status(200)
+  } catch (err) {
+    console.log(err)
+    await conn.rollback();
+    res.status(400).send({
+      message: err.message
+    })
+    
+  } finally {
+    conn.release()
+  }
+
 })
 
 exports.router = router;

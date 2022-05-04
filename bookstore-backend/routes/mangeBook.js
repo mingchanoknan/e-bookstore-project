@@ -5,75 +5,6 @@ const upload = require("../utils/Uploader");
 const fs = require("fs");
 const {isLoggedIn} = require("../middlewares/index");
 
-// const imageUploader = require("../utils/ImageBookUpload");
-// const fileUploader = require("../utils/FileBookUpload");
-// const { router } = require("./admin");
-// const multer = require("multer");
-// var storage = multer.diskStorage({
-//   destination: function (req, file, callback) {
-//     callback(null, "./static/uploads"); // path to save file
-//   },
-//   filename: function (req, file, callback) {
-//     // set file name
-//     callback(
-//       null,
-//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-//     );
-//   },
-// });
-
-// const upload = multer({ storage: storage });
-
-// router.post(
-//   "/addBook/:adminId",
-//   upload.single("imageBook"),
-//   async (req, res, next) => {
-//     // const title = req.body.title;
-//     // const abstract = req.body.abstract;
-//     // const book_path = "?";
-//     // const price = req.body.price;
-//     const publisher = req.body.publisher;
-//     // const author = req.body.author
-//     let publisherId = 0;
-//     const conn = await pool.getConnection();
-//     await conn.beginTransaction();
-//     try {
-//       const checkPublisher = await conn.query(
-//         `SELECT publisher_id FROM publisher WHERE publisher_name = ?`,
-//         [publisher]
-//       );
-
-//       // res.send(checkPublisher[0])
-//       if (checkPublisher[0].length) {
-//         publisherId = checkPublisher[0][0].publisher_id;
-//       } else {
-//         [addPublisher, field] = await conn.query(
-//           `INSERT INTO publisher(publisher_name) values(?)`,
-//           [publisher]
-//         );
-//         console.log(addPublisher);
-//         publisherId = addPublisher.insertId;
-//       }
-//       console.log(publisherId);
-//       await conn.commit();
-//     } catch (err) {
-//       await conn.rollback();
-//       res.send(err.message).status(400);
-//     } finally {
-//       conn.release();
-//     }
-
-//     // const addBook = await conn.query(`INSERT INTO ebook(title,abstract,book_path,pricr,`)
-
-//     // const file = req.file;
-//     // if (file) {
-//     //   const updateImg = await conn.query(
-//     //     `UPDATE admin SET image_path = ? WHERE admin_id = ?`,
-//     //     [file.path.substr(6), req.params.adminId]
-//     //   );
-//     // }
-//   }
-// );
 
 router.get("/bookType", async (req, res, next) => {
   const conn = await pool.getConnection();
@@ -107,7 +38,7 @@ router.put("/deleteBook/:bookId/:adminId",isLoggedIn, async (req, res, next) => 
       [req.params.bookId, req.params.adminId, "delete"]
     );
     await conn.commit();
-    res.send("Updated successfully").status(200);
+    res.send("delete successfully").status(200);
   } catch (err) {
     await conn.rollback();
     res.send(err.message).status(400);
@@ -171,7 +102,7 @@ router.post(
         const image_cover = req.files.image[0].path;
         const addBook = await conn.query(
           `INSERT INTO ebook(title, abstract, book_path,image_cover, price, publisher_id, type_id) values (?,?,?,?,?,?,?)`,
-          [title, abstract, book_path, image_cover.substr(6), price, publisherId, typeId]);
+          [title, abstract, book_path.substr(6), image_cover.substr(6), price, publisherId, typeId]);
         ebookId = addBook[0].insertId
       } else {
         const addBook = await conn.query(

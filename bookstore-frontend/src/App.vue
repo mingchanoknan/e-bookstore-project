@@ -42,16 +42,6 @@ export default {
     toggleModal(){
       this.$store.dispatch("modalLoginAction")
     },
-    // async loginByToken(){
-    //   const token = localStorage.getItem("token")
-    //   try {
-    //     const result = await axios.post("http://localhost:3000/customer/loginByToken" ,{token: token})
-    //     this.$store.dispatch("keepUser", result.data.user)
-    //   }
-    //   catch(err){
-    //     console.log(err.message)
-    //   }
-    // }
     onAuthChange () {
        const token = localStorage.getItem('token')
        if (token) {

@@ -14,7 +14,7 @@ const registerSchemas = Joi.object({
   fname: Joi.string().required(),
   lname: Joi.string().required(),
   position: Joi.string().optional(),
-  secretCode:Joi.string().optional(),
+  secretCode: Joi.string().optional(),
 });
 router.post("/admin/register", async (req, res, next) => {
   const username = req.body.username;
@@ -24,16 +24,16 @@ router.post("/admin/register", async (req, res, next) => {
   const lname = req.body.lname;
   const position = req.body.position;
   const secretCode = req.body.secretCode
-const conn = await pool.getConnection();
+  const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-  
-  
+
+
     if (secretCode != "webPro2022") {
-    throw new Error("Secret code incorrect!")
-  }
-  
-  
+      throw new Error("Secret code incorrect!")
+    }
+
+
     await registerSchemas.validateAsync(req.body, { abortEarly: false });
 
     const [row, col] = await conn.query(
@@ -53,7 +53,7 @@ const conn = await pool.getConnection();
     console.log(err.message)
     await conn.rollback();
     // res.send(err.message).status(400);
-    res.status(400).send({message: err.message})
+    res.status(400).send({ message: err.message })
   } finally {
     conn.release();
   }
@@ -78,7 +78,7 @@ router.post("/admin/login", async (req, res, next) => {
     }
     user["role"] = "admin"
     const token = await conn.query(`SELECT token FROM token WHERE admin_id = ?`,
-    [user.admin_id])
+      [user.admin_id])
     let obj = {
       status: "Login!",
       user: user,
@@ -86,40 +86,14 @@ router.post("/admin/login", async (req, res, next) => {
     };
     res.send(obj).status(200);
   } catch (err) {
+    await conn.rollback();
     res.send(err.message).status(400);
   } finally {
     conn.release();
   }
 });
-// router.get("/admin/loginByToken", async (req, res, next) => {
-//   const conn = await pool.getConnection();
-//   await conn.beginTransaction();
-//   try {
-//     const [row1, field] = await conn.query(
-//       `SELECT * FROM token WHERE token = ?`,
-//       [req.body.token]
-//     );
-
-//     const token = row1[0];
-//     if (token == undefined) {
-//       throw new Error("Token is Incorrect");
-//     }
-
-//     const [row2, field2] = await conn.query(
-//       `SELECT * FROM customer WHERE admin_id = ?`,
-//       [token.admin_id]
-//     );
-
-//     const user = row2[0];
-//     res.send(user).status(200);
-//   } catch (err) {
-//     res.send(err.message).status(400);
-//   } finally {
-//     conn.release();
-//   }
-// });
 //show profile
-router.get("/admin/profile/:adminId", isLoggedIn , async (req, res, next) => {
+router.get("/admin/profile/:adminId", isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
@@ -129,6 +103,7 @@ router.get("/admin/profile/:adminId", isLoggedIn , async (req, res, next) => {
     );
     res.send(row).status(200);
   } catch (err) {
+    await conn.rollback();
     res.send(err.message).status(400);
   } finally {
     conn.release();
@@ -136,26 +111,58 @@ router.get("/admin/profile/:adminId", isLoggedIn , async (req, res, next) => {
 });
 //edit Profile admin
 router.put(
-  "/admin/editProfile/:adminId",isLoggedIn,
+  "/admin/editProfile/:adminId", isLoggedIn,
   uploader.single('image'),
   async (req, res, next) => {
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
       const [row, col] = await conn.query(` UPDATE admin SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE admin_id = ?`,
-        [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth,req.params.adminId])
+        [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth, req.params.adminId])
       if (!!req.file) {
         const [addImg, col2] = await conn.query(`UPDATE admin SET image_path =? WHERE admin_id = ?`,
-        [req.file.path.substr(6),req.params.adminId])
+          [req.file.path.substr(6), req.params.adminId])
       }
       await conn.commit()
       res.send("edit profile successfully").status(200)
     } catch (err) {
+      await conn.rollback();
       res.status(404).json(err.message)
-    }finally {
+    } finally {
       conn.release()
     }
   }
 );
+
+const changeSchema = Joi.object({
+  old_password: Joi.string().required().min(8),
+  password: Joi.string().required().min(8),
+  confirm_password: Joi.string().required().valid(Joi.ref('password'))
+})
+router.put("/admin/changePassword/:adminId", isLoggedIn, async (req, res, next) => {
+  const conn = await pool.getConnection();
+  await conn.beginTransaction();
+  try {
+    await changeSchema.validateAsync(req.body,  { abortEarly: false })
+    const [user, col] = await conn.query(`SELECT * FROM admin WHERE admin_id = ?`, [req.params.adminId])
+    if (!(await bcrypt.compare(req.body.old_password, user[0].password))) {
+      throw new Error("Your old password is incorrect");
+    }
+    const password = await bcrypt.hash(req.body.password, 5)
+    const [row, col2] = await conn.query(`UPDATE admin SET password = ? WHERE admin_id=?`,
+      [password, req.params.adminId]);
+    res.send('Password change successfully').status(200)
+  } catch (err) {
+    console.log(err)
+    await conn.rollback();
+    res.status(400).send({
+      message: err.message
+    })
+    
+  } finally {
+    conn.release()
+  }
+
+})
 
 exports.router = router;

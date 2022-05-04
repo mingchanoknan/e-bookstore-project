@@ -26,12 +26,27 @@
           </p>
           <p><b>สำนักพิมพ์</b> {{ book.publisher_name }}</p>
           <p><b>หมวดหมู่</b> {{ book.type_name }}</p>
-          <v-btn rounded color="#EFFFE3" large v-if="isOwner || $store.state.user.role != 'customer'"> เปิดอ่าน </v-btn>
-          <v-btn rounded color="#EDC4D6" large v-else>ซื้อ {{ book.price }} บาท</v-btn>
-          <v-icon v-if="isInterest && !isOwner " color="pink" large
+          <v-btn
+            rounded
+            color="#EFFFE3"
+            large
+            v-if="isOwner || $store.state.user.role != 'customer'"
+            @click="openNewTab(book)"
+          >
+            เปิดอ่าน
+          </v-btn>
+          <v-btn rounded color="#EDC4D6" large v-else
+            >ซื้อ {{ book.price }} บาท</v-btn
+          >
+          <v-icon v-if="isInterest && !isOwner" color="pink" large
             >mdi-notebook-heart</v-icon
           >
-          <v-icon v-else-if="!isInterest && !isOwner && $store.state.user.role == 'customer'" color="black" large
+          <v-icon
+            v-else-if="
+              !isInterest && !isOwner && $store.state.user.role == 'customer'
+            "
+            color="black"
+            large
             >mdi-notebook-heart-outline</v-icon
           >
 
@@ -41,11 +56,20 @@
           <v-icon v-else-if="isFavorite && isOwner" color="pink" large
             >mdi-cards-heart</v-icon
           >
-          <span class="ml-3" v-if="$store.state.user != null && $store.state.user.role != 'customer'">
-            <v-icon large @click="editbook()" class="pr-3">mdi-pencil-outline</v-icon>
-          <v-icon large class="pr-3">mdi-trash-can-outline</v-icon>
+          <span
+            class="ml-3"
+            v-if="
+              $store.state.user != null && $store.state.user.role != 'customer'
+            "
+          >
+            <v-icon large @click="editbook()" class="pr-3"
+              >mdi-pencil-outline</v-icon
+            >
+            <v-icon large class="pr-3" @click="deletebook()"
+              >mdi-trash-can-outline</v-icon
+            >
           </span>
-          
+
           <p></p>
           <v-card
             max-width="400"
@@ -316,7 +340,9 @@ export default {
       this.rating = this.book.average_rating;
       // console.log(this.$route.params.bookId)
     },
-
+    openNewTab(book) {
+      window.open("http://localhost:3000/" + book.book_path);
+    },
     async checkBookAboutCustomer() {
       try {
         const result = await axios.get(
@@ -354,7 +380,7 @@ export default {
             rate: this.ratingCustomer,
           }
         );
-        console.log(result.data)
+        console.log(result.data);
         this.allComment.push({
           comment: this.commentCustomer,
           comment_date: new Date(),
@@ -369,18 +395,31 @@ export default {
         console.log(err);
       }
     },
-     async deleteComment(index){
-       try{
-         const result = await axios.delete(`http://localhost:3000/deleteComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`)
-       console.log(result.data)
-       this.allComment.splice(index,1)
-       } catch (err) {
+    async deleteComment(index) {
+      try {
+        const result = await axios.delete(
+          `http://localhost:3000/deleteComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`
+        );
+        console.log(result.data);
+        this.allComment.splice(index, 1);
+      } catch (err) {
         console.log(err);
       }
     },
-    editbook(){
-      this.$router.push("/editbook/"+this.$route.params.bookId)
-    }
+    editbook() {
+      this.$router.push("/editbook/" + this.$route.params.bookId);
+    },
+    async deletebook() {
+      try {
+        const result = await axios.put(
+          `http://localhost:3000/deleteBook/${this.book.ebook_id}/${this.$store.state.user.admin_id}`
+        );
+        console.log(result.data);
+        this.$router.push('/')
+      } catch (err) {
+        console.log(err);
+      }
+    },
     // async editComment(comment){
     //   try{
     //     // const result = await axios.put(`http://localhost:3000/editComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,{

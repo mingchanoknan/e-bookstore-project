@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TypeBar />
     <br />
     <v-container style="font-family: 'Kanit', sans-serif">
       <center><h1>Payment</h1></center>
@@ -70,11 +69,9 @@
 </template>
 <script>
 import axios from "@/plugins/axios";
-import TypeBar from "../components/bar/Typebar.vue";
 export default {
   name: "DetailPage",
   components: {
-    TypeBar,
   },
   data: () => ({
     allItemInCart:[],
