@@ -97,6 +97,8 @@ export default {
   },
   methods: {
     async deleteItem(index, item) {
+      let text = "ต้องการลบออกจากตะกร้า!";
+      if (confirm(text) == true) {
         try{
           const result = await axios.delete(`http://localhost:3000/deleteItem/${item.item_no}/${this.$store.state.user.cart.cart_id}`)
           console.log(result.data)
@@ -104,7 +106,7 @@ export default {
           this.allItemInCart.splice(index,1)
         }catch(err){
           console.log(err)
-        }
+        }}
 
     },
     async getItemInCart(){
