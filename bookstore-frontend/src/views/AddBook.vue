@@ -143,6 +143,7 @@ export default {
           `http://localhost:3000/addbook/${this.$store.state.user.admin_id}`,
           formData
         );
+        this.$router.push("/")
         console.log(result.data);
       } catch (err) {
         console.log(err);

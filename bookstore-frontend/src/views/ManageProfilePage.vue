@@ -7,10 +7,6 @@
       <v-row>
         <v-col lg="3" sm="12" md="12">
           <div class="avatar-upload">
-            <div class="avatar-edit">
-              <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg" />
-              <label for="imageUpload"></label>
-            </div>
             <div class="avatar-preview">
               <v-img v-if="$store.state.user.image_path == null"
                src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png">
@@ -58,6 +54,7 @@
               แก้ไขข้อมูลส่วนตัว
             </v-btn>
             <v-btn
+            @click="toggle()"
               title
               color="black"
               style="color: white; margin-right: 10px"
@@ -93,14 +90,25 @@
         </v-col>
       </v-row>
     </v-container>
+    <PasswordEditCard :active="toggleEdit"/>
   </div>
 </template>
 <script>
+import PasswordEditCard from "../components/card/PasswordEditCard.vue";
 export default {
   name: "DetailPage",
-  components: {},
-  data: () => ({}),
+  components: {
+    PasswordEditCard
+  },
+  data: () => ({
+    toggleEdit: false,
+    user:[],
+  }),created(){
+  },
   methods:{
+    toggle(){
+      this.toggleEdit = !this.toggleEdit
+    }
   }
 };
 </script>

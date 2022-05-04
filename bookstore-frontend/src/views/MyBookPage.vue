@@ -42,28 +42,38 @@ export default {
     technologyBooks: "",
   }),
   created() {
-    this.getBook();
+    this.getMyBook();
   },
   methods: {
-    async getBook() {
+    // async getBook() {
+    //   try {
+    //     let result = await axios("http://localhost:3000/getAllBook");
+    //     this.allBook = result.data;
+    //     result = await axios("http://localhost:3000/getNovelBooks");
+    //     this.novelBooks = result.data;
+    //     result = await axios("http://localhost:3000/getComicBooks");
+    //     this.comicBooks = result.data;
+    //     result = await axios("http://localhost:3000/getTravelBooks");
+    //     this.travelBooks = result.data;
+    //     result = await axios("http://localhost:3000/getTextBooks");
+    //     this.textBooks = result.data;
+    //     result = await axios("http://localhost:3000/getTechnologyBooks");
+    //     this.technologyBooks = result.data;
+    //     // console.log(this.comicBooks)
+    //   } catch (err) {
+    //     console.log(err.message);
+    //   }
+    // },
+    async getMyBook(){
       try {
-        let result = await axios("http://localhost:3000/getAllBook");
-        this.allBook = result.data;
-        result = await axios("http://localhost:3000/getNovelBooks");
-        this.novelBooks = result.data;
-        result = await axios("http://localhost:3000/getComicBooks");
-        this.comicBooks = result.data;
-        result = await axios("http://localhost:3000/getTravelBooks");
-        this.travelBooks = result.data;
-        result = await axios("http://localhost:3000/getTextBooks");
-        this.textBooks = result.data;
-        result = await axios("http://localhost:3000/getTechnologyBooks");
-        this.technologyBooks = result.data;
-        // console.log(this.comicBooks)
-      } catch (err) {
-        console.log(err.message);
+        console.log(this.$store.state.user.customer_id)
+        let result = await axios(`http://localhost:3000/getMyBook/${this.$store.state.user.customer_id}`)
+        this.allBook = result.data
       }
-    },
+      catch(err){
+        console.log(err)
+      }
+    }
   },
   computed: {},
   watch: {},
