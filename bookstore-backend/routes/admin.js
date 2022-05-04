@@ -3,23 +3,10 @@ const pool = require("../config/mysql_connector");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/token");
-const {isLoggedIn} = require("../middlewares/index")
+const { isLoggedIn } = require("../middlewares/index")
+const uploader = require("../utils/profileUploader");
 router = express.Router();
-// const multer = require("multer");
-// var storage = multer.diskStorage({
-//   destination: function (req, file, callback) {
-//     callback(null, "./static/uploads"); // path to save file
-//   },
-//   filename: function (req, file, callback) {
-//     // set file name
-//     callback(
-//       null,
-//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-//     );
-//   },
-// });
 
-// const upload = multer({ storage: storage });
 const registerSchemas = Joi.object({
   username: Joi.string().required(),
   password: Joi.string().required().min(8),
@@ -27,6 +14,7 @@ const registerSchemas = Joi.object({
   fname: Joi.string().required(),
   lname: Joi.string().required(),
   position: Joi.string().optional(),
+  secretCode:Joi.string().optional(),
 });
 router.post("/admin/register", async (req, res, next) => {
   const username = req.body.username;
@@ -147,30 +135,27 @@ router.get("/admin/profile/:adminId", isLoggedIn , async (req, res, next) => {
   }
 });
 //edit Profile admin
-// router.put(
-//   "/admin/editProfile/:adminId",isLoggedIn,
-//   upload.single("imageAdmin"),
-//   async (req, res, next) => {
-//     const conn = await pool.getConnection();
-//     await conn.beginTransaction();
-//     try {
-//       const file = req.file;
-//       if (file) {
-//         const updateImg = await conn.query(
-//           `UPDATE admin SET image_path = ? WHERE admin_id = ?`,
-//           [file.path.substr(6), req.params.adminId]
-//         );
-//       }
-
-//       const update = await conn.query(`UPDATE admin SET username = ? ,date_of_birth = ? , fname =? , lname =?, position = ? WHERE admin_id =? `,
-//       [req.body.username, req.body.date_of_birth, req.body.fname, req.body.lname, req.body.position, req.params.adminId]);
-//       res.send("Updated successfully").status(200);
-//     } catch (err) {
-//       res.send(err.message).status(400);
-//     } finally {
-//       conn.release();
-//     }
-//   }
-// );
+router.put(
+  "/admin/editProfile/:adminId",isLoggedIn,
+  uploader.single('image'),
+  async (req, res, next) => {
+    const conn = await pool.getConnection();
+    await conn.beginTransaction();
+    try {
+      const [row, col] = await conn.query(` UPDATE admin SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE admin_id = ?`,
+        [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth,req.params.adminId])
+      if (!!req.file) {
+        const [addImg, col2] = await conn.query(`UPDATE admin SET image_path =? WHERE admin_id = ?`,
+        [req.file.path.substr(6),req.params.adminId])
+      }
+      await conn.commit()
+      res.send("edit profile successfully").status(200)
+    } catch (err) {
+      res.status(404).json(err.message)
+    }finally {
+      conn.release()
+    }
+  }
+);
 
 exports.router = router;

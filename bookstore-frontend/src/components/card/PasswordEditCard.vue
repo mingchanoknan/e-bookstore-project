@@ -1,78 +1,93 @@
 <template>
+<v-dialog v-model="isActive">
+  <v-card>
   <v-form v-model="valid">
     <v-container>
-      <div class="close-container">
-      <v-icon large>mdi-close</v-icon>
+
+      <div @click="isActive = !isActive" class="close-container">
+        <v-icon large>mdi-close</v-icon>
+
       </div>
       <div class="head-name">
         <center><h1>แก้ไขรหัสผ่าน</h1></center>
       </div>
       <div class="mx-6 mt-6">
-                  <v-text-field
+        <v-text-field
           solo
           background-color="#EDC4D6"
           color="black"
           dense
           prepend-inner-icon="mdi-lock"
-          label="Password"
+          label="Old Password"
           outlined
-          v-model="password"
+          v-model="oldPassword"
           :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
           @click:append="passwordShow = !passwordShow"
           :type="passwordShow ? 'text' : 'password'"
         ></v-text-field>
-<v-text-field
-                      prepend-inner-icon="mdi-lock"
-                      label="Password"
-                      outlined
-                      dense
-                      color="black"
-                      v-model="password"
-                      :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                      @click:append="passwordShow = !passwordShow"
-                      :type="passwordShow ? 'text' : 'password'"
-                      background-color="#EDC4D6"
-                    ></v-text-field>
-                    <v-text-field
-                      prepend-inner-icon="mdi-lock-alert"
-                      label="Repeat Password"
-                      outlined
-                      dense
-                      color="black"
-                      v-model="confirmpassword"
-                      :append-icon="repeatShow ? 'mdi-eye' : 'mdi-eye-off'"
-                      @click:append="repeatShow = !repeatShow"
-                      :type="repeatShow ? 'text' : 'password'"
-                      background-color="#EDC4D6"
-                    ></v-text-field>
-
+        <v-text-field
+          prepend-inner-icon="mdi-lock"
+          label="New Password"
+          outlined
+          dense
+          color="black"
+          v-model="newPassword"
+          :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="passwordShow = !passwordShow"
+          :type="passwordShow ? 'text' : 'password'"
+          background-color="#EDC4D6"
+        ></v-text-field>
+        <v-text-field
+          prepend-inner-icon="mdi-lock-alert"
+          label="Repeat New Password"
+          outlined
+          dense
+          color="black"
+          v-model="confirmpassword"
+          :append-icon="repeatShow ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="repeatShow = !repeatShow"
+          :type="repeatShow ? 'text' : 'password'"
+          background-color="#EDC4D6"
+        ></v-text-field>
       </div>
 
       <div align="right">
         <div class="mb-2">
           <v-btn rounded color="#9FCDDE" large @click="loginCustomer()">
-            LOGIN AS USER</v-btn
+            Change Password </v-btn
           >
         </div>
       </div>
-
-    
     </v-container>
+    
   </v-form>
+  </v-card>
+  </v-dialog>
 </template>
 <script>
-import axios from "@/plugins/axios";
+// import axios from "@/plugins/axios";
 export default {
   name: "LoginCard",
   components: {},
+  props: ['active'],
   data: () => ({
     username: "",
-    password: "",
+    oldPassword: "",
+    newPassword:"",
+    passwordShow:false,
+    repeatShow:false,
+    confirmpassword:"",
     nameRules: [(v) => !!v || "Required."],
     valid: true,
+    isActive:false,
+    isOldPass:""
   }),
-  methods: {
-  },
+  methods: {},
+  watch: {
+    active: function(){
+      this.isActive = !this.isActive
+    }
+  }
 };
 </script>
 <style scoped>
@@ -81,7 +96,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 .head-name {
   color: black;
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
   letter-spacing: 1px;
   font-size: xx-color= "black" large;
   padding-left: 0.8em;

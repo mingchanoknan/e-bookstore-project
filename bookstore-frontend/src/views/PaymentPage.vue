@@ -9,7 +9,8 @@
         <v-col lg="6" sm="12" md="12">
           <h1>CART TOTALS</h1>
           <v-divider></v-divider><br />
-          <p>ราคาสินค้า 100.00 THB</p>
+          <p><b>จำนวน {{allItemInCart.length}} รายการ</b></p>
+          <p><b>ราคารวมสินค้า {{totalPrice}} THB</b></p>
           <center>
             <v-btn
               @click="$router.push('/cart')"
@@ -31,30 +32,33 @@
           <v-card color="#EDC4D6" style="color: black; padding: 1rem">
                   <center><h1>สรุปรายการสินค้า</h1></center>
       <v-divider></v-divider><br />
-            <v-row>
+      <v-row>
+        <v-col lg="6" sm="12" md="12"><h3>PRODUCT</h3></v-col>
+        <v-col lg="6" sm="12" md="12"><h3>ราคาสินค้า</h3></v-col>
+      </v-row>
+      
+            <v-row v-for="(item,index) in allItemInCart" :key="item.item_no">
               <v-col lg="6" sm="12" md="12">
-                <h3>PRODUCT</h3>
-                <p style="margin: 0;" >SPY x FAMILY เล่ม 02</p>
-                <p>โดย Tatsuya Endo</p>
+                <p style="margin: 0;" >{{index+1}}.)&nbsp;&nbsp;{{item.title}}</p>
+                <!-- <p>โดย Tatsuya Endo</p> -->
                 <section>
                 </section>
               </v-col>
               <v-col lg="6" sm="12" md="12">
-                <h3>ราคาสินค้า</h3>
-                <p>100.00 THB</p>
+                <p>{{item.price}} THB</p>
                 <center></center>
               </v-col> </v-row
             ><v-divider></v-divider><br>
             <center>
               <v-btn
-                @click="$router.push('/payment')"
+                @click="pay()"
                 title
-                color="black"
+                color="green"
                 style="color: white"
                 large
                 width="250px"
               >
-                ชำระเงิน
+                ยืนยันการชำระเงิน
               </v-btn>
             </center>
           </v-card>
@@ -65,13 +69,35 @@
   </div>
 </template>
 <script>
+import axios from "@/plugins/axios";
 import TypeBar from "../components/bar/Typebar.vue";
 export default {
   name: "DetailPage",
   components: {
     TypeBar,
   },
-  data: () => ({}),
+  data: () => ({
+    allItemInCart:[],
+    totalPrice:0
+  }),
+    created() {
+    this.getItemInCart();
+  },methods: {
+    async getItemInCart(){
+      const result = await axios.get(`http://localhost:3000/itemsInCart/${this.$store.state.user.cart.cart_id}`);
+      this.allItemInCart = result.data
+      this.totalPrice = this.allItemInCart[0].total_price
+    },
+    async pay(){
+      try{
+        const result = await axios.put(`http://localhost:3000/payment/${this.$store.state.user.cart.cart_id}/${this.$store.state.user.customer_id}`)
+        console.log(result.data)
+        this.$router.push("/myBook")
+      }catch(err){
+        console.log(err)
+      }
+    }
+  },
 };
 </script>
 <style scoped>
