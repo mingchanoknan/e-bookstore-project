@@ -317,7 +317,7 @@
                   $store.state.user.customer_id == comment.customer_id
                 "
                 color="orange"
-                text @click="isShowedit = true"
+                text @click="isShowedit = true" 
               >
                 Edit</v-btn
               >
@@ -340,6 +340,7 @@
   </div>
 </template>
 <script>
+import { required } from "vuelidate/lib/validators";
 import axios from "@/plugins/axios";
 // import TypeBar from "../components/bar/Typebar.vue";
 export default {
@@ -359,6 +360,9 @@ export default {
     commentCustomer: "",
     ratingCustomer: 0,
   }),
+  validations: {
+    commentCustomer: { required },
+  },
   created() {
     this.getBook();
     this.getComment();
@@ -443,6 +447,7 @@ export default {
       }
     },
     async deleteComment(index) {
+      this.$v.$touch()
       try {
         const result = await axios.delete(
           `http://localhost:3000/deleteComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`
