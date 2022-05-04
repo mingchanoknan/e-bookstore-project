@@ -42,7 +42,7 @@
             >mdi-cards-heart</v-icon
           >
           <span class="ml-3" v-if="$store.state.user != null && $store.state.user.role != 'customer'">
-            <v-icon large  class="pr-3">mdi-pencil-outline</v-icon>
+            <v-icon large @click="editbook()" class="pr-3">mdi-pencil-outline</v-icon>
           <v-icon large class="pr-3">mdi-trash-can-outline</v-icon>
           </span>
           
@@ -378,6 +378,9 @@ export default {
         console.log(err);
       }
     },
+    editbook(){
+      this.$router.push("/editbook/"+this.$route.params.bookId)
+    }
     // async editComment(comment){
     //   try{
     //     // const result = await axios.put(`http://localhost:3000/editComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,{
