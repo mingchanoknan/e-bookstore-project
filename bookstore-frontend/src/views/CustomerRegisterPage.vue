@@ -272,7 +272,7 @@ export default {
           this.$store.dispatch("modalLoginAction");
           this.$router.push("/");
         } catch (err) {
-          alert("ไม่ถูกต้อง");
+          alert("ข้อมูลไม่ถูกต้อง");
         }
       }
     },

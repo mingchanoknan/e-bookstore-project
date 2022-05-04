@@ -104,6 +104,14 @@ router.get("/customer/profile/:cusId", isLoggedIn, async (req, res, next) => {
     conn.release()
   }
 })
+
+const editProfileSchemas = Joi.object({
+  username: Joi.string().required(),
+  date_of_birth: Joi.date().optional(),
+  fname: Joi.string().required(),
+  lname: Joi.string().required(),
+});
+
 router.put("/customer/editProfile/:cusId", isLoggedIn, uploader.single('image'), async (req, res, next) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()

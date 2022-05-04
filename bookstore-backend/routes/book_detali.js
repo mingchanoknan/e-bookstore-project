@@ -23,12 +23,19 @@ router.get("/getDetailBook/:ebookId", async (req, res, next) => {
             join book_type using (type_id)
             where ebook_id = ?`, [ebookId]
         )
+        console.log(row[0])
+        if (row[0].set_id != null) {
+            let [set,col2] = await conn.query(`SELECT set_name FROM set_book WHERE set_id=?`,[row[0].set_id])
+            row[0]["set"] = set
+        }
         let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [ebookId])
         row[0]["author"] = author
-        conn.commit()
+        console.log(row[0])
+        await conn.commit()
         res.send(row[0]).status(200)
     } catch (err) {
-        conn.rollback()
+        console.log(err)
+        await conn.rollback()
         res.status(404).json(err.message)
     } finally {
         conn.release()

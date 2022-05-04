@@ -79,7 +79,7 @@
 
 import axios from "@/plugins/axios";
 export default {
-  name: "AddBookForm",
+  name: "EditBookForm",
   components: {},
   data: () => ({
     infoBook:[],
@@ -102,7 +102,7 @@ export default {
       this.title = this.infoBook.title
       this.abstract = this.infoBook.abstract
       this.price= this.infoBook.price
-      this.set = this.infoBook.set
+      this.set = this.infoBook.set_name
 
       // console.log(this.$route.params.bookId)
     },
@@ -111,8 +111,11 @@ export default {
       formData.append("title", this.title);
       formData.append("abstract", this.abstract);
       formData.append("price", this.price);
-      formData.append("set", this.set);
-      confirm("บันทึกการเปลี่ยนแปลง!");
+
+      if(this.set != undefined){
+        formData.append("set", this.set);
+      }
+      
       if(this.file != null){
         formData.append("file", this.file);
       }
