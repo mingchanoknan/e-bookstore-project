@@ -1,11 +1,11 @@
 <template>
-  <v-form style="background-color: #bfd0fd">
+  <v-form style="background-color: #bfd0fd" v-model="valid">
     <v-container>
       <center><h1>ADD A NEW BOOK</h1></center>
       <v-row>
         <v-col cols="12" md="4" lg="4">
           <h4 style="color = 'black'">ชื่อหนังสือ *</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
+          <v-text-field label="Solo" solo required background-color="white" color="black" rounded dense :rules="nameRules"
            v-model="title">
           </v-text-field>
         </v-col>
@@ -55,7 +55,7 @@
         </v-col>
         <v-col cols="12" lg="4" md="6" sm="12">
           <h4 style="color = 'black'">ชื่อสำนักพิมพ์ *</h4>
-          <v-text-field label="Solo" solo background-color="white" color="black" rounded dense
+          <v-text-field label="Solo" solo background-color="white" color="black" :rules="nameRules" required rounded dense
            v-model="publisher">
           </v-text-field>
         </v-col>
@@ -63,7 +63,7 @@
       <v-row>
         <v-col cols="12" lg="4" md="6" sm="12">
           <h4>หนังสือฉบับเต็ม *</h4>
-          <v-file-input accept="application/pdf" label="Avatar" solo dense
+          <v-file-input accept="application/pdf" required label="Avatar" solo dense :rules="nameRules"
            v-model="file">
           </v-file-input>
         </v-col>
@@ -86,6 +86,7 @@
   </v-form>
 </template>
 <script>
+import { required } from "vuelidate/lib/validators";
 import axios from "@/plugins/axios";
 export default {
   name: "AddBookForm",
@@ -102,7 +103,14 @@ export default {
     set: "",
     image: null,
     file: null,
+    nameRules: [(v) => !!v || "Required."],
+    valid: true,
   }),
+  validations: {
+    title: { required },
+    publisher: { required },
+    file: { required },
+  },
   created() {
     this.getTypeBook();
   },
@@ -123,6 +131,8 @@ export default {
       this.author = "";
     },
     async addBook() {
+      this.$v.$touch()
+      if (!this.$v.title.$error && !this.$v.publisher.$error && !this.$v.file.$error) {
       var formData = new FormData();
       formData.append("title", this.title);
       formData.append("abstract", this.abstract);
@@ -151,6 +161,8 @@ export default {
         console.log(result.data);
       } catch (err) {
         console.log(err);
+      }}else{
+        alert("ไม่ถูกต้อง กรุณาตรวจสอบข้อมูลใหม่")
       }
     },
     cancle(){

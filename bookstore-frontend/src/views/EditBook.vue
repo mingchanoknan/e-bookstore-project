@@ -76,6 +76,7 @@
   </v-form>
 </template>
 <script>
+
 import axios from "@/plugins/axios";
 export default {
   name: "EditBookForm",
@@ -110,6 +111,7 @@ export default {
       formData.append("title", this.title);
       formData.append("abstract", this.abstract);
       formData.append("price", this.price);
+
       if(this.set != undefined){
         formData.append("set", this.set);
       }
@@ -120,6 +122,7 @@ export default {
       if (this.image != null) {
         formData.append("image", this.image);
       }
+      
       try {
         const result = await axios.put(
           `http://localhost:3000/editBook/${this.$route.params.bookId}/${this.$store.state.user.admin_id}`,
@@ -132,7 +135,12 @@ export default {
       }
     },
     cancle() {
-      this.$router.push("/");
+      let text = "ยกเลิกการเปลี่ยนแปลง!";
+      if (confirm(text) == true) {
+        this.$router.push("/");
+      } else {
+        text = "You canceled!";
+      }
     },
   },
 };
