@@ -27,7 +27,7 @@
           <p><b>สำนักพิมพ์</b> {{ book.publisher_name }}</p>
           <p><b>หมวดหมู่</b> {{ book.type_name }}</p>
           <v-btn rounded color="#EFFFE3" large v-if="isOwner || $store.state.user.role != 'customer'"> เปิดอ่าน </v-btn>
-          <v-btn rounded color="#EDC4D6" large v-else>ซื้อ {{ book.price }} บาท</v-btn>
+          <v-btn rounded color="#EDC4D6" large v-else @click="addToCart(book.ebook_id)">ซื้อ {{ book.price }} บาท</v-btn>
           <v-icon v-if="isInterest && !isOwner " color="pink" large
             >mdi-notebook-heart</v-icon
           >
@@ -210,6 +210,14 @@
             <v-card-title>
               <v-row>
                 <v-col>
+                  
+
+
+
+
+
+
+                          
                   <v-avatar size="56">
                     <img
                       alt="user"
@@ -221,20 +229,22 @@
                   <v-row>
                     <p class="ml-3">{{ comment.username }}</p>
                   </v-row>
+                  
                   <v-row>
-                    <v-rating
+                    <v-rating v-show="!isShowedit"
                       :value="comment.rate"
                       background-color="purple lighten-3"
                       size="18"
                       readonly
                     ></v-rating>
-                    <p>
+                    <p v-show="!isShowedit">
                       {{
                         new Date(comment.comment_date).toString().substr(0, 24)
                       }}
                     </p>
                   </v-row>
                 </v-col>
+                
               </v-row>
             </v-card-title>
             <v-card-text>
@@ -245,7 +255,33 @@
                 auto-grow
                 value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
               ></v-textarea> -->
-              <p>{{ comment.comment }}</p>
+              <p v-show="!isShowedit">{{ comment.comment }}</p>
+                        <v-card
+            color="white"
+            style="color: white; padding: 1rem"
+            v-if="isShowedit"
+          >
+            <v-rating 
+              background-color="purple lighten-3"
+              color="purple lighten-3"
+              large
+              v-model="ratingCustomer" 
+            ></v-rating>
+            <p>Average from 4 Reviews</p>
+            <v-textarea 
+              filled
+              name="input-7-4"
+              label="แสดงความคิดเห็น"
+              v-model="commentCustomer"
+            ></v-textarea>
+            <p></p>
+            <v-btn rounded color="#EFFFE3" large @click="saveComment">
+              SAVE
+            </v-btn>
+            <v-btn rounded color="#EFFFE3" large @click="isShowedit = false">
+              CANCEL
+            </v-btn>
+          </v-card>
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -255,7 +291,7 @@
                   $store.state.user.customer_id == comment.customer_id
                 "
                 color="orange"
-                text
+                text @click="isShowedit = true"
               >
                 Edit</v-btn
               >
@@ -290,6 +326,7 @@ export default {
     rating: 0,
     allComment: [],
     isShow: false,
+    isShowedit: false,
     isOwner: false,
     isFavorite: false,
     isInterest: false,
@@ -308,6 +345,14 @@ export default {
   },
 
   methods: {
+    async addToCart(ebookId){
+      try{
+        const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
+      
+      console.log(result.data)
+      }catch(err){
+        console.log(err)
+      }},
     async getBook() {
       const result = await axios.get(
         "http://localhost:3000/getDetailBook/" + this.$route.params.bookId

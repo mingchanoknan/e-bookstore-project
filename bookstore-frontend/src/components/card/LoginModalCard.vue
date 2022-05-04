@@ -33,7 +33,7 @@
 
       <div class="text-center">
         <div class="mb-2">
-          <v-btn rounded color="#9FCDDE" large @click="loginCustomer()"> LOGIN AS USER</v-btn>
+          <v-btn rounded color="#9FCDDE" large @click="loginCustomer()" > LOGIN AS USER</v-btn>
         </div>
         <div class="mt-2">
           <v-btn rounded color="#9FCDDE" large @click="loginAdmin()"> LOGIN AS ADMIN</v-btn>
@@ -68,6 +68,7 @@
   </v-form>
 </template>
 <script>
+import { required} from "vuelidate/lib/validators";
 import axios from '@/plugins/axios'
 export default {
   name: "LoginCard",
@@ -78,6 +79,10 @@ export default {
     nameRules: [(v) => !!v || "Required."],
     valid: true,
   }),
+  validations: {
+    username: { required },
+    password: { required },
+  },
   methods: {
     activeModal() {
       console.log("wda");
@@ -88,17 +93,21 @@ export default {
       this.$router.push("/customerRegister");
     },
     async loginCustomer(){
+      this.$v.$touch()
+      if (!this.$v.username.$error && !this.$v.password.$error) {
       try{
-        const result = await axios.post("http://localhost:3000/customer/login" ,{username: this.username, password: this.password})
+        
+         const result = await axios.post("http://localhost:3000/customer/login" ,{username: this.username, password: this.password})
         localStorage.setItem('token', result.data.token.token)
         this.$store.dispatch("keepUser", result.data.user)
         this.activeModal()
       }
       catch(err){
-        console.log(err.message)
-      }
+        alert("ลูกค้ากรอกรหัสผ่านผิดกรุณาตรวจสอบอีกครั้ง!");
+      }}
     },
     async loginAdmin(){
+      if (!this.$v.username.$error && !this.$v.password.$error) {
       try{
         const result = await axios.post("http://localhost:3000/admin/login" ,{username: this.username, password: this.password})
         console.log(result.data)
@@ -107,8 +116,8 @@ export default {
         this.activeModal()
       }
       catch(err){
-        console.log(err.message)
-      }
+        alert("Admin กรอกรหัสผ่านผิดกรุณาตรวจสอบอีกครั้ง!");
+      }}
     },
   },
 };
