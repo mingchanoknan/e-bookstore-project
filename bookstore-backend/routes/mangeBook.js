@@ -244,10 +244,10 @@ upload.fields([
         const [row, field] = await conn.query(`SELECT image_cover FROM ebook WHERE ebook_id=?`, [bookId])
         const image_existed_path = row[0].image_cover
         if (image_existed_path != null) {
-          fs.unlinkSync(image_existed_path);
+          fs.unlinkSync("static"+image_existed_path);
         }
         
-        await conn.query(`UPDATE ebook SET image_cover=?`, [req.files.image[0].path])
+        await conn.query(`UPDATE ebook SET image_cover=?  WHERE ebook_id=?`, [req.files.image[0].path.substr(6),bookId])
       }
 
       if (!!req.files.file) {
@@ -256,9 +256,9 @@ upload.fields([
         if (book_existed_path != null) {
           fs.unlinkSync(book_path_existed_path);
         }
-        await conn.query(`UPDATE ebook SET book_path=?`, [req.files.file[0].path])
+        await conn.query(`UPDATE ebook SET book_path=? WHERE ebook_id=?`, [req.files.file[0].path])
       }
-      const updateBook = conn.query(`UPDATE ebook SET title=?, abstract=?,price=?`, [title, abstract, price])
+      const updateBook = conn.query(`UPDATE ebook SET title=?, abstract=?,price=? WHERE ebook_id=?`, [title, abstract, price,bookId])
       let setId;
       if (set != "") {
         const checkSet = await conn.query(

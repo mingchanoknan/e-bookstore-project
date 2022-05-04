@@ -100,7 +100,7 @@ const routes = [
         component: ()=>import("../views/Editprofile.vue")
     },
     {
-        path: '/editbook',
+        path: '/editbook/:bookId',
         name: 'Edit book Page',
         component: ()=>import("../views/EditBook.vue")
     }

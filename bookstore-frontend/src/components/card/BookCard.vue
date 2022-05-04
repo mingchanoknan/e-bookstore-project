@@ -59,7 +59,7 @@
             </span>
             <span v-else>
             
-            <v-icon  large  class="pr-3"
+            <v-icon  large @click="editbook($props.book.ebook_id)" class="pr-3"
               >mdi-pencil-outline</v-icon
             >
             <v-icon large class="pr-3"
@@ -100,6 +100,9 @@ export default {
       }catch(err){
         console.log(err)
       }
+    },
+    editbook(){
+      this.$router.push("/editbook/"+this.$props.book.ebook_id)
     }
   },
 };
