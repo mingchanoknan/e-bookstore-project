@@ -6,6 +6,8 @@ const upload = require("../utils/profileUploader");
 const { generateToken } = require("../utils/token");
 const { isLoggedIn } = require("../middlewares/index");
 const uploader = require("../utils/profileUploader");
+const fs = require("fs");
+const path = require("path")
 
 
 const registerSchemas = Joi.object({
@@ -95,10 +97,13 @@ router.get("/customer/profile/:cusId", isLoggedIn, async (req, res, next) => {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
-    const [row, col] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [req.params.cusId])
+    const [row, col] = await conn.query(`SELECT username, DATE(date_of_birth) as date_of_birth, fname, lname,image_path FROM customer WHERE customer_id = ?`, [req.params.cusId])
+    // console.log(row[0].date_of_birth)
     res.send(row).status(200);
     await conn.commit()
+    
   } catch (err) {
+    await conn.rollback()
     res.status(404).json(err.message)
   } finally {
     conn.release()
@@ -117,8 +122,16 @@ router.put("/customer/editProfile/:cusId", isLoggedIn, uploader.single('image'),
   await conn.beginTransaction()
   try {
     const [row, col] = await conn.query(` UPDATE customer SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE customer_id = ?`,
-      [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth, req.params.cusId])
+
+      [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth,req.params.cusId])
+
     if (!!req.file) {
+      const [row, field] = await conn.query(`SELECT image_path FROM customer WHERE customer_id = ?`,
+        [req.params.cusId])
+        const image_existed_path = row[0].image_path
+      if (image_existed_path != null) {
+        fs.unlinkSync(path.join(__dirname,"..\\static" +image_existed_path));
+      }
       const [addImg, col2] = await conn.query(`UPDATE customer SET image_path =? WHERE customer_id = ?`,
         [req.file.path.substr(6), req.params.cusId])
     }
@@ -186,8 +199,14 @@ router.put("/addToInterest/:bookId/:cusId", isLoggedIn, upload.single('myImage')
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    const [checkInterst, col] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id=? AND customer_id=?`, [req.params.bookId, req.params.cusId])
-    if (checkInterst.length != 0) {
+    const [checkMybook, col] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id AND customer_id=?`,
+            [req.params.bookId, req.params.cusId])
+    if (checkMybook.length == 0) {
+      
+    
+    const [checkInterst, col2] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id=? AND customer_id=?`, [req.params.bookId, req.params.cusId])
+    if (checkInterst.length != 0) { 
+
       const [updateBought, col3] = await conn.query(`UPDATE customer_ebook SET interest= 1 WHERE ebook_id=? AND customer_id=?`,
         [req.params.bookId, req.params.cusId])
     } else {
@@ -197,6 +216,7 @@ router.put("/addToInterest/:bookId/:cusId", isLoggedIn, upload.single('myImage')
       )
     }
 
+    }
     res.send("add interested successfully")
     await conn.commit()
   } catch (err) {

@@ -148,6 +148,7 @@ export default {
       // console.log(this.$route.params.bookId)
     },
     async saveEditBook() {
+      console.log(this.file)
       var formData = new FormData();
       formData.append("title", this.title);
       formData.append("abstract", this.abstract);
