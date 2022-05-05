@@ -96,7 +96,7 @@ export default {
   methods: {
       async getBook() {
       const result = await axios.get(
-        "http://localhost:3000/customer/profile/" + this.$route.params.cusId
+        "http://localhost:3000/getDetailBook/" + this.$route.params.bookId
       );
       this.infoBook = result.data;
       this.title = this.infoBook.title

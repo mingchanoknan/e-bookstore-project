@@ -73,7 +73,7 @@ router.post("/customer/login", async (req, res, next) => {
     }
     user["role"] = "customer"
     const [cartId, col2] = await conn.query(`SELECT cart_id FROM cart WHERE customer_id= ? AND status_payment = 0`, [user.customer_id])
-    user["cart_id"] = cartId[0]
+    user["cart"] = cartId[0]
     const token = await conn.query(`SELECT token FROM token WHERE customer_id = ?`,
       [user.customer_id])
     let obj = {

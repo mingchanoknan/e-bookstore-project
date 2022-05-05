@@ -96,7 +96,7 @@ export default {
         if (confirm(text) == true) {
           try {
             const result = await axios.post(
-              `/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`
+             `http://localhost:3000/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}/${this.$store.state.user.customer_id}`
             );
 
             console.log(result.data);
@@ -114,7 +114,7 @@ export default {
         if (confirm(text) == true) {
           try {
             const result = await axios.put(
-              `/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+              `http://localhost:3000/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`
             );
             console.log(result.data);
           } catch (err) {

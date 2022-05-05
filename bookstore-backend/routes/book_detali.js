@@ -9,14 +9,7 @@ router.get("/getDetailBook/:ebookId", async (req, res, next) => {
     await conn.beginTransaction();
 
     try {
-        // const [row,col] = await conn.query(
-        //     `select * from ebook
-        //     join publisher using (publisher_id)
-        //     join book_type using (type_id)
-        //     join author_ebook using (ebook_id)
-        //     join author using (author_id)
-        //     where ebook_id = ?`, [ebookId]
-        // )
+
         let [row, col] = await conn.query(
             `select * from ebook
             join publisher using (publisher_id)
