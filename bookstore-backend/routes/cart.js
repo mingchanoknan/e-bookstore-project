@@ -12,7 +12,7 @@ router.post("/addItem/:cartId/:ebookId/:cusId", isLoggedIn, async (req, res, nex
     await conn.beginTransaction();
     try {
 
-        const [checkMybook, col] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id AND customer_id=?`,
+        const [checkMybook, col] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id=? AND customer_id=? AND bought=1`,
             [req.params.ebookId, req.params.cusId])
         const [checkInCart, col1] = await conn.query(`SELECT * FROM  cart_item where ebook_id =? AND cart_id=?`, [req.params.ebookId, req.params.cartId])
         if (checkInCart.length == 0 && checkMybook.length == 0) {

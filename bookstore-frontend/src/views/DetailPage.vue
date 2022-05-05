@@ -408,20 +408,6 @@ export default {
   },
 
   methods: {
-    async addToInterest(ebookId) {
-      // let text = "ต้องการเพิ่มหนังสือในรายการที่สนใจหรือไม่";
-      // if (confirm(text) == true) {
-      try {
-        const result = await axios.put(
-          `/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`
-        );
-        console.log(result.data);
-      } catch (err) {
-        console.log(err);
-      }
-      // {}
-      console.log("frame", ebookId);
-    },
     async addToCart(ebookId) {
       if (this.$store.state.user == null) {
         this.$store.dispatch("modalLoginAction");

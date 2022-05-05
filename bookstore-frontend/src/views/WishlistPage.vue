@@ -35,14 +35,11 @@ export default {
   data: () => ({
     interestedBook: "",
   }),
-  created() {
+  mounted() {
     this.getBook();
-    console.log(this.$store.state.user.customer_id);
   },
   methods: {
-    close() {
-      console.log("123");
-    },
+
     async getBook() {
       try {
         let result = await axios(
