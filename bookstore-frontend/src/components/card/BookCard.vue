@@ -1,6 +1,6 @@
 <template>
   <!-- <div>This is card</div> -->
-  <v-card class="mx-auto my-12 font" max-width="374" style="position: relative" >
+  <v-card class="mx-auto my-12 font" max-width="374" style="position: relative">
     <div class="background-card"></div>
     <center class="front pt-6">
       <v-img
@@ -54,14 +54,21 @@
                 $store.state.user == null || $store.state.user.role != 'admin'
               "
             >
-              <v-icon @click="addToCart($props.book.ebook_id)" large class="pr-3">mdi-cart-outline</v-icon>
-              <v-icon @click="addToInterest($props.book.ebook_id)" large>mdi-notebook-heart-outline</v-icon>
+              <v-icon
+                @click="addToCart($props.book.ebook_id)"
+                large
+                class="pr-3"
+                >mdi-cart-outline</v-icon
+              >
+              <v-icon @click="addToInterest($props.book.ebook_id)" large
+                >mdi-notebook-heart-outline</v-icon
+              >
             </span>
             <span v-else>
-            
-            <v-icon  large @click="editbook($props.book.ebook_id)" class="pr-3"
-              >mdi-pencil-outline</v-icon
-            ></span>
+              <v-icon large @click="editbook($props.book.ebook_id)" class="pr-3"
+                >mdi-pencil-outline</v-icon
+              ></span
+            >
           </v-row>
         </span>
       </v-container>
@@ -76,42 +83,56 @@ export default {
     data: "",
   }),
   props: ["book"],
-  created() {
-  },
+  created() {},
   methods: {
-    getBook(){
-      this.$router.push("/bookdetail/"+this.$props.book.ebook_id)
+    getBook() {
+      this.$router.push("/bookdetail/" + this.$props.book.ebook_id);
     },
-    async addToCart(ebookId){
-      let text = "ต้องการเพิ่มหนังสือลงตะกร้าหรือไม่";
-      if (confirm(text) == true) {
-      try{
-        const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
-      
-      console.log(result.data)
-      }catch(err){
-        console.log(err)
-      }}
-    },async addToInterest(ebookId){
-      let text = "ต้องการเพิ่มหนังสือในรายการที่สนใจหรือไม่";
-      if (confirm(text) == true) {
-      try{
-        const result = await axios.put(`/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`)
-      console.log(result.data)
-      }catch(err){
-        console.log(err)
-      }}
+    async addToCart(ebookId) {
+      if (this.$store.state.user == null) {
+        this.$store.dispatch("modalLoginAction");
+      } else {
+        let text = "ต้องการเพิ่มหนังสือลงตะกร้าหรือไม่";
+        if (confirm(text) == true) {
+          try {
+            const result = await axios.post(
+              `/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`
+            );
+
+            console.log(result.data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
     },
-    editbook(){
-      this.$router.push("/editbook/"+this.$props.book.ebook_id)
-    }
+    async addToInterest(ebookId) {
+      if (this.$store.state.user == null) {
+        this.$store.dispatch("modalLoginAction");
+      } else {
+        let text = "ต้องการเพิ่มหนังสือในรายการที่สนใจหรือไม่";
+        if (confirm(text) == true) {
+          try {
+            const result = await axios.put(
+              `/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+            );
+            console.log(result.data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    },
+    editbook() {
+      this.$router.push("/editbook/" + this.$props.book.ebook_id);
+    },
   },
 };
 </script>
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap");
 .font {
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
 }
 .background-card {
   background-color: #da9c9d;

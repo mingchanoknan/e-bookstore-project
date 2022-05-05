@@ -5,7 +5,7 @@ const upload = require("../utils/Uploader");
 const fs = require("fs");
 const { isLoggedIn } = require("../middlewares/index");
 const Joi = require("joi");
-
+const path = require("path")
 
 router.get("/bookType", async (req, res, next) => {
   const conn = await pool.getConnection();
@@ -64,7 +64,7 @@ router.post(
     { name: "file", maxCount: 1 },
   ]),
   async (req, res, next) => {
-    console.log(req.body)
+    // console.log(req.body)
     const title = req.body.title;
     const abstract = req.body.abstract;
     const price = req.body.price;
@@ -143,7 +143,7 @@ router.post(
       }
       for (let aut of author) {
         let [checkAuthor, field] = await conn.query(`SELECT * FROM author WHERE author_name=?`, [aut])
-        console.log(checkAuthor)
+        // console.log(checkAuthor)
         
         if (checkAuthor.length == 0) {
           const [row, field] = await conn.query(`INSERT INTO author(author_name) values(?)`, [aut])
@@ -181,6 +181,7 @@ upload.fields([
   { name: "file", maxCount: 1 },
 ]),
   async (req, res, next) => {
+    console.log(req.files)
     const title = req.body.title;
     const abstract = req.body.abstract;
     const price = req.body.price;
@@ -190,22 +191,24 @@ upload.fields([
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
+      console.log(req.files)
       await editBookSchema.validateAsync(req.body,  { abortEarly: false })
       if (!!req.files.image) {
         const [row, field] = await conn.query(`SELECT image_cover FROM ebook WHERE ebook_id=?`, [bookId])
         const image_existed_path = row[0].image_cover
         if (image_existed_path != null) {
-          fs.unlinkSync("static"+image_existed_path);
+          // fs.unlinkSync("..\\static"+image_existed_path); 
+          fs.unlinkSync(path.join(__dirname,"..\\static" +image_existed_path));
+
         }
         
         await conn.query(`UPDATE ebook SET image_cover=?  WHERE ebook_id=?`, [req.files.image[0].path.substr(6),bookId])
       }
-
       if (!!req.files.file) {
         const [row, field] = await conn.query(`SELECT book_path FROM ebook WHERE ebook_id=?`, [bookId])
         const book_existed_path = row[0].book_path
         if (book_existed_path != null) {
-          fs.unlinkSync(book_path_existed_path);
+          fs.unlinkSync(path.join(__dirname,"..\\static" +book_existed_path));
         }
         await conn.query(`UPDATE ebook SET book_path=? WHERE ebook_id=?`, [req.files.file[0].path])
       }
@@ -236,9 +239,10 @@ upload.fields([
       res.send("Update Successfully")
       await conn.commit()
 
-    }catch (err) {
+    } catch (err) {
+      console.log(err)
       await conn.rollback();
-      res.send(err.message).status(400);
+      res.status(400).json(err)
     } finally {
       conn.release();
     }

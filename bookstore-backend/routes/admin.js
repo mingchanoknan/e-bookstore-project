@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/token");
 const { isLoggedIn } = require("../middlewares/index")
 const uploader = require("../utils/profileUploader");
+const fs = require("fs");
+const path = require("path")
 router = express.Router();
 
 const registerSchemas = Joi.object({
@@ -128,12 +130,19 @@ router.put(
       const [row, col] = await conn.query(` UPDATE admin SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE admin_id = ?`,
         [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth, req.params.adminId])
       if (!!req.file) {
+        const [row, field] = await conn.query(`SELECT image_path FROM admin WHERE admin_id = ?`,
+          [req.params.adminId])
+          const image_existed_path = row[0].image_path
+        if (image_existed_path != null) {
+          fs.unlinkSync(path.join(__dirname,"..\\static" +image_existed_path));
+        }
         const [addImg, col2] = await conn.query(`UPDATE admin SET image_path =? WHERE admin_id = ?`,
           [req.file.path.substr(6), req.params.adminId])
       }
       await conn.commit()
       res.send("edit profile successfully").status(200)
     } catch (err) {
+      console.log(err)
       await conn.rollback();
       res.status(404).json(err.message)
     } finally {
