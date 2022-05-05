@@ -111,7 +111,9 @@ export default {
       formData.append("title", this.title);
       formData.append("abstract", this.abstract);
       formData.append("price", this.price);
-      formData.append("set", this.set);
+      if(this.set != undefined){
+        formData.append("set", this.set);
+      }
       let text = "ยกเลิกการเปลี่ยนแปลง!";
       if (confirm(text) == true) {
       if(this.file != null){

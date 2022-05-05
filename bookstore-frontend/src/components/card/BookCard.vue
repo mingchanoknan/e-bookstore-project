@@ -1,6 +1,6 @@
 <template>
   <!-- <div>This is card</div> -->
-  <v-card class="mx-auto my-12 font" max-width="374" style="position: relative">
+  <v-card class="mx-auto my-12 font" max-width="374" style="position: relative" >
     <div class="background-card"></div>
     <center class="front pt-6">
       <v-img
@@ -83,20 +83,24 @@ export default {
       this.$router.push("/bookdetail/"+this.$props.book.ebook_id)
     },
     async addToCart(ebookId){
+      let text = "ต้องการเพิ่มหนังสือลงตะกร้าหรือไม่";
+      if (confirm(text) == true) {
       try{
         const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
       
       console.log(result.data)
       }catch(err){
         console.log(err)
-      }
+      }}
     },async addToInterest(ebookId){
+      let text = "ต้องการเพิ่มหนังสือในรายการที่สนใจหรือไม่";
+      if (confirm(text) == true) {
       try{
         const result = await axios.put(`/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`)
       console.log(result.data)
       }catch(err){
         console.log(err)
-      }
+      }}
     },
     editbook(){
       this.$router.push("/editbook/"+this.$props.book.ebook_id)

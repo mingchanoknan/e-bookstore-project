@@ -65,7 +65,7 @@
   </v-dialog>
 </template>
 <script>
-import { required, sameAs } from "vuelidate/lib/validators";
+import { required, sameAs , minLength} from "vuelidate/lib/validators";
 import axios from "@/plugins/axios";
 export default {
   name: "LoginCard",
@@ -82,8 +82,8 @@ export default {
     isActive:false,
   }),
   validations: {
-    oldPassword: { required },
-    newPassword: { required },
+    oldPassword: { required: required, minLength: minLength(8)},
+    newPassword: { required: required, minLength: minLength(8)},
     confirmpassword: { sameAs: sameAs('newPassword')},
   },
   methods: {

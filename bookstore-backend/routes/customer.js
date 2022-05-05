@@ -45,7 +45,7 @@ router.post("/customer/register", async (req, res, next) => {
   } catch (err) {
     console.log(err)
     await conn.rollback();
-    res.status(404).json(err.message)
+    res.status(404).send(err.message)
   } finally {
     conn.release();
   }
@@ -221,6 +221,7 @@ router.get("/interestBook/:cusId", isLoggedIn, async (req, res, next) => {
       let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [book.ebook_id])
       book["author"] = author
     }
+    console.log(row)
     res.send(row).status(200)
     await conn.commit()
   } catch (err) {

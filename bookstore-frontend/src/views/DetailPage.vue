@@ -450,8 +450,6 @@ export default {
       }
     },
     async deleteComment(index) {
-      this.$v.$touch()
-      
       try {
         const result = await axios.delete(
           `http://localhost:3000/deleteComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`
