@@ -4,10 +4,15 @@
       <v-row>
         <v-col lg="6" sm="12" md="12" align="right">
           <v-img
-            v-if="book.image_cover"
-            :src="'http://localhost:3000/' + book.image_cover"
+            v-if="book.image_cover == null"
             align="center"
-            style="max-height: 550px; max-width: 350px"
+            src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+          ></v-img>
+          <v-img
+            v-else
+
+            align="center"
+            :src="'http://localhost:3000/' + book.image_cover"
           ></v-img>
         </v-col>
         <v-col lg="6" sm="12" md="12">
@@ -395,7 +400,8 @@ export default {
 
   methods: {
     async addToCart(ebookId) {
-      console.log(ebookId);
+
+      
       if (this.$store.state.user == null) {
         this.$store.dispatch("modalLoginAction");
       } else {
@@ -409,6 +415,7 @@ export default {
             console.log(err);
           }
         }
+
       }
     },
     async getBook() {

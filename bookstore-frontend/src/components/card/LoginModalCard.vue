@@ -27,7 +27,9 @@
           color="black"
           required
           filled
-          type="password"
+          :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="passwordShow = !passwordShow"
+          :type="passwordShow ? 'text' : 'password'"
         ></v-text-field>
       </div>
 
@@ -78,6 +80,7 @@ export default {
     password: "",
     nameRules: [(v) => !!v || "Required."],
     valid: true,
+    passwordShow:false,
   }),
   validations: {
     username: { required },
