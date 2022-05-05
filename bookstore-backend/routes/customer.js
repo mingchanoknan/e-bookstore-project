@@ -186,12 +186,17 @@ router.put("/addToInterest/:bookId/:cusId", isLoggedIn, upload.single('myImage')
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-
-
-    const [row, col] = await conn.query(
+    const [checkInterst, col] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id=? AND customer_id=?`, [req.params.bookId, req.params.cusId])
+    if (checkInterst.length != 0) { 
+      const [updateBought, col3] = await conn.query(`UPDATE customer_ebook SET interest= 1 WHERE ebook_id=? AND customer_id=?`,
+      [req.params.bookId, req.params.cusId])
+    } else {
+      const [row, col2] = await conn.query(
       `INSERT INTO customer_ebook(interest,ebook_id,customer_id) values(1,?,?)`,
       [req.params.bookId, req.params.cusId]
     )
+    }
+    
     res.send("add interested successfully")
     await conn.commit()
   } catch (err) {

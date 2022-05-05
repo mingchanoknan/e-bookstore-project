@@ -22,6 +22,7 @@
                   height="200px" width="150px"
                   :src="'http://localhost:3000/' + item.image_cover"
                 ></v-img>
+
                 </center>
               </v-col>
 

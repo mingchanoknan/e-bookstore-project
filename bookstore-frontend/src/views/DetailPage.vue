@@ -3,7 +3,7 @@
     <v-container style="font-family: 'Kanit', sans-serif">
       <v-row>
         <v-col lg="6" sm="12" md="12" align="right">
-          <v-img
+          <v-img v-if="book.image_cover"
             :src="'http://localhost:3000/' + book.image_cover"
             align="center"
             style="max-height: 550px; max-width: 350px"
@@ -183,7 +183,7 @@
               ></v-rating>
               <p>Average from {{ allComment.length }} Reviews</p>
               <v-btn
-                v-if="isOwner"
+                v-if="isOwner && !isComment "
                 rounded
                 color="#EFFFE3"
                 large
@@ -236,14 +236,6 @@
             <v-card-title>
               <v-row>
                 <v-col>
-                  
-
-
-
-
-
-
-                          
                   <v-avatar size="56">
                     <img
                       alt="user"
@@ -291,18 +283,18 @@
               background-color="purple lighten-3"
               color="purple lighten-3"
               large
-              v-model="ratingCustomer" 
+              v-model="ratingEditCustomer" 
             ></v-rating>
             <p>Average from 4 Reviews</p>
             <v-textarea 
               filled
               name="input-7-4"
               label="แสดงความคิดเห็น"
-              v-model="commentCustomer"
+              v-model="commentEditCustomer"
             ></v-textarea>
             <p></p>
-            <v-btn rounded color="#EFFFE3" large @click="saveComment">
-              SAVE
+            <v-btn rounded color="#EFFFE3" large @click="editComment(comment)">
+              SAVE EDIT
             </v-btn>
             <v-btn rounded color="#EFFFE3" large @click="isShowedit = false">
               CANCEL
@@ -314,10 +306,11 @@
                 v-if="
                   $store.state.user != null &&
                   $store.state.user.role == 'customer' &&
-                  $store.state.user.customer_id == comment.customer_id
+                  $store.state.user.customer_id == comment.customer_id &&
+                  !isShowedit 
                 "
                 color="orange"
-                text @click="isShowedit = true" 
+                text @click="editCommentBtn(comment)" 
               >
                 Edit</v-btn
               >
@@ -325,7 +318,8 @@
                 v-if="
                   $store.state.user != null &&
                   $store.state.user.role == 'customer' &&
-                  $store.state.user.customer_id == comment.customer_id
+                  $store.state.user.customer_id == comment.customer_id &&
+                  !isShowedit 
                 "
                 @click="deleteComment(index)"
                 color="orange"
@@ -359,6 +353,9 @@ export default {
     isInterest: false,
     commentCustomer: "",
     ratingCustomer: 0,
+    ratingEditCustomer:0,
+    commentEditCustomer:0,
+    isComment:false
   }),
   validations: {
     commentCustomer: { required },
@@ -418,6 +415,12 @@ export default {
           `http://localhost:3000/getComments/${this.$route.params.bookId}`
         );
         this.allComment = result.data;
+        if(this.$store.state.user != null){
+          this.isComment = !!this.allComment.find((comment)=> {
+          return comment.customer_id == this.$store.state.user.customer_id
+        })
+        }
+        console.log(this.isComment)
       } catch (err) {
         console.log(err);
       }
@@ -440,7 +443,7 @@ export default {
           rate: this.ratingCustomer,
           username: this.$store.state.user.username,
         });
-
+        this.isComment = true
         this.isShow = false;
       } catch (err) {
         console.log(err);
@@ -453,6 +456,7 @@ export default {
         );
         console.log(result.data);
         this.allComment.splice(index, 1);
+        this.isComment = false
       } catch (err) {
         console.log(err);
       }
@@ -471,16 +475,25 @@ export default {
         console.log(err);
       }
     },
-    // async editComment(comment){
-    //   try{
-    //     // const result = await axios.put(`http://localhost:3000/editComment/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,{
-    //     //   comment: this.
-    //     // })
-    //  console.log(result.data)
-    //  }catch (err) {
-    //     console.log(err);
-    //   }
-    // }
+    async editComment(comment){
+      try{
+        const result = await axios.put(`http://localhost:3000/editComments/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,{
+          comment: this.commentEditCustomer,
+          rate: this.ratingEditCustomer
+        });
+        comment.comment = this.commentEditCustomer
+        comment.rate = this.ratingEditCustomer
+        this.isShowedit = false
+     console.log(result.data)
+     }catch (err) {
+        console.log(err);
+      }
+    },
+    editCommentBtn(comment){
+      this.isShowedit = true
+      this.ratingEditCustomer = comment.rate
+      this.commentEditCustomer = comment.comment
+    }
   },
 };
 </script>
