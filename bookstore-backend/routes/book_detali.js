@@ -25,7 +25,7 @@ router.get("/getDetailBook/:ebookId", async (req, res, next) => {
         )
         console.log(row[0])
         if (row[0].set_id != null) {
-            let [set,col2] = await conn.query(`SELECT set_name FROM set_book WHERE set_id=?`,[row[0].set_id])
+            let [set, col2] = await conn.query(`SELECT set_name FROM set_book WHERE set_id=?`, [row[0].set_id])
             row[0]["set"] = set
         }
         let [author, field] = await conn.query(`SELECT author_id, author_name FROM author_ebook join author using (author_id) where ebook_id=?`, [ebookId])
@@ -76,8 +76,8 @@ router.post("/comments/:ebookId/:cusId", isLoggedIn, async (req, res, next) => {
             `insert into comment(comment,rate,ebook_id,customer_id) values (?,?,?,?)`, [req.body.comment, req.body.rate, ebookId, customerId]
         );
         const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
-        const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
-        await  conn.commit()
+        const [updateAvgRating, col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`, [avg[0].avgRating, ebookId])
+        await conn.commit()
         res.send(avg[0]).status(200)
     } catch (err) {
         console.log(err)
@@ -96,11 +96,11 @@ router.put("/editComments/:ebookId/:cusId", isLoggedIn, async (req, res, next) =
 
     try {
         const [row, col] = await conn.query(
-            `update comment set comment =?,rate = ? WHERE ebook_id=? AND customer_id= ?`, [req.body.comment, req.body.rate, ebookId,customerId]
+            `update comment set comment =?,rate = ? WHERE ebook_id=? AND customer_id= ?`, [req.body.comment, req.body.rate, ebookId, customerId]
 
         )
         const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
-        const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
+        const [updateAvgRating, col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`, [avg[0].avgRating, ebookId])
         await conn.commit()
         res.send("edit comment successfully").status(200)
     } catch (err) {
@@ -117,10 +117,10 @@ router.delete("/deleteComment/:ebookId/:cusId", isLoggedIn, async (req, res, nex
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
-        const [row, col] = await conn.query(`DELETE FROM comment WHERE ebook_id=? AND customer_id =?`, [ebookId,req.params.cusId])
+        const [row, col] = await conn.query(`DELETE FROM comment WHERE ebook_id=? AND customer_id =?`, [ebookId, req.params.cusId])
         const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
-        const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
-        
+        const [updateAvgRating, col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`, [avg[0].avgRating, ebookId])
+
         await conn.commit()
         res.send("delete Successfully").status(200)
     } catch (err) {

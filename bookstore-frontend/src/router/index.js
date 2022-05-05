@@ -70,16 +70,6 @@ const routes = [
         component: ()=>import("../views/ManageProfilePage.vue")
     },
     {
-        path: '/paymenthistory',
-        name: 'Payment History Page',
-        component: ()=>import("../views/PaymentHistoryPage.vue")
-    },
-    {
-        path: '/reviewhistory',
-        name: 'Review History Page',
-        component: ()=>import("../views/ReviewHistoryPage.vue")
-    },
-    {
         path: '/wishlist',
         name: 'Wish list Page',
         component: ()=>import("../views/WishlistPage.vue")

@@ -50,7 +50,11 @@
             v-else
             >ซื้อ {{ book.price }} บาท</v-btn
           >
-          <v-icon v-if="isInterest && !isOwner" color="pink" large
+          <v-icon
+            v-if="isInterest && !isOwner"
+            color="pink"
+            large
+            @click="addToInterest(book.ebook_id)"
             >mdi-notebook-heart</v-icon
           >
           <v-icon
@@ -59,6 +63,7 @@
             "
             color="black"
             large
+            @click="addToCart(book.ebook_id)"
             >mdi-notebook-heart-outline</v-icon
           >
 
@@ -399,6 +404,20 @@ export default {
   },
 
   methods: {
+    async addToInterest(ebookId) {
+      // let text = "ต้องการเพิ่มหนังสือในรายการที่สนใจหรือไม่";
+      // if (confirm(text) == true) {
+      try {
+        const result = await axios.put(
+          `/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+        );
+        console.log(result.data);
+      } catch (err) {
+        console.log(err);
+      }
+      // {}
+      console.log("frame", ebookId);
+    },
     async addToCart(ebookId) {
 
       

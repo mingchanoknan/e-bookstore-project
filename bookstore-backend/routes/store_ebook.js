@@ -6,7 +6,6 @@ router = express.Router();
 router.get("/getAllBook", async (req, res, next) => {
     const conn = await pool.getConnection();
     await conn.beginTransaction();
-    console.log("123")
     try {
         let [row,col] = await conn.query(
             `select * from ebook

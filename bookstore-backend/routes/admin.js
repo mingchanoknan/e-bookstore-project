@@ -126,7 +126,7 @@ router.put(
     const conn = await pool.getConnection();
     await conn.beginTransaction();
     try {
-      await editProfileSchemas.validateAsync(req.body,  { abortEarly: false })
+      await editProfileSchemas.validateAsync(req.body, { abortEarly: false })
       const [row, col] = await conn.query(` UPDATE admin SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE admin_id = ?`,
         [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth, req.params.adminId])
       if (!!req.file) {
@@ -160,7 +160,7 @@ router.put("/admin/changePassword/:adminId", isLoggedIn, async (req, res, next) 
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    await changeSchema.validateAsync(req.body,  { abortEarly: false })
+    await changeSchema.validateAsync(req.body, { abortEarly: false })
     const [user, col] = await conn.query(`SELECT * FROM admin WHERE admin_id = ?`, [req.params.adminId])
     if (!(await bcrypt.compare(req.body.old_password, user[0].password))) {
       throw new Error("Your old password is incorrect");
@@ -175,7 +175,7 @@ router.put("/admin/changePassword/:adminId", isLoggedIn, async (req, res, next) 
     res.status(400).send({
       message: err.message
     })
-    
+
   } finally {
     conn.release()
   }

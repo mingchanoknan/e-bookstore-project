@@ -6,31 +6,40 @@
       </div>
       <v-divider></v-divider><br />
       <v-row>
-               
-          <div class="avatar-upload">
-            <div class="avatar-edit">
-              <input @change="selectImages" type="file" id="imageUpload" accept=".png, .jpg, .jpeg" />
-              <label for="imageUpload"></label>
-            </div>
-            <div class="avatar-preview">
-              <v-img v-if="!hasImg"
-               src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png">
-              </v-img>
+        <div class="avatar-upload">
+          <div class="avatar-edit">
+            <input
+              @change="selectImages"
+              type="file"
+              id="imageUpload"
+              accept=".png, .jpg, .jpeg"
+            />
+            <label for="imageUpload"></label>
+          </div>
+          <div class="avatar-preview">
+            <v-img
+              v-if="!hasImg"
+              src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+            >
+            </v-img>
 
-              <v-img v-else-if ="hasImg && imgProfile !=null"
-               :src="showSelectImage()">
-              </v-img>
-              <v-img v-else
-               :src="`http://localhost:3000/${$store.state.user.image_path}`">
-              </v-img>
+            <v-img
+              v-else-if="hasImg && imgProfile != null"
+              :src="showSelectImage()"
+            >
+            </v-img>
+            <v-img
+              v-else
+              :src="`http://localhost:3000/${$store.state.user.image_path}`"
+            >
+            </v-img>
 
-              
-              <!-- <div
+            <!-- <div
                 id="imagePreview"
                 style="background-image: url('http://i.pravatar.cc/500?img=7')"
               ></div> -->
-            </div>
           </div>
+        </div>
       </v-row>
       <v-row>
         <v-col cols="12" md="4" lg="6">
@@ -41,7 +50,8 @@
             background-color="#EDC4D6"
             color="black"
             rounded
-            dense :rules="nameRules"
+            dense
+            :rules="nameRules"
             v-model="username"
           >
           </v-text-field>
@@ -51,7 +61,7 @@
       </v-row>
       <v-row>
         <v-col cols="12" md="4" lg="6">
-          <h4>Firstname  *</h4>
+          <h4>Firstname *</h4>
           <v-text-field
             label="Solo"
             solo
@@ -59,7 +69,8 @@
             color="black"
             rounded
             dense
-            v-model="fname" :rules="nameRules"
+            v-model="fname"
+            :rules="nameRules"
           >
           </v-text-field>
         </v-col>
@@ -67,7 +78,8 @@
         <v-col cols="12" lg="6" md="4">
           <h4>Lastname *</h4>
           <v-text-field
-            label="Solo" :rules="nameRules"
+            label="Solo"
+            :rules="nameRules"
             solo
             background-color="#EDC4D6"
             color="black"
@@ -78,9 +90,10 @@
           </v-text-field>
         </v-col>
         <v-col cols="12" lg="4" md="6" sm="12">
-          <h4 style="color = 'black'">Birthdate  *</h4>
+          <h4 style="color = 'black'">Birthdate *</h4>
           <v-text-field
-            solo :rules="nameRules"
+            solo
+            :rules="nameRules"
             rounded
             prepend-inner-icon="mdi-cake-variant"
             label="Date of birth"
@@ -129,8 +142,8 @@ export default {
     fname: "",
     lname: "",
     birthdate: null,
-    hasImg:false,
-    imgProfile:null,
+    hasImg: false,
+    imgProfile: null,
     rules: {
       required: (value) => !!value || "Required.",
       min: (v) => v.length >= 8 || "Min 8 characters",
@@ -151,60 +164,76 @@ export default {
     this.birthdate = this.$store.state.user.date_of_birth
       .toString()
       .substr(0, 10);
-    if (this.$store.state.user.image_path != null){
-      this.hasImg = true
+    if (this.$store.state.user.image_path != null) {
+      this.hasImg = true;
     }
   },
   methods: {
     selectImages(event) {
-      this.hasImg = true
+      this.hasImg = true;
       this.imgProfile = event.target.files;
     },
     async saveEditprofile() {
-      console.log(this.birthdate)
       let formData = new FormData();
-      formData.append('username', this.username);
-      formData.append('fname', this.fname);
-      formData.append('lname', this.lname);
-      formData.append('date_of_birth', this.birthdate);
-      this.$v.$touch()
-      if (!this.$v.username.$error && !this.$v.fname.$error && !this.$v.lname.$error && !this.$v.birthdate.$error) {        
-      try {
-        var result;
-        if (this.$store.state.user.role == "customer") {
-          if(this.imgProfile != null){
-             formData.append('image', this.imgProfile[0]);
-             console.log(formData)
-             result = await axios.put(`http://localhost:3000/customer/editProfile/${this.$store.state.user.customer_id}`,formData)
-          }else{
-           result = await axios.put(`http://localhost:3000/customer/editProfile/${this.$store.state.user.customer_id}`,formData)
+      formData.append("username", this.username);
+      formData.append("fname", this.fname);
+      formData.append("lname", this.lname);
+      formData.append("date_of_birth", this.birthdate);
+      this.$v.$touch();
+      if (
+        !this.$v.username.$error &&
+        !this.$v.fname.$error &&
+        !this.$v.lname.$error &&
+        !this.$v.birthdate.$error
+      ) {
+        try {
+          var result;
+          if (this.$store.state.user.role == "customer") {
+            if (this.imgProfile != null) {
+              formData.append("image", this.imgProfile[0]);
+              console.log(formData);
+              result = await axios.put(
+                `http://localhost:3000/customer/editProfile/${this.$store.state.user.customer_id}`,
+                formData
+              );
+            } else {
+              result = await axios.put(
+                `http://localhost:3000/customer/editProfile/${this.$store.state.user.customer_id}`,
+                formData
+              );
+            }
+          } else {
+            if (this.imgProfile != null) {
+              formData.append("image", this.imgProfile[0]);
+              console.log(formData);
+              result = await axios.put(
+                `http://localhost:3000/admin/editProfile/${this.$store.state.user.admin_id}`,
+                formData
+              );
+            } else {
+              result = await axios.put(
+                `http://localhost:3000/admin/editProfile/${this.$store.state.user.admin_id}`,
+                formData
+              );
+            }
           }
-        } else {
-         if(this.imgProfile != null){
-             formData.append('image', this.imgProfile[0]);
-             console.log(formData)
-             result = await axios.put(`http://localhost:3000/admin/editProfile/${this.$store.state.user.admin_id}`,formData)
-          }else{
-           result = await axios.put(`http://localhost:3000/admin/editProfile/${this.$store.state.user.admin_id}`,formData)
-          }
+          console.log(result.data);
+          this.$router.push("/profile");
+        } catch (err) {
+          console.log(err);
         }
-        console.log(result.data)
-        this.$router.push("/profile")
-        
-      } catch (err) {
-        console.log(err)
-      }}
-      else{
+      } else {
         alert("ไม่ถูกต้องกรุณาตรวจสอบอีกครั้ง!");
       }
     },
     showSelectImage() {
-      if (this.imgProfile == null){
-        return
+      if (this.imgProfile == null) {
+        return;
       }
-      return URL.createObjectURL(new Blob(this.imgProfile, {type: "application/zip"}))
-    }
-    
+      return URL.createObjectURL(
+        new Blob(this.imgProfile, { type: "application/zip" })
+      );
+    },
   },
 };
 </script>
