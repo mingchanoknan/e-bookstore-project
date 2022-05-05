@@ -12,7 +12,8 @@
               <v-col lg="4" sm="12" md="12">
                 <div class="background-card"></div>
                 <center><v-img height="auto" width="150"
-                src="https://cdn-local.mebmarket.com/meb/server1/193092/Thumbnail/book_detail_large.gif?2"></v-img>
+                :src="'http://localhost:3000/' + item.image_cover">
+                </v-img>
                 </center>
               </v-col>
 

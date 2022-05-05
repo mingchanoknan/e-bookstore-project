@@ -88,7 +88,7 @@ router.post("/comments/:ebookId/:cusId", isLoggedIn, async (req, res, next) => {
     }
 })
 
-router.put("/editComments/:commentId/:cusId", isLoggedIn, async (req, res, next) => {
+router.put("/editComments/:ebookId/:cusId", isLoggedIn, async (req, res, next) => {
     const ebookId = req.params.ebookId
     const customerId = req.params.cusId
     const conn = await pool.getConnection();
@@ -96,15 +96,16 @@ router.put("/editComments/:commentId/:cusId", isLoggedIn, async (req, res, next)
 
     try {
         const [row, col] = await conn.query(
-            `update comment set comment =?,rate = ?, WHERE ebook_id=? AND customer_id= ?`, [req.body.comment, req.body.rate, ebookId,customerId]
+            `update comment set comment =?,rate = ? WHERE ebook_id=? AND customer_id= ?`, [req.body.comment, req.body.rate, ebookId,customerId]
 
         )
         const [avg, col2] = await conn.query(`SELECT AVG(rate) as avgRating FROM comment WHERE ebook_id =?`, [ebookId]);
         const [updateAvgRating,col3] = await conn.query(`UPDATE ebook SET average_rating =  ? WHERE ebook_id =?`,[avg[0].avgRating, ebookId])
-        conn.commit()
-        res.send(row).status(200)
+        await conn.commit()
+        res.send("edit comment successfully").status(200)
     } catch (err) {
-        conn.rollback();
+        await conn.rollback();
+        console.log(err)
         res.status(404).json(err.message)
     } finally {
         conn.release();
