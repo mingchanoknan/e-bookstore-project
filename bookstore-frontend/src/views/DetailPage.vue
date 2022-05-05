@@ -3,7 +3,8 @@
     <v-container style="font-family: 'Kanit', sans-serif">
       <v-row>
         <v-col lg="6" sm="12" md="12" align="right">
-          <v-img v-if="book.image_cover"
+          <v-img
+            v-if="book.image_cover"
             :src="'http://localhost:3000/' + book.image_cover"
             align="center"
             style="max-height: 550px; max-width: 350px"
@@ -31,21 +32,25 @@
             rounded
             color="#EFFFE3"
             large
-            v-if="isOwner || $store.state.user.role != 'customer'"
+            v-if="$store.state.user!=null && (isOwner || $store.state.user.role != 'customer')"
             @click="openNewTab(book)"
           >
             เปิดอ่าน
           </v-btn>
-          <v-btn rounded color="#EDC4D6" large v-else
+          <v-btn
+            @click="addToCart($route.params.bookId)"
+            rounded
+            color="#EDC4D6"
+            large
+            v-else
             >ซื้อ {{ book.price }} บาท</v-btn
           >
           <v-icon v-if="isInterest && !isOwner" color="pink" large
-
             >mdi-notebook-heart</v-icon
           >
           <v-icon
             v-else-if="
-              !isInterest && !isOwner && $store.state.user.role == 'customer'
+              $store.state.user ==null ||( !isInterest && !isOwner &&  $store.state.user.role == 'customer' )
             "
             color="black"
             large
@@ -183,7 +188,7 @@
               ></v-rating>
               <p>Average from {{ allComment.length }} Reviews</p>
               <v-btn
-                v-if="isOwner && !isComment "
+                v-if="isOwner && !isComment"
                 rounded
                 color="#EFFFE3"
                 large
@@ -236,10 +241,16 @@
             <v-card-title>
               <v-row>
                 <v-col>
-                  <v-avatar size="56">
+                  <v-avatar size="56" v-if ="comment.image_path == null">
                     <img
                       alt="user"
                       src="https://cdn.pixabay.com/photo/2020/06/24/19/12/cabbage-5337431_1280.jpg"
+                    />
+                  </v-avatar>
+                  <v-avatar size="56" v-else>
+                    <img
+                      alt="user"
+                      :src="'http://localhost:3000'+comment.image_path"
                     />
                   </v-avatar>
                 </v-col>
@@ -247,9 +258,10 @@
                   <v-row>
                     <p class="ml-3">{{ comment.username }}</p>
                   </v-row>
-                  
+
                   <v-row>
-                    <v-rating v-show="!isShowedit"
+                    <v-rating
+                      v-show="!isShowedit"
                       :value="comment.rate"
                       background-color="purple lighten-3"
                       size="18"
@@ -262,7 +274,6 @@
                     </p>
                   </v-row>
                 </v-col>
-                
               </v-row>
             </v-card-title>
             <v-card-text>
@@ -274,32 +285,42 @@
                 value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
               ></v-textarea> -->
               <p v-show="!isShowedit">{{ comment.comment }}</p>
-                        <v-card
-            color="white"
-            style="color: white; padding: 1rem"
-            v-if="isShowedit"
-          >
-            <v-rating 
-              background-color="purple lighten-3"
-              color="purple lighten-3"
-              large
-              v-model="ratingEditCustomer" 
-            ></v-rating>
-            <p>Average from 4 Reviews</p>
-            <v-textarea 
-              filled
-              name="input-7-4"
-              label="แสดงความคิดเห็น"
-              v-model="commentEditCustomer"
-            ></v-textarea>
-            <p></p>
-            <v-btn rounded color="#EFFFE3" large @click="editComment(comment)">
-              SAVE EDIT
-            </v-btn>
-            <v-btn rounded color="#EFFFE3" large @click="isShowedit = false">
-              CANCEL
-            </v-btn>
-          </v-card>
+              <v-card
+                color="white"
+                style="color: white; padding: 1rem"
+                v-if="isShowedit"
+              >
+                <v-rating
+                  background-color="purple lighten-3"
+                  color="purple lighten-3"
+                  large
+                  v-model="ratingEditCustomer"
+                ></v-rating>
+                <p>Average from 4 Reviews</p>
+                <v-textarea
+                  filled
+                  name="input-7-4"
+                  label="แสดงความคิดเห็น"
+                  v-model="commentEditCustomer"
+                ></v-textarea>
+                <p></p>
+                <v-btn
+                  rounded
+                  color="#EFFFE3"
+                  large
+                  @click="editComment(comment)"
+                >
+                  SAVE EDIT
+                </v-btn>
+                <v-btn
+                  rounded
+                  color="#EFFFE3"
+                  large
+                  @click="isShowedit = false"
+                >
+                  CANCEL
+                </v-btn>
+              </v-card>
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -307,10 +328,11 @@
                   $store.state.user != null &&
                   $store.state.user.role == 'customer' &&
                   $store.state.user.customer_id == comment.customer_id &&
-                  !isShowedit 
+                  !isShowedit
                 "
                 color="orange"
-                text @click="editCommentBtn(comment)" 
+                text
+                @click="editCommentBtn(comment)"
               >
                 Edit</v-btn
               >
@@ -319,7 +341,7 @@
                   $store.state.user != null &&
                   $store.state.user.role == 'customer' &&
                   $store.state.user.customer_id == comment.customer_id &&
-                  !isShowedit 
+                  !isShowedit
                 "
                 @click="deleteComment(index)"
                 color="orange"
@@ -353,9 +375,9 @@ export default {
     isInterest: false,
     commentCustomer: "",
     ratingCustomer: 0,
-    ratingEditCustomer:0,
-    commentEditCustomer:0,
-    isComment:false
+    ratingEditCustomer: 0,
+    commentEditCustomer: 0,
+    isComment: false,
   }),
   validations: {
     commentCustomer: { required },
@@ -372,14 +394,23 @@ export default {
   },
 
   methods: {
-    async addToCart(ebookId){
-      try{
-        const result = await axios.post(`/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`)
-      
-      console.log(result.data)
-      }catch(err){
-        console.log(err)
-      }},
+    async addToCart(ebookId) {
+      console.log(ebookId);
+      if (this.$store.state.user == null) {
+        this.$store.dispatch("modalLoginAction");
+      } else {
+        if (confirm("Want to add to cart?")) {
+          try {
+            const result = await axios.post(
+              `/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}/${this.$store.state.user.customer_id}`
+            );
+            console.log(result.data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+    },
     async getBook() {
       const result = await axios.get(
         "http://localhost:3000/getDetailBook/" + this.$route.params.bookId
@@ -396,14 +427,16 @@ export default {
         const result = await axios.get(
           `http://localhost:3000/isOwnerBook/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`
         );
-        if (result.data.bought.data[0]) {
-          this.isOwner = true;
-        }
-        if (result.data.favorite.data[0]) {
-          this.isFavorite = true;
-        }
-        if (result.data.interest.data[0]) {
-          this.isInterest = true;
+        if (result.data != "") {
+          if (result.data.bought.data[0]) {
+            this.isOwner = true;
+          }
+          if (result.data.favorite.data[0]) {
+            this.isFavorite = true;
+          }
+          if (result.data.interest.data[0]) {
+            this.isInterest = true;
+          }
         }
       } catch (err) {
         console.log(err);
@@ -415,12 +448,12 @@ export default {
           `http://localhost:3000/getComments/${this.$route.params.bookId}`
         );
         this.allComment = result.data;
-        if(this.$store.state.user != null){
-          this.isComment = !!this.allComment.find((comment)=> {
-          return comment.customer_id == this.$store.state.user.customer_id
-        })
+        if (this.$store.state.user != null) {
+          this.isComment = !!this.allComment.find((comment) => {
+            return comment.customer_id == this.$store.state.user.customer_id;
+          });
         }
-        console.log(this.isComment)
+        console.log(this.isComment);
       } catch (err) {
         console.log(err);
       }
@@ -443,7 +476,7 @@ export default {
           rate: this.ratingCustomer,
           username: this.$store.state.user.username,
         });
-        this.isComment = true
+        this.isComment = true;
         this.isShow = false;
       } catch (err) {
         console.log(err);
@@ -456,7 +489,7 @@ export default {
         );
         console.log(result.data);
         this.allComment.splice(index, 1);
-        this.isComment = false
+        this.isComment = false;
       } catch (err) {
         console.log(err);
       }
@@ -470,30 +503,33 @@ export default {
           `http://localhost:3000/deleteBook/${this.book.ebook_id}/${this.$store.state.user.admin_id}`
         );
         console.log(result.data);
-        this.$router.push('/')
+        this.$router.push("/");
       } catch (err) {
         console.log(err);
       }
     },
-    async editComment(comment){
-      try{
-        const result = await axios.put(`http://localhost:3000/editComments/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,{
-          comment: this.commentEditCustomer,
-          rate: this.ratingEditCustomer
-        });
-        comment.comment = this.commentEditCustomer
-        comment.rate = this.ratingEditCustomer
-        this.isShowedit = false
-     console.log(result.data)
-     }catch (err) {
+    async editComment(comment) {
+      try {
+        const result = await axios.put(
+          `http://localhost:3000/editComments/${this.$route.params.bookId}/${this.$store.state.user.customer_id}`,
+          {
+            comment: this.commentEditCustomer,
+            rate: this.ratingEditCustomer,
+          }
+        );
+        comment.comment = this.commentEditCustomer;
+        comment.rate = this.ratingEditCustomer;
+        this.isShowedit = false;
+        console.log(result.data);
+      } catch (err) {
         console.log(err);
       }
     },
-    editCommentBtn(comment){
-      this.isShowedit = true
-      this.ratingEditCustomer = comment.rate
-      this.commentEditCustomer = comment.comment
-    }
+    editCommentBtn(comment) {
+      this.isShowedit = true;
+      this.ratingEditCustomer = comment.rate;
+      this.commentEditCustomer = comment.comment;
+    },
   },
 };
 </script>

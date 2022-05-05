@@ -161,7 +161,7 @@ export default {
       this.imgProfile = event.target.files;
     },
     async saveEditprofile() {
-      
+      console.log(this.birthdate)
       let formData = new FormData();
       formData.append('username', this.username);
       formData.append('fname', this.fname);
