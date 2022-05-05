@@ -68,7 +68,7 @@
   </v-form>
 </template>
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators";
 import axios from '@/plugins/axios'
 export default {
   name: "LoginCard",
@@ -81,7 +81,7 @@ export default {
   }),
   validations: {
     username: { required },
-    password: { required },
+    password: { required: required, minLength: minLength(8) },
   },
   methods: {
     activeModal() {
@@ -103,8 +103,11 @@ export default {
         this.activeModal()
       }
       catch(err){
-        alert("ลูกค้ากรอกรหัสผ่านผิดกรุณาตรวจสอบอีกครั้ง!");
+        alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง! กรุณาตรวจสอบข้อมูลอีกครั้ง");
       }}
+      else{
+        alert("กรอกรหัสผ่านไม่ถูกต้อง!")
+      }
     },
     async loginAdmin(){
       if (!this.$v.username.$error && !this.$v.password.$error) {

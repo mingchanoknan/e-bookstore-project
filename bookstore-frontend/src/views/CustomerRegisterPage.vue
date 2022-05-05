@@ -214,24 +214,34 @@ export default {
   validations: {
     username: { required },
     password: { required },
-    confirmpassword: { sameAs: sameAs('password') },
-    firstname: { required},
-    lastname: { required},
-    birthdate: {required}
+    confirmpassword: { sameAs: sameAs("password") },
+    firstname: { required },
+    lastname: { required },
+    birthdate: { required },
+    secretCode: { required },
+    position: { required },
   },
 
   methods: {
     setStateRegister(numberOfState) {
-      this.$v.$touch()
+      this.$v.$touch();
       if (numberOfState == 2) {
-        if (!this.$v.username.$error && !this.$v.password.$error && !this.$v.confirmpassword.$error) {
+        if (
+          !this.$v.username.$error &&
+          !this.$v.password.$error &&
+          !this.$v.confirmpassword.$error
+        ) {
           this.e1 = numberOfState;
         } else {
           alert("กรุณาตรวจสอบความถูกต้อง");
         }
       }
       if (numberOfState == 3) {
-        if (!this.$v.firstname.$error && !this.$v.lastname.$error && !this.$v.birthdate.$error) {
+        if (
+          !this.$v.firstname.$error &&
+          !this.$v.lastname.$error &&
+          !this.$v.birthdate.$error
+        ) {
           this.e1 = numberOfState;
         } else {
           alert("เฟรม");
@@ -239,9 +249,11 @@ export default {
       }
     },
     async register() {
-      if (!this.$v.$invalid) {
-        try {
-          if (this.isAdmin) {
+      this.$v.$touch();
+      if (this.isAdmin) {
+        console.log("test1");
+        if (!this.$v.$invalid) {
+          try {
             const result = await axios.post(
               "http://localhost:3000/admin/register",
               {
@@ -255,7 +267,23 @@ export default {
               }
             );
             console.log(result.data);
-          } else {
+          } catch (err) {
+            console.log(err.data);
+          }
+        } else {
+          alert("กรอกไม่ครบ");
+        }
+      } else {
+        console.log("test2");
+        if (
+          !this.$v.username.$error &&
+          !this.$v.password.$error &&
+          !this.$v.confirmpassword.$error &&
+          !this.$v.firstname.$error &&
+          !this.$v.lastname.$error &&
+          !this.$v.birthdate.$error
+        ) {
+          try {
             const result = await axios.post(
               "http://localhost:3000/customer/register",
               {
@@ -267,14 +295,13 @@ export default {
               }
             );
             console.log(result.data);
-            alert("สมัครสมาชิกสำเร็จ")
+          } catch (err) {
+            console.log(err.data);
           }
-          this.$store.dispatch("modalLoginAction");
-          this.$router.push("/");
-        } catch (err) {
-          alert("ข้อมูลไม่ถูกต้อง");
         }
       }
+      this.$store.dispatch("modalLoginAction");
+      this.$router.push("/");
     },
   },
 };

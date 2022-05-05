@@ -11,8 +11,17 @@
             <v-row>
               <v-col lg="4" sm="12" md="12">
                 <div class="background-card"></div>
-                <center><v-img height="auto" width="150"
-                src="https://cdn-local.mebmarket.com/meb/server1/193092/Thumbnail/book_detail_large.gif?2"></v-img>
+                <center>
+                <v-img
+                  v-if="item.image_cover == null"
+                  height="200px" width="150px"
+                  src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                ></v-img>
+                <v-img
+                  v-else
+                  height="200px" width="150px"
+                  :src="'http://localhost:3000/' + item.image_cover"
+                ></v-img>
                 </center>
               </v-col>
 
