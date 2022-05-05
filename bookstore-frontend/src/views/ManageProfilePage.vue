@@ -9,7 +9,7 @@
           <div class="avatar-upload">
             <div class="avatar-preview">
               <v-img
-                v-if="$store.state.user.image_path == null"
+                v-if="user.image_path == undefined || user.image_path == null"
                 src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
               >
               </v-img>
@@ -38,12 +38,12 @@
                 <p>Lastname : {{ user.lname }}</p>
                 <p>
                   Date of brith :
-                  {{ user.date_of_birth }}
+                  {{ (user.date_of_birth) }}
                 </p>
                 <p v-if="$store.state.user.role != 'customer'">
-                  position: {{ user.position }}
+                  position: {{ $store.state.user.position }}
                 </p>
-                <p v-else>Member level : {{ user.member_level }}</p>
+                <p v-else>Member level : {{ $store.state.user.member_level }}</p>
               </v-col>
             </v-row>
           </v-card>
@@ -125,7 +125,7 @@ export default {
     toggleEdit: false,
     user: [],
   }),
-  created() {
+  mounted() {
     this.getProfile();
   },
   methods: {
@@ -146,8 +146,9 @@ export default {
             this.$store.state.user.admin_id
         );
       }
+      console.log(result.data)
       this.user = result.data[0];
-      this.user.date_of_birth = this.user.date_of_birth.substr(0, 10);
+      this.user.date_of_birth = (new Date(this.user.date_of_birth)).toString().substr(0, 16);
       // console.log(result.data[0].date_of_birth.substr(0,10))
     },
   },
