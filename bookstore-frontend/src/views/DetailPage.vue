@@ -10,7 +10,6 @@
           ></v-img>
           <v-img
             v-else
-
             align="center"
             :src="'http://localhost:3000/' + book.image_cover"
           ></v-img>
@@ -37,7 +36,10 @@
             rounded
             color="#EFFFE3"
             large
-            v-if="$store.state.user!=null && (isOwner || $store.state.user.role != 'customer')"
+            v-if="
+              $store.state.user != null &&
+              (isOwner || $store.state.user.role != 'customer')
+            "
             @click="openNewTab(book)"
           >
             เปิดอ่าน
@@ -59,9 +61,11 @@
           >
           <v-icon
             v-else-if="
-              $store.state.user ==null ||( !isInterest && !isOwner &&  $store.state.user.role == 'customer' )
+              $store.state.user == null ||
+              (!isInterest && !isOwner && $store.state.user.role == 'customer')
             "
             color="black"
+
             large
             @click="addToCart(book.ebook_id)"
             >mdi-notebook-heart-outline</v-icon
@@ -251,7 +255,7 @@
             <v-card-title>
               <v-row>
                 <v-col>
-                  <v-avatar size="56" v-if ="comment.image_path == null">
+                  <v-avatar size="56" v-if="comment.image_path == null">
                     <img
                       alt="user"
                       src="https://cdn.pixabay.com/photo/2020/06/24/19/12/cabbage-5337431_1280.jpg"
@@ -260,7 +264,7 @@
                   <v-avatar size="56" v-else>
                     <img
                       alt="user"
-                      :src="'http://localhost:3000'+comment.image_path"
+                      :src="'http://localhost:3000' + comment.image_path"
                     />
                   </v-avatar>
                 </v-col>
@@ -419,22 +423,19 @@ export default {
       console.log("frame", ebookId);
     },
     async addToCart(ebookId) {
-
-      
       if (this.$store.state.user == null) {
         this.$store.dispatch("modalLoginAction");
       } else {
         if (confirm("Want to add to cart?")) {
           try {
             const result = await axios.post(
-              `/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}/${this.$store.state.user.customer_id}`
+              `http://localhost:3000/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}/${this.$store.state.user.customer_id}`
             );
             console.log(result.data);
           } catch (err) {
             console.log(err);
           }
         }
-
       }
     },
     async getBook() {
@@ -555,6 +556,24 @@ export default {
       this.isShowedit = true;
       this.ratingEditCustomer = comment.rate;
       this.commentEditCustomer = comment.comment;
+    },
+    async addToInterest(ebookId) {
+      this.isInterest = true
+      if (this.$store.state.user == null) {
+        this.$store.dispatch("modalLoginAction");
+      } else {
+        let text = "ต้องการเพิ่มหนังสือในรายการที่สนใจหรือไม่";
+        if (confirm(text) == true) {
+          try {
+            const result = await axios.put(
+              `http://localhost:3000/addToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+            );
+            console.log(result.data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
     },
   },
 };

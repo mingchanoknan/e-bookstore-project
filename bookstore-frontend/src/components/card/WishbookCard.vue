@@ -64,7 +64,7 @@
                 class="pr-3"
                 >mdi-cart-outline</v-icon
               >
-              <v-icon large>mdi-notebook-heart-outline</v-icon>
+              <v-icon color="pink" large>mdi-notebook-heart</v-icon>
             </span>
           </v-row>
         </span>
@@ -86,36 +86,40 @@ export default {
       this.$router.push("/bookdetail/" + this.$props.book.ebook_id);
     },
     async addToCart(ebookId) {
-      try {
-        const result = await axios.post(
-          `/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}`
-        );
-        console.log(result.data);
-      } catch (err) {
-        console.log(err);
+      let text = "ต้องการเพิ่มหนังสือลงตะกร้าหรือไม่";
+      if (confirm(text) == true) {
+        try {
+          const result = await axios.post(
+            `http://localhost:3000/addItem/${this.$store.state.user.cart.cart_id}/${ebookId}/${this.$store.state.user.customer_id}`
+          );
+
+          console.log(result.data);
+        } catch (err) {
+          console.log(err);
+        }
       }
     },
     async unInterested(ebookId) {
       let text = "ต้องการลบออกจากตะกร้า!";
       if (confirm(text) == true) {
-      try {
-        const result = await axios.put(
-          `/deleteToInterest/${ebookId}/${this.$store.state.user.customer_id}`
-        );
-        console.log(result.data);
-      } catch (err) {
-        console.log(err);
-      }}
+        try {
+          const result = await axios.put(
+            `http://localhost:3000/deleteToInterest/${ebookId}/${this.$store.state.user.customer_id}`
+          );
+          console.log(result.data);
+        } catch (err) {
+          console.log(err);
+        }
+      }
     },
-
   },
 };
 </script>
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kanit&display=swap");
 
 .font {
-  font-family: 'Kanit', sans-serif;
+  font-family: "Kanit", sans-serif;
 }
 .background-card {
   background-color: #da9c9d;
