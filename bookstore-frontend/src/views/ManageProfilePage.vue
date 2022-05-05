@@ -3,16 +3,20 @@
     <br />
     <v-container style="font-family: 'Kanit', sans-serif">
       <center><h1>My Account</h1></center>
-      <v-divider></v-divider><br/>
+      <v-divider></v-divider><br />
       <v-row>
         <v-col lg="3" sm="12" md="12">
           <div class="avatar-upload">
             <div class="avatar-preview">
-              <v-img v-if="$store.state.user.image_path == null"
-               src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png">
+              <v-img
+                v-if="$store.state.user.image_path == null"
+                src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+              >
               </v-img>
-              <v-img v-else
-               :src="`http://localhost:3000/${$store.state.user.image_path}`">
+              <v-img
+                v-else
+                :src="`http://localhost:3000/${user.image_path}`"
+              >
               </v-img>
               <!-- <div
                 id="imagePreview"
@@ -25,26 +29,34 @@
         <v-col lg="9" sm="12" md="12">
           <v-card
             color="#EFFFE3"
-            style="color: black; padding: 1rem; font-size:large"
+            style="color: black; padding: 1rem; font-size: large"
             height="250px"
           >
-          <v-row>
-            <v-col lg="6" sm="12" md="12">
-              <h4>Username : {{$store.state.user.username}}</h4>
-            </v-col>
-            <v-col lg="6" sm="12" md="12">
-              <p>Firstname : {{$store.state.user.fname}}</p>
-              <p>Lastname : {{$store.state.user.lname}}</p>
-              <p>Date of brith : {{$store.state.user.date_of_birth.toString().substr(0,10)}}</p>
-              <p v-if="$store.state.user.role != 'customer'" >position: {{$store.state.user.position}}</p>
-              <p v-else>Member level : {{$store.state.user.member_level}}</p>
-            </v-col>
-          </v-row>
+            <v-row>
+              <v-col lg="6" sm="12" md="12">
+                <h4>Username : {{ user.username }}</h4>
+              </v-col>
+              <v-col lg="6" sm="12" md="12">
+                <p>Firstname : {{ user.fname }}</p>
+                <p>Lastname : {{ user.lname }}</p>
+                <p>
+                  Date of brith :
+                  {{ user.date_of_birth }}
+                </p>
+                <p v-if="$store.state.user.role != 'customer'">
+                  position: {{ user.position }}
+                </p>
+                <p v-else>
+                  Member level : {{ user.member_level }}
+                </p>
+              </v-col>
+            </v-row>
           </v-card>
 
-          <br/>
+          <br />
           <div align="right">
-            <v-btn @click="$router.push('/editprofile')"
+            <v-btn
+              @click="$router.push('/editprofile')"
               title
               color="black"
               style="color: white; margin-right: 10px"
@@ -54,7 +66,7 @@
               แก้ไขข้อมูลส่วนตัว
             </v-btn>
             <v-btn
-            @click="toggle()"
+              @click="toggle()"
               title
               color="black"
               style="color: white; margin-right: 10px"
@@ -67,49 +79,85 @@
         </v-col>
       </v-row>
       <v-row v-if="$store.state.user.role == 'customer'">
-        <v-col lg="6" sm="12" md="12" >
-              <v-sheet border-variant="primary" @click="$router.push('/mybook')"
-      class="mx-auto transition-swing" color="#FEEEF5"
-      elevation="12"
-      height="128"
-      width="65%" rounded="xl"
-    ><v-container><h3>ชั้นหนังสือของฉัน</h3><small>รายการหนังสือทั้งหมดของคุณ</small></v-container></v-sheet><br>
-       
+        <v-col lg="6" sm="12" md="12">
+          <v-sheet
+            border-variant="primary"
+            @click="$router.push('/mybook')"
+            class="mx-auto transition-swing"
+            color="#FEEEF5"
+            elevation="12"
+            height="128"
+            width="65%"
+            rounded="xl"
+            ><v-container
+              ><h3>ชั้นหนังสือของฉัน</h3>
+              <small>รายการหนังสือทั้งหมดของคุณ</small></v-container
+            ></v-sheet
+          ><br />
         </v-col>
 
         <v-col lg="6" sm="12" md="12">
-                <v-sheet
-       @click="$router.push('/wishlist')"
-      class="mx-auto transition-swing" color="#FEEEF5"
-      elevation="12"
-      height="128"
-      width="65%" rounded="xl"
-    ><v-container><h3>รายการที่อยากได้</h3><small>รายการหนังสือที่อยากได้</small></v-container></v-sheet>
+          <v-sheet
+            @click="$router.push('/wishlist')"
+            class="mx-auto transition-swing"
+            color="#FEEEF5"
+            elevation="12"
+            height="128"
+            width="65%"
+            rounded="xl"
+            ><v-container
+              ><h3>รายการที่อยากได้</h3>
+              <small>รายการหนังสือที่อยากได้</small></v-container
+            ></v-sheet
+          >
 
-            <br>
+          <br />
         </v-col>
       </v-row>
     </v-container>
-    <PasswordEditCard :active="toggleEdit"/>
+    <PasswordEditCard :active="toggleEdit" />
   </div>
 </template>
 <script>
 import PasswordEditCard from "../components/card/PasswordEditCard.vue";
+import axios from "@/plugins/axios";
 export default {
   name: "DetailPage",
   components: {
-    PasswordEditCard
+    PasswordEditCard,
   },
   data: () => ({
     toggleEdit: false,
-    user:[],
-  }),created(){
+    user: [],
+
+  }),
+  created() {
+    this.getProfile();
   },
-  methods:{
-    toggle(){
-      this.toggleEdit = !this.toggleEdit
-    }
-  }
+  methods: {
+    toggle() {
+      this.toggleEdit = !this.toggleEdit;
+    },
+    async getProfile() {
+      let result;
+      
+      if (this.$store.state.user.role == "customer") {
+           result = await axios.get(
+          "http://localhost:3000/customer/profile/" +
+            this.$store.state.user.customer_id
+        );
+      }
+      else{
+        result = await axios.get(
+          "http://localhost:3000/admin/profile/" +
+            this.$store.state.user.admin_id
+        )
+      }
+      this.user=result.data[0]
+      this.user.date_of_birth=this.user.date_of_birth.substr(0,10)
+      // console.log(result.data[0].date_of_birth.substr(0,10))
+    },
+  },
 };
 </script>
 <style scoped>

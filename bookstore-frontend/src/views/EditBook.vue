@@ -94,9 +94,9 @@ export default {
     this.getBook();
   },
   methods: {
-        async getBook() {
+      async getBook() {
       const result = await axios.get(
-        "http://localhost:3000/getDetailBook/" + this.$route.params.bookId
+        "http://localhost:3000/customer/profile/" + this.$route.params.cusId
       );
       this.infoBook = result.data;
       this.title = this.infoBook.title
@@ -111,11 +111,12 @@ export default {
       formData.append("title", this.title);
       formData.append("abstract", this.abstract);
       formData.append("price", this.price);
+
+      let text = "ยืนยันการเปลี่ยนแปลง!";
+      if (confirm(text) == true) {
       if(this.set != undefined){
         formData.append("set", this.set);
       }
-      let text = "ยกเลิกการเปลี่ยนแปลง!";
-      if (confirm(text) == true) {
       if(this.file != null){
         formData.append("file", this.file);
       }
