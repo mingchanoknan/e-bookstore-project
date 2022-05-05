@@ -105,7 +105,7 @@ router.get("/customer/profile/:cusId", isLoggedIn, async (req, res, next) => {
   } catch (err) {
     await conn.rollback()
     res.status(404).json(err.message)
-  }finally {
+  } finally {
     conn.release()
   }
 })
@@ -122,6 +122,7 @@ router.put("/customer/editProfile/:cusId", isLoggedIn, uploader.single('image'),
   await conn.beginTransaction()
   try {
     const [row, col] = await conn.query(` UPDATE customer SET username = ?,fname =?, lname = ?,date_of_birth = ? WHERE customer_id = ?`,
+
       [req.body.username, req.body.fname, req.body.lname, req.body.date_of_birth,req.params.cusId])
 
     if (!!req.file) {
@@ -138,7 +139,7 @@ router.put("/customer/editProfile/:cusId", isLoggedIn, uploader.single('image'),
     res.send("edit profile successfully").status(200)
   } catch (err) {
     res.status(404).json(err.message)
-  }finally {
+  } finally {
     conn.release()
   }
 })
@@ -179,7 +180,7 @@ router.put("/payment/:cartId/:cusId", isLoggedIn, async (req, res, next) => {
       }
     }
     const [payStatus, col3] = await conn.query(`UPDATE cart SET status_payment=1 WHERE cart_id=?`, [req.params.cartId])
-    const [createCard, col4] = await conn.query(`INSERT INTO cart(customer_id) values(?)`,[customerId])
+    const [createCard, col4] = await conn.query(`INSERT INTO cart(customer_id) values(?)`, [customerId])
     console.log(payStatus)
 
     res.send("payment already!").status(200)
@@ -205,14 +206,16 @@ router.put("/addToInterest/:bookId/:cusId", isLoggedIn, upload.single('myImage')
     
     const [checkInterst, col2] = await conn.query(`SELECT * FROM customer_ebook WHERE ebook_id=? AND customer_id=?`, [req.params.bookId, req.params.cusId])
     if (checkInterst.length != 0) { 
+
       const [updateBought, col3] = await conn.query(`UPDATE customer_ebook SET interest= 1 WHERE ebook_id=? AND customer_id=?`,
-      [req.params.bookId, req.params.cusId])
+        [req.params.bookId, req.params.cusId])
     } else {
       const [row, col2] = await conn.query(
-      `INSERT INTO customer_ebook(interest,ebook_id,customer_id) values(1,?,?)`,
-      [req.params.bookId, req.params.cusId]
-    )
+        `INSERT INTO customer_ebook(interest,ebook_id,customer_id) values(1,?,?)`,
+        [req.params.bookId, req.params.cusId]
+      )
     }
+
     }
     res.send("add interested successfully")
     await conn.commit()
@@ -303,7 +306,7 @@ router.put("/customer/changePassword/:cusId", isLoggedIn, async (req, res, next)
   const conn = await pool.getConnection();
   await conn.beginTransaction();
   try {
-    await changeSchema.validateAsync(req.body,  { abortEarly: false })
+    await changeSchema.validateAsync(req.body, { abortEarly: false })
     const [user, col] = await conn.query(`SELECT * FROM customer WHERE customer_id = ?`, [req.params.cusId])
     if (!(await bcrypt.compare(req.body.old_password, user[0].password))) {
       throw new Error("Your old password is incorrect");
@@ -318,7 +321,7 @@ router.put("/customer/changePassword/:cusId", isLoggedIn, async (req, res, next)
     res.status(400).send({
       message: err.message
     })
-    
+
   } finally {
     conn.release()
   }
