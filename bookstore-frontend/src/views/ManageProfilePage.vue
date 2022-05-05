@@ -13,10 +13,7 @@
                 src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
               >
               </v-img>
-              <v-img
-                v-else
-                :src="`http://localhost:3000/${user.image_path}`"
-              >
+              <v-img v-else :src="`http://localhost:3000/${user.image_path}`">
               </v-img>
               <!-- <div
                 id="imagePreview"
@@ -46,9 +43,7 @@
                 <p v-if="$store.state.user.role != 'customer'">
                   position: {{ user.position }}
                 </p>
-                <p v-else>
-                  Member level : {{ user.member_level }}
-                </p>
+                <p v-else>Member level : {{ user.member_level }}</p>
               </v-col>
             </v-row>
           </v-card>
@@ -129,7 +124,6 @@ export default {
   data: () => ({
     toggleEdit: false,
     user: [],
-
   }),
   created() {
     this.getProfile();
@@ -140,21 +134,20 @@ export default {
     },
     async getProfile() {
       let result;
-      
+
       if (this.$store.state.user.role == "customer") {
-           result = await axios.get(
+        result = await axios.get(
           "http://localhost:3000/customer/profile/" +
             this.$store.state.user.customer_id
         );
-      }
-      else{
+      } else {
         result = await axios.get(
           "http://localhost:3000/admin/profile/" +
             this.$store.state.user.admin_id
-        )
+        );
       }
-      this.user=result.data[0]
-      this.user.date_of_birth=this.user.date_of_birth.substr(0,10)
+      this.user = result.data[0];
+      this.user.date_of_birth = this.user.date_of_birth.substr(0, 10);
       // console.log(result.data[0].date_of_birth.substr(0,10))
     },
   },

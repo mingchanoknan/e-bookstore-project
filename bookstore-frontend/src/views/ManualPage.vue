@@ -141,7 +141,6 @@
                     </div>
                   </ul>
                 </div>
-                
               </v-card>
               <v-btn color="primary" @click="e6 = 2"> Continue </v-btn>
               <v-btn text @click="e6 = --e6"> Previous </v-btn>
@@ -234,14 +233,14 @@
                 <div class="how-to-buy" align="center" style="margin: 10px">
                   <v-img
                     src="https://www.mebmarket.com/web/dist/assets/images/how_to/HowtoSell01.jpg"
-                    style="width: 100%;max-width: 300px;"
+                    style="width: 100%; max-width: 300px"
                     alt="meb e-book how to buy"
                   />
                 </div>
                 <div class="how-to-buy" align="center" style="margin: 10px">
                   <v-img
                     src="https://www.mebmarket.com/web/dist/assets/images/how_to/HowtoSell02.jpg"
-                    style="width: 100%;max-width: 300px;"
+                    style="width: 100%; max-width: 300px"
                     alt="meb e-book how to buy"
                   />
                 </div>

@@ -105,7 +105,7 @@ export default {
         this.newBook = result.data;
         result = await axios("http://localhost:3000/getPopularBooks");
         this.popular = result.data;
-         console.log(this.popular)
+        console.log(this.popular);
       } catch (err) {
         console.log(err.message);
       }
